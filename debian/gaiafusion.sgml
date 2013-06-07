@@ -1,0 +1,133 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+
+<!-- Process this file with docbook-to-man to generate an nroff manual
+     page: `docbook-to-man manpage.sgml > manpage.1'.  You may view
+     the manual page with: `docbook-to-man manpage.sgml | nroff -man |
+     less'.  A typical entry in a Makefile or Makefile.am is:
+
+manpage.1: manpage.sgml
+	docbook-to-man $< > $@
+
+
+	The docbook-to-man binary is found in the docbook-to-man package.
+	Please remember that if you create the nroff version in one of the
+	debian/rules file targets (such as build), you will need to include
+	docbook-to-man in your Build-Depends control field.
+
+  -->
+
+  <!-- Fill in your name for FIRSTNAME and SURNAME. -->
+  <!ENTITY dhfirstname "<firstname>Nicolas</firstname>">
+  <!ENTITY dhsurname   "<surname>Wack</surname>">
+  <!-- Please adjust the date whenever revising the manpage. -->
+  <!ENTITY dhdate      "<date>2010-01-04</date>">
+  <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
+       allowed: see man(7), man(1). -->
+  <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
+  <!ENTITY dhemail     "<email>&lt;nicolas.wack@upf.edu&gt;</email>">
+  <!ENTITY dhusername  "Nicolas Wack">
+  <!ENTITY dhucpackage "<refentrytitle>gaiafusion</refentrytitle>">
+  <!ENTITY dhpackage   "gaiafusion">
+
+  <!ENTITY debian      "<productname>Debian</productname>">
+  <!ENTITY gnu         "<acronym>GNU</acronym>">
+  <!ENTITY gpl         "&gnu; <acronym>GPL</acronym>">
+]>
+
+<refentry>
+  <refentryinfo>
+    <address>
+      &dhemail;
+    </address>
+    <author>
+      &dhfirstname;
+      &dhsurname;
+    </author>
+    <copyright>
+      <year>2010</year>
+      <holder>&dhusername;</holder>
+    </copyright>
+    &dhdate;
+  </refentryinfo>
+  <refmeta>
+    &dhucpackage;
+
+    &dhsection;
+  </refmeta>
+  <refnamediv>
+    <refname>&dhpackage;</refname>
+
+    <refpurpose>Smart command-line utility to merge essentia signature files into a gaia database file.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+
+      <command>&dhpackage;</command>
+
+      <command> [ <replaceable>options</replaceable> ] <replaceable> list_of_sigfiles output_dataset</replaceable> </command>
+
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>DESCRIPTION</title>
+
+    <para><command>&dhpackage;</command> is a program that allows you to merge a list
+      of essentia signature files or a directory into a single gaia database file. It is multithreaded,
+      so you might want to run it on a multiprocessor machine.</para>
+
+    <para><command><replaceable>list_of_sigfiles</replaceable></command> is a yaml document
+      containing the list of files to be merged in the following format: a map from ID to filename.
+      It might also be a directory, in which case this program will look for all the sigfiles in there
+      and deduce an ID automatically (relative to this path)
+    </para>
+
+    <para><command><replaceable>output_dataset</replaceable></command> is the filename
+      in which to write the dataset resulting from the merge action.</para>
+
+  </refsect1>
+  <refsect1>
+    <title>OPTIONS</title>
+
+    <para>For more detailed information about the options please run
+      <command>gaiafusion</command> without arguments
+      (or with the --help argument)</para>
+
+  </refsect1>
+<!--
+  <refsect1>
+    <title>SEE ALSO</title>
+
+    <para>bar (1), baz (1).</para>
+
+    <para>The programs are documented fully by <citetitle>The Rise and
+      Fall of a Fooish Bar</citetitle> available via the
+      <application>Info</application> system.</para>
+  </refsect1>
+-->
+  <refsect1>
+    <title>AUTHOR</title>
+
+    <para>This manual page was written by &dhusername; &dhemail;.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-default-dtd-file:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
+
+

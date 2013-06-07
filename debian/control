@@ -1,0 +1,46 @@
+Source: gaia2
+Section: math
+Priority: extra
+Maintainer: Nicolas Wack <nicolas.wack@upf.edu>
+Build-Depends: debhelper (>= 5), pkg-config, docbook-to-man, libqt4-dev (>= 4.5), python-dev, doxygen, libyaml-dev, swig (>= 1.3.31)
+Standards-Version: 3.7.2
+
+Package: libgaia2-dev
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4 (>= 4.5)
+Description: General library to work with points in a semimetric space
+ Gaia is a general library that allows you to work with points in a semimetric
+ space. The points have any number of attributes, each one having a name and a
+ type, which can be either one of those three: real number, string,
+ enumeration. In simple words, Gaia allows you to define the following:
+ .
+  * a structure for your space, which will be determined by the PointLayout.
+    Each point has exactly one PointLayout, and as such, points which share the
+    same layout are said to be in the same space. A PointLayout actually
+    contains a list of dimensions (real or string) which contains attributes of
+    each point, as well as their associated names and a tree structure to
+    organize them (which you can forget about if you don't care for a specific
+    reason)
+  * a DataSet, which is basically a collection of Points. All Points in a
+    DataSet share the same layout.
+  * Transformations, which allow you to take Points in a DataSet (or the whole
+    DataSet) and apply them a transformation that returns a new Point (or
+    DataSet) in a possibly different output space (eg: with a different
+    PointLayout)
+  * distance functions, which return the distance between two points in a
+    specific space
+
+Package: python-gaia2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4 (>= 4.5), python (>= 2.4)
+Description: python-gaia2
+
+Package: gaia2-tools
+Architecture: any
+Depends: python-gaia2
+Description: gaia2-tools
+
+Package: gaia2-cyclops
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4 (>= 4.5), libqt4-network (>= 4.5), cronolog
+Description: gaia2-cyclops

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
+<!-- eric4 project file for project Gaia2 Python module -->
+<!-- Saved: 2010-12-15, 15:49:38 -->
+<!-- Copyright (C) 2010 Nicolas Wack, nicolas.wack@upf.edu -->
+<Project version="4.6">
+  <Language>en</Language>
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <ProjectType>Qt4C</ProjectType>
+  <Description>Gaia2 Python module and its submodules</Description>
+  <Version>0.1</Version>
+  <Author>Nicolas Wack</Author>
+  <Email>nicolas.wack@upf.edu</Email>
+  <Sources>
+    <Source>utils.py</Source>
+    <Source>fastyaml.py</Source>
+    <Source>fusion.py</Source>
+    <Source>classification/__init__.py</Source>
+    <Source>classification/confusionmatrix.py</Source>
+    <Source>classification/evaluation.py</Source>
+    <Source>classification/groundtruth.py</Source>
+    <Source>linalg/pca.py</Source>
+    <Source>linalg/__init__.py</Source>
+    <Source>classification/classifier_1NN.py</Source>
+    <Source>classification/classifier_SIMCA.py</Source>
+    <Source>classification/classifier_SVM.py</Source>
+    <Source>classification/classificationtaskmanager.py</Source>
+    <Source>classification/classificationtask.py</Source>
+    <Source>scripts/dataset_to_csv.py</Source>
+    <Source>scripts/classification/generate_classification_project.py</Source>
+    <Source>scripts/classification/generate_svm_history_from_config.py</Source>
+    <Source>scripts/classification/get_classification_results.py</Source>
+    <Source>scripts/classification/run_tests.py</Source>
+    <Source>scripts/classification/generate_essentia_models.py</Source>
+    <Source>scripts/collections/add_audio_format.py</Source>
+    <Source>scripts/collections/generate_all_collections_metadata.py</Source>
+    <Source>scripts/collections/generate_collection_metadata.py</Source>
+    <Source>scripts/collections/validate_all_collections.py</Source>
+    <Source>scripts/collections/validate_collection.py</Source>
+    <Source>mtgdb/collection.py</Source>
+    <Source>mtgdb/environment.py</Source>
+    <Source>mtgdb/mtgdb_collections.yaml</Source>
+    <Source>mtgdb/__init__.py</Source>
+    <Source>scripts/dima_eval/crossfold_models.py</Source>
+    <Source>scripts/__init__.py</Source>
+    <Source>scripts/classification/__init__.py</Source>
+  </Sources>
+  <Forms>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Resources>
+  </Resources>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+  </Others>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES" />
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.py" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+  </FiletypeAssociations>
+</Project>

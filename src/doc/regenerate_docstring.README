@@ -1,0 +1,10 @@
+IMPORTANT NOTE:
+
+usage of this script is a bit peculiar.
+when you want to regenerate the docstrings, you first need to compile and install the
+latest version of the python bindings.
+Then you need to call this script, and finally you need to recompile the python bindings.
+
+It is a good idea to only do this before a tag, as the file containing the docstrings
+is committed to the repo as well.
+

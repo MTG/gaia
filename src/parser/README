@@ -1,0 +1,12 @@
+This directory contains the sources for the parser
+
+It contains two special files, lexer.l and grammar.y, which are used
+respectively by the scanner generator Flex and the parser generator Lemon
+
+To compile these into C source files, run the following commands (in the same
+order, compiling lexer.l depends on the compilation of the grammar):
+
+$ lemon grammar.y && flex -i lexer.l
+
+That will generate grammar.{c,h} and lex.yy.c, which are needed to compile
+the gaia library

@@ -1,0 +1,535 @@
+2011-12-19 Gaia 2.4.3: The "Winter is coming" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: classification/evaluation scripts have been enhanced a bit
+	and should now work in a much easier way.
+
+
+2011-09-28 Gaia 2.4.2: The "Points can be frozen too!" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: added the named constructor FrozenPoint.fromPoint(gaia2.Point) to
+	be able to correctly build a FrozenPoint from a standard Point while conserving
+	the layout information
+
+
+2011-09-14 Gaia 2.4.1: The "Your package has arrived" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: fixed Debian and CentOS packages.
+
+	* bugfix: some small compilation fixes and adjustments
+
+
+2011-08-16 Gaia 2.4: The "Hell just froze over" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: introduction of the new FrozenDataSet and its associated FrozenPoint
+	and FrozenViews. The FrozenDataSet is an immutable structure, but its memory is
+	all contiguous which makes NN-queries up to 6x faster in certain cases (more
+	likely to be 2x faster on average).
+
+	* feature: "classic" descriptors in python are now returned as their native
+	equivalent types instead of as wrappers to RealDescriptor and StringDescriptor.
+
+	* bugfix: the usual assortment of bugfixes, unicode related, small memleaks, etc...
+
+
+    ----------------------------------------------------------------------------------
+
+
+2011-04-13 Gaia 2.3.5: The "SearchSpace forever" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: fixed 2 very hard to hit crashes when reusing a searchspace in the
+	query optimizer.
+
+
+2011-04-05 Gaia 2.3.4: The "Appending Enums is Shady" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: fixed a grave data corruption bug when you tried to append 2 datasets
+	which have some enumerated values.
+
+
+2011-03-15 Gaia 2.3.3: The "Need for Speed" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: revamped the logging subsystem to have colors and submodules identifiers.
+
+	* feature: new gaia2.essentia python submodule that allows to run an Essentia
+	extractor on all files in a directory.
+
+	* optim: fixed a bug where getting an indexed SearchSpace would take way longer
+	than expected.
+
+	* optim: SearchSpace::filterAndSort is now a tiny bit faster.
+
+	* bugfix: fixed a memory leak in SvmPredict
+
+
+2011-01-26 Gaia 2.3.2.5: The "Cyclops loves classifiers!" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: added optimized parameters for training the SVM models for Essentia.
+
+	* feature: a bit of work on the classification scripts.
+
+	* bugfix: Cronolog now runs as user cyclops instead of root.
+
+	* bugfix: fixed a crash in the ResultSet::thresholdLimit() method.
+
+
+2010-12-10 Gaia 2.3.2.4: The "Cyclops eats strings for breakfast" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: Cyclops client does not automatically convert IDs from strings to integers anymore.
+
+
+2010-09-27 Gaia 2.3.2.3: The "Cyclops likes CentOS" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: fixed CentOS package.
+
+
+2010-09-27 Gaia 2.3.2.2: The "Cyclops back from holidays" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* bugfix: fixed a cyclops segfault on queries that use the "thresholdLimit" param.
+
+	* bugfix: fixed a crash on RHEL 5.5 where cyclopsmaster would segfault on "status" query.
+
+
+2010-08-17 Gaia 2.3.2.1: The "Cyclops in holidays" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: added thresholdLimit to filter out results by distance instead
+	of result numbers.
+
+	* feature: added Rename algorithm to rename a single descriptor.
+
+	* bugfix: workaround for a bug in libyaml that can't read map keys with
+	more than 1024 chars.
+
+
+2010-07-08 Gaia 2.3.2: The "Cyclops likes MIREX" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: Cyclops, a multithreaded C++ Yaml-RPC query server makes its entry
+	in Gaia world. It is intended to be run as a daemon, and also comes in a
+	distributed flavor, with a CyclopsMaster and slaves which it can manage.
+
+	* feature: the Mirex scripts from last year have seen a huge makeover, and are
+	now part of Gaia's standard python library. They are also used to
+	(semi-)automatically generate the SVM models to be used for Essentia.
+
+	* feature: the Gaussianize transformation is now wayyyyy faster to serialize/
+	deserialize, and the resulting histories are more than 2x smaller in size.
+	WARNING: this is a binary-incompatible change, and histories created with either
+	Gaia 2.3 or 2.3.1 will generate incorrect results.
+
+	* feature: the Select and Remove transformations are much faster to instantiate.
+
+	* feature: the gaiainfo tool is now also much faster (constant time).
+
+	* feature: filtering and indexing now work on enumerated descriptors.
+
+	* feature: there is now an installer for Gaia2 on Windows, as well as CentOS 5
+	rpm packages!
+
+	* bugfix: gaiamerge's "--reflayout" option was broken since 2.3, it is now fixed.
+
+	* bugfix: Points which have 2 descriptors with a common part in their namespace
+	can now be loaded correctly.
+
+
+2010-03-11 Gaia 2.3.1: The "GaiaFusion is hot!" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: GaiaFusion now works much better, and is also resilient to
+	discrepancies that might happen in histories when merging multiple chunks.
+
+	* feature: can now create programmable filters, ie: filters that can be
+	constructed directly instead of being parsed from a filter string.
+
+	* feature: SearchSpaces can now be built manually.
+
+	* feature: new distance: ResistorAverage.
+
+	* feature: started importing some python scripts into gaia2 python module.
+
+	* bugfix: transforming a dataset now uses the absolute strict minimum amount
+	of required memory (there was lots of temp memory thrashing before).
+
+	* bugfix: the encoding for strings is now forced to utf-8 all the time, even
+	if your	locale is different.
+
+	* bugfix: the usual bugfixes, this time mostly about fixed-/variable-length
+	ambiguities, some SVM fixes, etc...
+
+
+2009-11-27 Gaia 2.3: The "No-collection" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: the collections have been removed from the DataSet class.
+	Now a dataset only contains points.
+
+	* feature: a new tool, GaiaFusion, is introduced. It is a pumped up
+	version of gaiamerge, which can merge automatically by chunks, and it also
+	applies the basic required transfo to a dataset (removevl, fixlength, cleaner)
+
+	* API: fixlength needs to be applied before cleaner, and actually, it is
+	a good idea to apply it always as first step.
+
+	* API change: DataSet::totalPoints() -> DataSet::size()
+
+	* API change: TransfoChain::originalLayout() is now DataSet::originalLayout()
+
+	* API change: More generally, the naming of the parameters is more consistent:
+
+          - Most of the algorithms take "descriptorNames" and "except" as parameters,
+	    except when it doesn't make sense.
+
+	  - all composite metrics now take the "distance" and "params" parameters,
+	    which are used for creating the composed distance. (ie: no more forwarding
+	    of half ParameterMaps to composed distance)
+
+	  - Parameters given to algorithms and metrics are now checked against the ones
+	    that they support, and it will throw an exception if you give them unused
+	    parameters.
+
+	* bugfix: fixes a (potentially) huge memory leak when doing queries, as well as
+	2 other ones in the python bindings when instanting Metrics or Analyzers through
+	their respective factories
+
+	* feature: new distances: ForceIdentity.
+
+
+    ----------------------------------------------------------------------------------
+
+
+2009-09-16 Gaia 2.2.3: The "Mirex 2009" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: start of some more high-level tools for doing classification.
+	This is located in test/classification and is still very experimental.
+	Use at your own risk. Ultimately, most of this stuff will move to the
+	standard gaia2 python namespace.
+	This also contains an implementation of the SIMCA classifier.
+
+	* feature: the PCA and RCA transformations now have a parameter to specify
+	the name of the resulting descriptor.
+
+	* bugfix: the usual series of bugfixes, small warts and annoyances,
+	including the following ones reported in Trac: #139, #142
+	Also note that Point::load() now correctly loads segmented sigfiles from
+	Essentia >= 1.1 .
+
+
+2009-07-06 Gaia 2.2.2.1: The "Third-of-an-imp" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: gaia2.utils.mergeDataSet now accepts start and end parameters.
+
+	* bugfix: appendCollection works again (failed since the DataSets started
+	being self-referencing by default).
+
+	* bugfix: the order of construction of layouts is not important anymore.
+
+
+2009-06-18 Gaia 2.2.2: The "Third-of-a-devil" release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: Gaia now correctly deals with multi-segment points (with respect to
+	transformations and metrics).
+
+	* feature: DataSets are now self-referencing by default. This means that the call
+	to DataSet::setReferenceDataSet(this) is now superfluous (although still correct).
+
+	* feature: new distances: RandomDistance, SemanticClassifier, SummedSegment,
+	WeightedEuclidean
+
+	* feature: Python bindings now include docstrings for the algorithms/metrics.
+
+	* feature: new tool: gaiasvm_to_essentia, which converts a Gaia history containing
+	an SVM trainer into an Essentia SVM model file ready to be used. This works even
+	when the history contains transfos such as select, remove, normalize, etc...
+
+	* feature: AddField transformation now allows to specify default values.
+
+	* feature: ResultSets can now limit() the number of points they contain.
+
+	* bugfix: Gaia doesn't crash anymore when making a View on a DataSet and a
+	Distance which was created on a different layout.
+
+	* bugfix: fixed a crash when KullbackLeibler distance was used in a multithreaded
+	query (ie: when TBB was installed when compiling).
+
+	* bugfix: some gaiamerge fixes (possible race condition), added the possibility to
+	specify a reference layout and also the number of threads to be used for merging.
+
+
+2009-03-12 Gaia 2.2.1: The Wolowicz release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: Gaia can now be compiled with TBB to have multi-threaded queries.
+
+	* bugfix: Gaia now compiles on CentOS4, and fixes the debian packages.
+
+
+2009-03-06 Gaia 2.2: The Sheldon release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* feature: WARNING: API-incompatible change
+	now View.nnSearch doesn't return the results anymore, but instead a ResultSet
+	which contains all the results (similar to what is returned by a SQL query).
+	You can call ResultSet::get(nPoints, offset) to get the results you would have
+	gotten directly before.
+	ResultSets can be reused for another query, allowing for chained queries.
+	ResultSets are explicitly shared (ref-counted), meaning that if you make a copy
+	of one, you will have 2 of them but pointing to the same data. When the last
+	instance of a ResultSet is destroyed, the memory is returned to the system.
+
+	* feature: you can now index views, which makes it much faster to use queries
+	with filters on them. The flip side of the coin is that you cannot anymore
+	filter using collections (ie: WHERE ... FROM collec1, collec2)
+
+	* feature: you can use a new distance for each query you do on the view, you
+	don't need to create a new view each time
+
+	* feature: in python it is now possible to access descriptor directly with
+	p[name] and p[name] = value (instead of p.value(name) or p.label(name) )
+
+	* feature: new distances: RhythmDistance, WeightedPearsonCorrelation and
+	BPFCompose
+
+	* feature: new transformations: SVM classifier, Extract
+
+	* feature: new build target: 'waf dist' to create a redistributable tarball
+
+	* bugfix: it is not possible to change a layout anymore once it has been shared
+	between points.
+
+	* bugfix: check for null pointers when applying transformations on datasets.
+
+	* bugfix: you can now add descriptors to a layout using their fully qualified
+	name instead of adding each part consecutively. (ticket #106)
+
+
+    ----------------------------------------------------------------------------------
+
+
+2008-12-10 Gaia 2.1.2: The Zapp Brannigan release (Nicolas Wack <nicolas.wack@upf.edu>)
+
+	* fixed a very grave bug in Collection::removePoints() which could lead
+	to data corruption.
+
+
+2008-11-25 Gaia 2.1.1: The Bender release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* feature/bugfix: The unicity condition is now enforced upon the IDs of
+	points within the same collection, both when adding new points and when
+	loading a DataSet.
+
+	* feature: Collection::addPoint* and Collection::removePoint* now have
+	a worst case complexity of O(n log n) instead of O(n^2) before.
+
+	* bugfix: Fixed a (possibly huge) memory leak in the query parser
+
+
+2008-10-22 Gaia 2.1: The Nibbler release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* Note: now Point::value() returns a copy of the data, not a reference anymore
+
+	* feature: Gaia is now ready to load multiple-segments files (segmented by
+	Essentia) as well as work on it. This feature is not yet fully working but
+	the file format is fixed so that you can have a smooth upgrade path from the
+	2.0.x versions. Gaia 2.1 can load any 2.0.x file and load them correctly.
+
+	* feature: Added new transformation FixLength, which fixes the length of the
+	given descriptors, which leads to (sometimes huge) memory savings.
+
+	* feature: Added new transformation Enumerate, which allows you to convert
+	a string descriptor to an enum one. This is "invisible" to the user but
+	leads to quite big improvements in memory usage as well as better filtering
+	performance, even possibly indexing.
+
+	* feature: The Gaussianize transformation is resurrected from 1.4, Normalize
+	now takes much more parameters, such as % of outliers, whether to apply
+	clipping, ...
+
+	* feature: Added a new tool "gaiainfo" that returns information about a
+	given dataset file.
+
+	* feature: mergeDataSets now preserves the history of the merged DataSets,
+	so that it is now possible to add a point to the resulting dataset
+
+	* feature: New distance functions: NormalizedAngle (replaces CosineNorm from
+	the 2.0.x branch) and ExponentialCompress (replaces and extends EuclideanExp
+	from the 2.0.x branch)
+
+	* python: you can now iterate over the points and collections of a DataSet
+	using ds.points() and ds.collections()
+
+	* bugfix: Fixed segfault when deleting a dataset before dereferencing it (by
+	other datasets)
+
+	* bugfix: RCA is functional again! There is also a new parameter, classLabel,
+	which you can use instead of the classFile you had before if the descriptor
+	for the class is already in the dataset.
+
+
+    ----------------------------------------------------------------------------------
+
+
+2008-05-16 Gaia 2.0.8: The Super-Arale-chan release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* bugfix: fixed a potential segfault when deleting a dataset before a view
+	that references it.
+
+	* feature: By default asserts are now removed from builds. Add them back
+	with: './waf configure --with-asserts'
+
+
+2008-04-25 Gaia 2.0.7: The Arale release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* bugfix: Gaia now loads signature files encoded in utf-8. (ticket #52)
+
+	* bugfix: When setting a reference dataset, it now also checks that all the
+	point names are equal, not only the number of points in each collection.
+	(ticket #59)
+
+	* bugfix: Fixed a nasty bug where some point names mysteriously disappeared
+	just after merging. (ticket #49, #51 and #60)
+
+
+2008-03-04 Gaia 2.0.6: The Senbei release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* feature: Added a new transformation MergeRegion which takes several
+	descriptors and merges them into a single one. This has the nice effect to
+	require	much less memory afterwards, and allows us again to work on datasets
+	of ~1M points with ~1GB of RAM.
+
+	* feature: Added a waf configuration option that allows to compile Gaia to
+	load "bz2-encrypted" signature files.
+
+	* bugfix: Collection::removePointNoSort() has been removed (it could not
+	possibly work), Collection::removePoints() has been added and does the job
+	of removing multiple points at once much better. (ticket #36)
+
+	* feature: Points can now be loaded directly from a string buffer using the
+	new Point::loadFromString() method. (ticket #41)
+
+
+2007-10-10 Gaia 2.0.5: The Midori release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* feature: Added a new function mergePoints(p1, p2) which merges the data
+	contained in the two points
+
+	* feature: There is a version number field available:
+	const char* gaia2::version in C++ and gaia2.__version__ in python,
+	thus closing #39
+
+	* bugfix: Closed tickets #37 and #38
+
+
+2007-10-04 Gaia 2.0.4: The Gatchan release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	* Fixed the bug (ticket #32) where de-referencing a dataset would make
+	gaia crash.
+
+	* Fixed a potential bug (ticket #29) where morphing a point because of
+	a wrongly detected layout would not work as expected.
+
+	* Algorithms that do not make sense on datasets with less than 2 points
+	now throw an explicit exception (ticket #31)
+
+
+2007-09-07 Gaia 2.0.3: The Great King Nikochan release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	(Also called the holiday release...)
+
+	* Removed the unicity condition for the points (which caused the *NoSort
+	functions to sort the points anyway).
+
+	* Changed the base vector type from QVector to QVarLengthArray, resulting
+	in memory savings around 35%!! (YMMV)
+
+	* Fixed a refcounting bug in SWIG/Python bindings on the reference dataset.
+
+
+2007-08-16 Gaia 2.0.2: The Ku-Pee-Pee Poh? release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	Fixed the (not so) obvious bugs that appeared with 2.0.1 and that needed
+	immediate fixing:
+
+	* Using filters during a query would previously not use the values from
+	the reference dataset, but those from the current one. Now fixed!
+
+	* The FROM list in the query filters was ignored, but not anymore.
+
+	* When using containing conditions on point IDs, we do not require
+	anymore the current dataset to have a reference one.
+
+	* Various API changes: all addPoint* and addCollection methods now
+	return a reference to the object that was just inserted (ticket #22)
+	You can now also access points in a collection using their index, which
+	is not recommended but can prove to be useful when iterating over all
+	points in a collection, for instance.
+
+	* Actually changed the namespace from gaia to gaia2 (the previous
+	Changelog said it was done, but that was a blatant lie!!)
+
+	* Syntax of the filter parser additions: BETWEEN ... AND ...
+
+
+2007-08-10 Gaia 2.0.1: The N'Cha! release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	First maintenance release of the 2.0 branch:
+
+	* Doxygen documentation improved a lot, now also contains examples &
+	tutorials
+
+	* Build system has been improved a lot, new logging system which allows
+	to activate or deactivate various runtime debugging levels.
+
+	* New algorithms: "RemoveVL" which removes the variable-length
+	descriptors from a dataset.
+
+	* namespace for the base library is now "gaia2", and namespace for the
+	STL facade is now "gaiastd"; gaia2::GaiaException can also be caught as
+	gaiastd::GException (instead of the more generic std::exception)
+
+	* faster point lookup using binary search (O(log(n)) instead of O(n))
+
+	* Views now allow pre-filtering before doing queries.
+
+	* Syntax of the filter parser additions: FROM, NOT, IN (...), point.id
+	The addition of the FROM clause also implies that from now on, all
+	predicated should be written starting with the WHERE keyword.
+
+	* python bindings now handle more gracefully Parameter and ParameterMap
+	objects, can convert from QString to python string, etc...
+
+	* and of course the usual slew of bugfixes, of which the most important
+	were:
+
+	#21: auto-detection of the type when parsing the yaml file sometimes
+	     detected a value which was supposed to be a string as a float,
+	     resulting in the loaded point not being able to be added to a
+	     dataset
+
+	#20: query parser was in an invlaid state after parsing an invalid
+	     query resulting in following queries to also fail
+
+	#18: the representation of StringDescriptor in python was uncertain.
+	     now it maps exactly the one from python native string and list
+	     of strings
+
+
+
+2007-07-11 Gaia 2.0: The Hoyoyo! release (Nicolas Wack <nwack@iua.upf.edu>)
+
+	Rewritten everything from scratch, new significant features include:
+
+	* More flexible Point layout (ie: possible descriptors), hierarchically
+	ordered, can use string types as well as real number types, and can also
+	support the concept of segment (ie: a chunk of the whole audio + scope)
+	(NB: segments don't work yet in 2.0, but will do so in the next version)
+
+	* A DataSet is now composed of Collections, making it easier to work
+	with multiple collections of tracks (ie: different users of the same
+	system) within the same DataSet (much easier and faster than having
+	multiple datasets)
+
+	* Better traceability of descriptors. It is now very easy to access
+	values from a point, know which descriptors were taken into account in
+	a PCA, etc...
+
+	* A simpler and much more generic way of defining distance functions
+	between points in a space that makes it possible to experiment which one
+	of those works better for you, to mix different ones to create a new one
+	that makes musical sense, etc...
+
+	* And an overall better architecture that makes it easier to work with
+	and less prone to bugs...

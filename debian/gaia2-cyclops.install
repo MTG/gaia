@@ -1,0 +1,5 @@
+debian/tmp/usr/bin/cyclops
+debian/tmp/usr/bin/cyclopsmaster
+debian/tmp/etc/cyclops/*
+debian/tmp/etc/init.d/cyclops*
+

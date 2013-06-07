@@ -1,0 +1,57 @@
+            ______________
+           |              |
+           |  Gaia 2.4.3  |
+           |______________|
+
+
+ABOUT
+-----
+
+ - dependencies:
+   - Qt >= 4.5
+   - libYAML >= 0.1.1
+   - Python >= 2.4
+   - SWIG >= 1.3.31
+
+
+INSTALL
+-------
+
+Linux:
+
+- online help for WAF (build system)
+   $ ./waf --help
+
+- configure with the desired options:
+   $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+
+- compile libgaia.a:
+   $ ./waf
+   $ ./waf install [--destdir=/where/ever/]
+
+
+Windows / MacOS X:
+
+- for Windows and Mac users there are QtCreator projects inside the packaging/ directory.
+
+
+
+3RD PARTY
+---------
+
+This library contains source code from the LibSVM project, which is distributed
+under the revised BSD license.
+Please refer to the src/3rdparty/libsvm/COPYRIGHT file for more information.
+
+This library contains the Mersenne Twister random number generator, which
+is distributed under the BSD license.
+
+This library contains source code from the Alglib project (http://www.alglib.net),
+which is distributed under the 3-clause BSD license.
+
+This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
+which is distributed under the LGPLv3 license.
+
+This library contains source code from FrogLogic command line parser
+(http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)
+which is distributed under the BSD license.

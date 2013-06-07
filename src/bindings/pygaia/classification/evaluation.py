@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from gaia2 import DataSet
+from gaia2.utils import TextProgress
+from groundtruth import GroundTruth
+from confusionmatrix import ConfusionMatrix
+import random
+import logging
+
+log = logging.getLogger('gaia2.classification.Evaluation')
+
+
+
+def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True):
+    """Evaluate the classifier on the given dataset and returns the confusion matrix.
+
+    Uses only the points that are in the groundTruth parameter for the evaluation.
+
+    Parameters
+    ----------
+
+    classifier  : a function which given a point returns its class
+    dataset     : the dataset from which to get the points
+    groundTruth : a map from the points to classify to their respective class
+    """
+
+    progress = TextProgress(len(groundTruth))
+    done = 0
+
+    confusion = confusion or ConfusionMatrix()
+
+    for pointId, expected in groundTruth.items():
+        try:
+            found = classifier(dataset.point(pointId))
+            confusion.add(expected, found, pointId)
+
+        except Exception, e:
+            log.warning('Could not classify point "%s" because %s' % (pointId, str(e)))
+            raise
+
+        done += 1
+        if verbose: progress.update(done)
+
+    return confusion
+
+
+def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
+    """Evaluate the classifier on the given dataset and returns the confusion matrix.
+
+    The evaluation is performed using n-fold cross validation.
+    Uses only the points that are in the groundTruth parameter for the evaluation.
+
+    Parameters
+    ----------
+
+    nfold        : the number of folds to use for the cross-validation
+    dataset      : the dataset from which to get the points
+    groundTruth  : a map from the points to classify to their respective class
+    trainingFunc : a function which will train and return a classifier given a dataset,
+                   the groundtruth, and the *args and **kwargs arguments
+    """
+    log.info('Doing %d-fold cross validation' % nfold)
+    classes = set(groundTruth.values())
+    progress = TextProgress(nfold, 'Evaluating fold %(current)d/%(total)d')
+
+    # get map from class to point names
+    iclasses = {}
+    for c in classes:
+        iclasses[c] = [ p for p in groundTruth.keys() if groundTruth[p] == c ]
+        random.shuffle(iclasses[c])
+
+    # get folds
+    folds = {}
+    for i in range(nfold):
+        folds[i] = []
+        for c in iclasses.values():
+            foldsize = (len(c)-1)//nfold + 1 # -1/+1 so we take all instances into account, last fold might have fewer instances
+            folds[i] += c[ foldsize * i : foldsize * (i+1) ]
+
+    # build sub-datasets and run evaluation on them
+    confusion = None
+    pnames = [ p.name() for p in dataset.points() ]
+
+    for i in range(nfold):
+        if log.isEnabledFor(logging.INFO):
+            progress.update(i+1)
+
+        trainds = DataSet()
+        trainds.addPoints([ dataset.point(pname) for pname in pnames if pname not in folds[i] ])
+        traingt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in groundTruth.items() if p not in folds[i] ]))
+
+        testds = DataSet()
+        testds.addPoints([ dataset.point(str(pname)) for pname in folds[i] ])
+        testgt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in groundTruth.items() if p in folds[i] ]))
+
+        classifier = trainingFunc(trainds, traingt, *args, **kwargs)
+        confusion = evaluate(classifier, testds, testgt, confusion, verbose = False)
+
+    return confusion

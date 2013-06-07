@@ -1,0 +1,6 @@
+debian/tmp/usr/lib/python*/*-packages/gaia2/*so
+debian/tmp/usr/lib/python*/*-packages/gaia2/*py
+debian/tmp/usr/lib/python*/*-packages/gaia2/*/*py
+debian/tmp/usr/lib/python*/*-packages/gaia2/*/*yaml
+debian/tmp/usr/lib/python*/*-packages/gaia2/*/*/*py
+debian/tmp/usr/lib/python*/*-packages/gaia2/*/*/*yaml

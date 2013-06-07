@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+##### General options ##############################################################
+
+datasetdir = BASE_DIR + '/datasets/'
+resultsdir = BASE_DIR + '/results/'
+
+mood_classes = [ 'aggressive',
+                 'happy',
+                 'sad',
+                 'relaxed',
+                 'relaxing',
+                 'relax'
+                 ]
+
+##### Parameters to change depending on the classification task to be run ##########
+
+# name of the descriptor to be used for the class name (should be different for different DBs, too)
+# is also used for task name
+className = 'mood'
+
+# dir where the essentia sigfiles are located
+basedir = MtgdbPath(mtgdbRoot = MTGDB_AUDIO,
+                    collection = 'benchmarks/moods/CyrilMoods',
+                    #essentiaVersion = 'essentia_streaming_1.0.6_schizo')
+                    essentiaVersion = 'essentia_streaming_1.1_schizo_ffmpeg05')
+
+
+##### Classifier parameters ########################################################
+orderedCommonConfig = [ { 'eqloud': [ 'eqloud', 'neqloud' ] },
+                        { 'featset': [ 1, 2, 3, 4, 5, 6, 7, 8 ] }
+                        ]
+
+orderedEvalConfig = { 'simca':
+                      [ { 'coveredVariance': [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 98 ] },
+                        { 'alpha': [ 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 ] }
+                        ],
+
+                      'svm':
+                      [ { 'type': [ 'C-SVC', 'nu-SVC' ] },
+                        { 'kernel': [ 'RBF', 'poly' ] },
+                        { 'C': [ -5, -3, -1, 1, 3, 5, 7, 9, 11, 13, 15 ] }, # will actually be 2**x
+                        { 'gamma': [ 3, 1, -1, -3, -5, -7, -9, -11, -13, -15 ] } # will actually be 2**x
+                        ],
+
+                      'mixed':
+                      [ { 'rcadim': [ 2, 4, 6, 8, 9, 10, 15, 20 ] },
+                        { 'alpha': [ 0.00, 0.02, 0.04, 0.06, 0.08, 0.9, 0.1, 0.11, 0.12, 0.14, 0.16, 0.18 ] + [ x/10. for x in range(2, 11) ] }
+                        ]
+
+                      }
+

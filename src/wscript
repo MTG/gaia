@@ -1,0 +1,189 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import Options
+import os, os.path
+
+
+def set_options(opt):
+    opt.add_option('--with-stlfacade', action='store_true',
+                   dest = 'with_stlfacade', default = False,
+                   help = 'whether or not to compile the STL facade inside the Gaia library')
+
+    opt.add_option('--with-tests', action='store_true',
+                   dest = 'with_tests', default = False,
+                   help = 'whether ot not to compile the C++ tests inside the test directory')
+
+    # options provided in subdirectories
+    opt.sub_options('bindings')
+
+
+def configure(conf):
+    conf.env['WITH_STLFACADE'] = Options.options.with_stlfacade
+    conf.env['WITH_TESTS'] = Options.options.with_tests
+    conf.env['WITH_CYCLOPS'] = Options.options.cyclops
+    conf.sub_config('bindings')
+
+def install_tree(bld, dst, src):
+    src = os.path.normpath(src)
+
+    for root, dirs, files in os.walk(src):
+        relroot = root[len(src)+1:]
+
+        for f in files:
+            bld.install_files(os.path.join(dst, relroot),
+                              os.path.join(root, f))
+
+def build_library(bld):
+    gaialib = bld.new_task_gen('cxx', 'staticlib')
+
+    gaialib.source = '''
+    convert.cpp
+    debugging.cpp
+    gaia.cpp
+    gaiamath.cpp
+    dataset.cpp
+    descriptortree.cpp
+    frozendataset.cpp
+    linalg.cpp
+    parameter.cpp
+    point.cpp
+    pointlayout.cpp
+    region.cpp
+    searchspace.cpp
+    searchspacepool.cpp
+    timer.cpp
+    transformation.cpp
+    utils.cpp
+    yamlcpp.cpp
+    parser/lex.yy.cpp
+    parser/filter.cpp
+    parser/filterwrapper.cpp
+    3rdparty/libsvm/svm.cpp
+    3rdparty/libsvm/gaiasvmutils.cpp
+    '''
+
+    gaialib.find_sources_in_dirs([ 'algorithms', 'metrics', '3rdparty/alglib' ])
+
+    if bld.env['WITH_STLFACADE']:
+        gaialib.find_sources_in_dirs('stlfacade')
+        bld.install_files('${PREFIX}/include/gaia2', 'stlfacade/*.h')
+        bld.install_files('${PREFIX}/include/gaia2', 'baseexception.h')
+    else:
+        # we shouldn't redistribute these headers (they contain Qt code)
+        bld.install_files('${PREFIX}/include/gaia2', '*.h')
+        bld.install_files('${PREFIX}/include/gaia2', [ 'algorithms/analyzer.h',
+                                                       'algorithms/applier.h' ])
+        bld.install_files('${PREFIX}/include/gaia2', [ 'metrics/distancefunction.h',
+                                                       'metrics/layoutawarefactory.h',
+                                                       'metrics/frozendistance.h' ])
+        bld.install_files('${PREFIX}/include/gaia2/parser', [ 'parser/filter.h',
+                                                              'parser/parsertypes.h',
+                                                              'parser/grammar.h' ])
+
+        # also install all Eigen headers
+        import os
+        os.chdir('src')
+        install_tree(bld, '${PREFIX}/include/gaia2/Eigen', '3rdparty/Eigen')
+
+    bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
+    bld.install_files('${PREFIX}/lib', 'libgaia2.a')
+
+    gaialib.uselib = bld.env['USELIB']
+    gaialib.includes = [ '.', 'metrics', '3rdparty' ]
+    gaialib.target   = 'gaia2'
+
+
+def build_with_gaia(bld, prog):
+    prog.includes = [ '.', 'metrics', '3rdparty' ]
+    prog.uselib_local = 'gaia2'
+    prog.uselib = bld.env['USELIB']
+
+def is_dev_version(bld):
+    mainws = os.path.join(bld.curdir, '..', 'wscript')
+    version_line = [ l.strip() for l in open(mainws) if l.startswith('VERSION') ][0]
+    return '-dev' in version_line
+
+def build_tools(bld):
+    # merge utility
+    merge_prog = bld.new_task_gen('cxx', 'program')
+    merge_prog.target = 'tools/gaiamerge'
+    merge_prog.source = 'tools/gaiamerge.cpp'
+    build_with_gaia(bld, merge_prog)
+
+    # info utility
+    info_prog = bld.new_task_gen('cxx', 'program')
+    info_prog.target = 'tools/gaiainfo'
+    info_prog.source = 'tools/gaiainfo.cpp'
+    build_with_gaia(bld, info_prog)
+
+    # GaiaFusion
+    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
+
+    # gaiafreeze utility
+    gaiafreeze_prog = bld.new_task_gen('cxx', 'program')
+    gaiafreeze_prog.target = 'tools/gaiafreeze'
+    gaiafreeze_prog.source = 'tools/gaiafreeze.cpp'
+    build_with_gaia(bld, gaiafreeze_prog)
+
+    # gaia22to23fl utility
+    gaia22to23fl_prog = bld.new_task_gen('cxx', 'program')
+    gaia22to23fl_prog.target = 'tools/gaia22to23fl'
+    gaia22to23fl_prog.source = 'tools/gaia22to23fl.cpp'
+    build_with_gaia(bld, gaia22to23fl_prog)
+
+    if is_dev_version(bld):
+        # Note: we don't want to build this with a released version, because
+        # otherwise rpm insists on including it also in the distributed binary
+        # gaiabench utility
+        gaiabench_prog = bld.new_task_gen('cxx', 'program')
+        gaiabench_prog.target = 'tools/gaiabench'
+        gaiabench_prog.source = 'tools/gaiabench.cpp tools/frozensearch.cpp'
+        build_with_gaia(bld, gaiabench_prog)
+
+    # Cyclops server
+    if bld.env['WITH_CYCLOPS']:
+        # cyclops "normal" server
+        cyclops_prog = bld.new_task_gen('cxx', 'program')
+        cyclops_prog.target = 'tools/cyclops'
+        cyclops_prog.source = '''
+        tools/cyclops_server/cyclopsserver.cpp
+        tools/cyclops_server/cyclopsproxy.cpp
+        tools/cyclops_server/cyclops.cpp
+        tools/cyclops_server/yamlrpcserver.cpp
+        '''
+        build_with_gaia(bld, cyclops_prog)
+
+        cyclops_prog.includes += [ 'tools/cyclops_server/' ]
+        cyclops_prog.uselib += [ 'QTNETWORK' ]
+
+        # cyclops "master" server
+        cyclopsmaster_prog = bld.new_task_gen('cxx', 'program')
+        cyclopsmaster_prog.target = 'tools/cyclopsmaster'
+        cyclopsmaster_prog.source = '''
+        tools/cyclops_server/cyclopsmasterserver.cpp
+        tools/cyclops_server/cyclopsproxy.cpp
+        tools/cyclops_server/cyclopsmaster.cpp
+        tools/cyclops_server/cyclops.cpp
+        tools/cyclops_server/yamlrpcserver.cpp
+        '''
+        build_with_gaia(bld, cyclopsmaster_prog)
+
+        cyclopsmaster_prog.includes += [ 'tools/cyclops_server/' ]
+        cyclopsmaster_prog.uselib += [ 'QTNETWORK' ]
+
+        # cyclops init scripts
+        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
+        bld.install_files('/etc/init.d', 'tools/cyclops_server/initscripts/*', chmod=0755)
+
+
+def build(bld):
+    build_library(bld)
+    build_tools(bld)
+
+    if bld.env['WITH_TESTS']:
+        bld.add_subdirs('test')
+
+    if bld.env['WITH_PYTHON_BINDINGS']:
+        bld.add_subdirs('bindings')
+

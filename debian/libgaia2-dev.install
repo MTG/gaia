@@ -1,0 +1,4 @@
+debian/tmp/usr/include/gaia2
+debian/tmp/usr/lib/libgaia2.a
+debian/tmp/usr/share/doc/libgaia2/
+debian/tmp/usr/lib/pkgconfig/gaia2.pc

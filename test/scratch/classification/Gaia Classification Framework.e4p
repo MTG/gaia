@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
+<!-- eric4 project file for project Gaia Classification Framework -->
+<!-- Saved: 2009-08-07, 17:55:09 -->
+<!-- Copyright (C) 2009 Nicolas Wack, nicolas.wack@upf.edu -->
+<Project version="4.6">
+  <Language>en</Language>
+  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <ProjectType>Qt4C</ProjectType>
+  <Description>This project contains various files to be able to rapidly prototype some classifiers using the Gaia library.</Description>
+  <Version>0.1</Version>
+  <Author>Nicolas Wack</Author>
+  <Email>nicolas.wack@upf.edu</Email>
+  <Sources>
+    <Source>classify.py</Source>
+    <Source>classification_utils.py</Source>
+    <Source>classifier_1NN.py</Source>
+    <Source>classifier_SVM.py</Source>
+    <Source>confusionmatrix.py</Source>
+    <Source>classifier_SIMCA.py</Source>
+    <Source>do_feature_selection.py</Source>
+    <Source>plot_results.py</Source>
+    <Source>run_single_test.py</Source>
+    <Source>run_tests.py</Source>
+    <Source>config.py</Source>
+    <Source>common.py</Source>
+    <Source>readresults.py</Source>
+    <Source>genre.project</Source>
+    <Source>mood.project</Source>
+    <Source>genre_itms.project</Source>
+    <Source>merge_base_dataset.py</Source>
+    <Source>genre_segments.project</Source>
+  </Sources>
+  <Forms>
+  </Forms>
+  <Translations>
+  </Translations>
+  <Resources>
+  </Resources>
+  <Interfaces>
+  </Interfaces>
+  <Others>
+  </Others>
+  <MainScript>classify.py</MainScript>
+  <Vcs>
+    <VcsType>None</VcsType>
+  </Vcs>
+  <FiletypeAssociations>
+    <FiletypeAssociation pattern="*.ui" type="FORMS" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
+    <FiletypeAssociation pattern="*.ui.h" type="FORMS" />
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS" />
+    <FiletypeAssociation pattern="*.py" type="SOURCES" />
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES" />
+  </FiletypeAssociations>
+</Project>

@@ -1,0 +1,170 @@
+gaia2 (2.4.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Mon, 19 Dec 2011 16:37:49 +0100
+
+gaia2 (2.4.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 28 Sep 2011 18:21:33 +0200
+
+gaia2 (2.4.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 14 Sep 2011 17:57:46 +0200
+
+gaia2 (2.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Tue, 16 Aug 2011 16:04:31 +0200
+
+gaia2 (2.3.5-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 13 Apr 2011 18:56:16 +0200
+
+gaia2 (2.3.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Tue, 05 Apr 2011 19:34:55 +0200
+
+gaia2 (2.3.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Tue, 15 Mar 2011 18:50:35 +0100
+
+gaia2 (2.3.2.5-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 26 Jan 2011 16:31:36 +0100
+
+gaia2 (2.3.2.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Fri, 10 Dec 2010 11:42:46 +0100
+
+gaia2 (2.3.2.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Mon, 27 Sep 2010 16:04:23 +0200
+
+gaia2 (2.3.2.1-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Tue, 17 Aug 2010 18:41:26 +0200
+
+gaia2 (2.3.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 07 Jul 2010 17:56:27 +0200
+
+gaia2 (2.3.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Thu, 11 Mar 2010 18:16:09 +0100
+
+gaia2 (2.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Fri, 27 Nov 2009 18:34:32 +0100
+
+gaia2 (2.2.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 16 Sep 2009 15:16:38 +0200
+
+gaia2 (2.2.2.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Mon, 06 Jul 2009 17:43:28 +0200
+
+gaia2 (2.2.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Thu, 18 Jun 2009 18:50:06 +0200
+
+gaia2 (2.2.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Thu, 12 Mar 2009 19:59:51 +0100
+
+gaia2 (2.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Fri, 06 Mar 2009 19:26:12 +0100
+
+gaia2 (2.1.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nicolas Wack <nicolas.wack@upf.edu>  Wed, 10 Dec 2008 18:58:46 +0100
+
+gaia2 (2.1-1) unstable; urgency=low
+
+  * new upstream version 
+
+ -- Nicolas Wack <nwack@iua.upf.edu>  Mon, 04 Aug 2008 11:30:51 +0200
+
+gaia2 (2.0.7-1) unstable; urgency=low
+
+  * Changed package name to libgaia2
+
+ -- Koppi <koppi@iua.upf.edu>  Tue, 06 May 2008 10:23:21 +0200
+
+gaia (2.0.5-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Paul Brossier <pbrossier@iua.upf.edu>  Wed, 10 Oct 2007 15:23:27 +0200
+
+gaia (2.0.2-1) unstable; urgency=low
+
+  * New release 2.0.2.
+  * Compile against commercial Qt. 
+
+ -- Paul Brossier <pbrossier@iua.upf.edu>  Mon, 20 Aug 2007 18:26:13 +0200
+
+gaia (2.0-3) unstable; urgency=low
+
+  * Rebuild agains qt4-upf.
+
+ -- Paul Brossier <piem@debian.org>  Thu, 16 Aug 2007 17:59:12 +0200
+
+gaia (2.0-2) unstable; urgency=low
+
+  * Switch back to python 2.4
+  * remove doc/ in clean rules
+
+ -- Paul Brossier <piem@debian.org>  Fri, 10 Aug 2007 12:56:36 +0200
+
+gaia (2.0-1) unstable; urgency=low
+
+  * New upstream version, first actual package
+
+ -- Paul Brossier <pbrossier@iua.upf.edu>  Wed, 11 Jul 2007 17:57:36 +0200
+
+gaia (1.4-1) unstable; urgency=low
+
+  * Initial package draft. 
+
+ -- Paul Brossier <piem@debian.org>  Tue, 23 Jan 2007 15:15:42 +0000
+

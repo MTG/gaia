@@ -1,0 +1,30 @@
+Gaia 2.2 benchmarks:
+
+DB size = 1'068'505 points
+run on Xeon 2.66GHz
+distance = euclidean on pca 25
+
+Filter                                                                          Gaia 2.1      Gaia 2.2     Gaia 2.2.1    Gaia 2.2.1
+                                                                                              prerelease   without TBB   with TBB
+
+''                                                                              270ms         303ms        288ms         185ms
+'WHERE point.id IN ("100006", "1000146", "1000246", "1000314")'                 666ms         0.2ms        0.2ms         0.2ms
+'WHERE (True AND True) and (true and TRUE)'                                     270ms         304ms        287ms         186ms
+'WHERE (false AND True) OR (true and false)'                                    287ms         0.2ms        0.2ms         0.2ms
+'WHERE value.tempotap_bpm.value > 140'                                          273ms         34ms         34ms          24ms
+'WHERE value.tempotap_bpm > 110'                                                270ms         183ms        178ms         117ms
+'WHERE value.tempotap_bpm > 120 AND value.tempotap_bpm < 130'                   270ms         131ms        126ms         107ms
+'WHERE value.tempotap_bpm BETWEEN 120 AND 130'                                  N/A (bug)     83ms         78ms          59ms
+'WHERE label.tonal_key_key = "C"'                                               270ms         65ms         63ms          42ms
+'''WHERE ((label.tonal_key_key = "A" AND label.tonal_key_mode = "major") OR
+          (label.tonal_key_key = "E" AND label.tonal_key_mode = "minor"))
+          AND value.tempotap_bpm < 90'''                                        277ms         83ms         82ms          78ms
+
+
+Notes:
+
+- when no filter is specified, it runs about 30ms slower for a DB of 1M points (grows linearly with the size of the DB, independent of distance used)
+  This cost could be removed completely if absolutely necessary, but it is costly in manpower. Somehow fixed with 2.2.1.
+- in the case the number of points considered is small, the costs are reduced dramatically
+- It is better to use "V between X and Y" than "V >= X and V <= Y"
+- We clearly see that we're not limited by CPU power when doing queries, but by memory bandwidth

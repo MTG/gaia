@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# Copyright (C) 2010 MTG, Universitat Pompeu Fabra
+#
+# Init file for cyclopsmaster
+#
+# chkconfig: 2345 55 25
+# description: cyclopsmaster server daemon
+#
+# This is the master component when setting up Gaia Cyclops in
+# a master/slave setup. You should have the slaves running prior
+# to launching the master node.
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+DAEMON=/usr/bin/cyclopsmaster
+CONFIG_FILE=/etc/cyclops/master.yaml
+NAME=cyclopsmaster
+DESC="Gaia Cyclops master server"
+LOGDIR=/var/log/cyclops
+
+PIDFILE=/var/run/cyclopsmaster.pid
+
+# Test if binary exists
+test -x $DAEMON || exit 0
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Define LSB log_* functions.
+. /lib/lsb/init-functions
+
+BOOTUP=verbose
+DAEMON_OPTS=$CONFIG_FILE
+USER=cyclops
+
+CRONOLOG="sudo -u $USER /usr/sbin/cronolog $LOGDIR/%Y/master.%m%d.log"
+
+# source default
+#if [ -f /etc/default/$NAME ] ; then
+#    . /etc/default/$NAME
+#fi
+
+start_server() {
+	if [ ! -d $LOGDIR ]; then
+		mkdir $LOGDIR || return 2
+		chown $USER $LOGDIR
+	fi
+    /etc/init.d/cyclopsslaves start
+    daemon --pidfile $PIDFILE --user $USER "$DAEMON $DAEMON_OPTS 2>&1 | $CRONOLOG &" > /dev/null
+	return $?
+}
+
+stop_server() {
+    /etc/init.d/cyclopsslaves stop
+    killproc $NAME
+	return $?
+}
+
+case "$1" in
+  start)
+	echo "Starting $NAME..."
+	start_server
+	case "$?" in
+		0) log_success_msg "$NAME started." ;;
+		1) log_success_msg "already started";;
+		*) log_failure_msg $? ;;
+	esac
+
+	;;
+  stop)
+	echo "Stopping $NAME..."
+	stop_server
+	case "$?" in
+		0) log_success_msg "$NAME stopped." ;;
+		1) log_success_msg "already stopped";;
+		*) log_failure_msg $? ;;
+	esac
+
+	;;
+  reload)
+        echo "Reloading $NAME daemon: not implemented, as the daemon"
+        echo "cannot re-read the config file (use restart)."
+        ;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	;;
+  status)
+	status cyclopsmaster
+	;;
+  *)
+	echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload|force-reload|status}" >&2
+	exit 3
+	;;
+esac
+
+exit 0

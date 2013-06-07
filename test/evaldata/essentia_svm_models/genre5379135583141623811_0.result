@@ -1,0 +1,287 @@
+blu:
+  blu: [blu/blues.00019.wav, blu/blues.00087.wav, blu/blues.00001.wav, blu/blues.00088.wav,
+    blu/blues.00003.wav, blu/blues.00097.wav, blu/blues.00078.wav, blu/blues.00014.wav,
+    blu/blues.00020.wav, blu/blues.00073.wav, blu/blues.00037.wav, blu/blues.00049.wav,
+    blu/blues.00017.wav, blu/blues.00084.wav, blu/blues.00083.wav, blu/blues.00040.wav,
+    blu/blues.00074.wav, blu/blues.00063.wav, blu/blues.00039.wav, blu/blues.00071.wav,
+    blu/blues.00050.wav, blu/blues.00025.wav, blu/blues.00036.wav, blu/blues.00045.wav,
+    blu/blues.00099.wav, blu/blues.00055.wav, blu/blues.00069.wav, blu/blues.00053.wav,
+    blu/blues.00038.wav, blu/blues.00027.wav, blu/blues.00057.wav, blu/blues.00086.wav,
+    blu/blues.00066.wav, blu/blues.00085.wav, blu/blues.00059.wav, blu/blues.00095.wav,
+    blu/blues.00018.wav, blu/blues.00009.wav, blu/blues.00026.wav, blu/blues.00068.wav,
+    blu/blues.00093.wav, blu/blues.00089.wav, blu/blues.00094.wav, blu/blues.00046.wav,
+    blu/blues.00054.wav, blu/blues.00013.wav, blu/blues.00058.wav, blu/blues.00048.wav,
+    blu/blues.00052.wav, blu/blues.00042.wav, blu/blues.00022.wav, blu/blues.00007.wav,
+    blu/blues.00091.wav, blu/blues.00065.wav, blu/blues.00090.wav, blu/blues.00035.wav,
+    blu/blues.00060.wav, blu/blues.00029.wav, blu/blues.00062.wav, blu/blues.00021.wav,
+    blu/blues.00004.wav, blu/blues.00023.wav, blu/blues.00016.wav, blu/blues.00028.wav,
+    blu/blues.00098.wav, blu/blues.00011.wav, blu/blues.00030.wav, blu/blues.00067.wav,
+    blu/blues.00070.wav, blu/blues.00092.wav, blu/blues.00034.wav, blu/blues.00041.wav,
+    blu/blues.00024.wav, blu/blues.00031.wav, blu/blues.00044.wav, blu/blues.00033.wav,
+    blu/blues.00005.wav, blu/blues.00032.wav, blu/blues.00047.wav, blu/blues.00076.wav,
+    blu/blues.00015.wav, blu/blues.00012.wav, blu/blues.00064.wav]
+  cou: [blu/blues.00000.wav, blu/blues.00008.wav, blu/blues.00056.wav, blu/blues.00002.wav,
+    blu/blues.00006.wav, blu/blues.00082.wav, blu/blues.00080.wav, blu/blues.00051.wav,
+    blu/blues.00096.wav]
+  dis: [blu/blues.00075.wav]
+  jaz: [blu/blues.00010.wav]
+  met: [blu/blues.00079.wav, blu/blues.00061.wav]
+  roc: [blu/blues.00043.wav, blu/blues.00081.wav, blu/blues.00077.wav, blu/blues.00072.wav]
+cla:
+  blu: [cla/classical.00035.wav]
+  cla: [cla/classical.00082.wav, cla/classical.00080.wav, cla/classical.00092.wav,
+    cla/classical.00086.wav, cla/classical.00006.wav, cla/classical.00056.wav, cla/classical.00087.wav,
+    cla/classical.00045.wav, cla/classical.00055.wav, cla/classical.00040.wav, cla/classical.00017.wav,
+    cla/classical.00049.wav, cla/classical.00077.wav, cla/classical.00090.wav, cla/classical.00002.wav,
+    cla/classical.00005.wav, cla/classical.00047.wav, cla/classical.00041.wav, cla/classical.00019.wav,
+    cla/classical.00008.wav, cla/classical.00053.wav, cla/classical.00003.wav, cla/classical.00000.wav,
+    cla/classical.00011.wav, cla/classical.00014.wav, cla/classical.00037.wav, cla/classical.00061.wav,
+    cla/classical.00007.wav, cla/classical.00010.wav, cla/classical.00093.wav, cla/classical.00059.wav,
+    cla/classical.00001.wav, cla/classical.00036.wav, cla/classical.00096.wav, cla/classical.00030.wav,
+    cla/classical.00057.wav, cla/classical.00097.wav, cla/classical.00038.wav, cla/classical.00013.wav,
+    cla/classical.00094.wav, cla/classical.00088.wav, cla/classical.00070.wav, cla/classical.00067.wav,
+    cla/classical.00050.wav, cla/classical.00012.wav, cla/classical.00032.wav, cla/classical.00018.wav,
+    cla/classical.00068.wav, cla/classical.00072.wav, cla/classical.00027.wav, cla/classical.00063.wav,
+    cla/classical.00028.wav, cla/classical.00042.wav, cla/classical.00058.wav, cla/classical.00071.wav,
+    cla/classical.00064.wav, cla/classical.00043.wav, cla/classical.00075.wav, cla/classical.00098.wav,
+    cla/classical.00015.wav, cla/classical.00078.wav, cla/classical.00089.wav, cla/classical.00033.wav,
+    cla/classical.00046.wav, cla/classical.00074.wav, cla/classical.00039.wav, cla/classical.00079.wav,
+    cla/classical.00069.wav, cla/classical.00009.wav, cla/classical.00004.wav, cla/classical.00044.wav,
+    cla/classical.00062.wav, cla/classical.00076.wav, cla/classical.00099.wav, cla/classical.00085.wav,
+    cla/classical.00095.wav, cla/classical.00060.wav, cla/classical.00031.wav, cla/classical.00034.wav,
+    cla/classical.00073.wav, cla/classical.00065.wav, cla/classical.00029.wav, cla/classical.00084.wav,
+    cla/classical.00081.wav, cla/classical.00091.wav, cla/classical.00016.wav, cla/classical.00066.wav,
+    cla/classical.00083.wav]
+  cou: [cla/classical.00048.wav]
+  jaz: [cla/classical.00051.wav]
+  reg: [cla/classical.00054.wav]
+  roc: [cla/classical.00052.wav]
+cou:
+  blu: [cou/country.00074.wav, cou/country.00075.wav, cou/country.00070.wav]
+  cou: [cou/country.00059.wav, cou/country.00031.wav, cou/country.00071.wav, cou/country.00096.wav,
+    cou/country.00016.wav, cou/country.00027.wav, cou/country.00007.wav, cou/country.00090.wav,
+    cou/country.00044.wav, cou/country.00032.wav, cou/country.00041.wav, cou/country.00069.wav,
+    cou/country.00047.wav, cou/country.00000.wav, cou/country.00093.wav, cou/country.00088.wav,
+    cou/country.00072.wav, cou/country.00051.wav, cou/country.00098.wav, cou/country.00068.wav,
+    cou/country.00033.wav, cou/country.00060.wav, cou/country.00077.wav, cou/country.00066.wav,
+    cou/country.00003.wav, cou/country.00028.wav, cou/country.00082.wav, cou/country.00089.wav,
+    cou/country.00019.wav, cou/country.00004.wav, cou/country.00079.wav, cou/country.00065.wav,
+    cou/country.00002.wav, cou/country.00048.wav, cou/country.00013.wav, cou/country.00055.wav,
+    cou/country.00095.wav, cou/country.00085.wav, cou/country.00035.wav, cou/country.00091.wav,
+    cou/country.00022.wav, cou/country.00012.wav, cou/country.00001.wav, cou/country.00058.wav,
+    cou/country.00024.wav, cou/country.00057.wav, cou/country.00083.wav, cou/country.00076.wav,
+    cou/country.00018.wav, cou/country.00081.wav, cou/country.00056.wav, cou/country.00054.wav,
+    cou/country.00073.wav, cou/country.00025.wav, cou/country.00078.wav, cou/country.00009.wav,
+    cou/country.00008.wav, cou/country.00029.wav, cou/country.00026.wav, cou/country.00084.wav,
+    cou/country.00086.wav, cou/country.00061.wav, cou/country.00023.wav, cou/country.00049.wav,
+    cou/country.00052.wav, cou/country.00037.wav, cou/country.00021.wav, cou/country.00094.wav,
+    cou/country.00046.wav, cou/country.00097.wav, cou/country.00087.wav, cou/country.00010.wav,
+    cou/country.00064.wav]
+  dis: [cou/country.00014.wav, cou/country.00039.wav, cou/country.00006.wav, cou/country.00038.wav]
+  jaz: [cou/country.00067.wav, cou/country.00030.wav]
+  pop: [cou/country.00045.wav]
+  reg: [cou/country.00020.wav, cou/country.00034.wav, cou/country.00063.wav, cou/country.00036.wav,
+    cou/country.00011.wav]
+  roc: [cou/country.00099.wav, cou/country.00080.wav, cou/country.00005.wav, cou/country.00053.wav,
+    cou/country.00062.wav, cou/country.00043.wav, cou/country.00015.wav, cou/country.00092.wav,
+    cou/country.00042.wav, cou/country.00040.wav, cou/country.00050.wav, cou/country.00017.wav]
+dis:
+  cou: [dis/disco.00016.wav, dis/disco.00041.wav, dis/disco.00039.wav]
+  dis: [dis/disco.00074.wav, dis/disco.00082.wav, dis/disco.00012.wav, dis/disco.00043.wav,
+    dis/disco.00066.wav, dis/disco.00064.wav, dis/disco.00058.wav, dis/disco.00096.wav,
+    dis/disco.00001.wav, dis/disco.00062.wav, dis/disco.00068.wav, dis/disco.00069.wav,
+    dis/disco.00089.wav, dis/disco.00034.wav, dis/disco.00005.wav, dis/disco.00093.wav,
+    dis/disco.00046.wav, dis/disco.00009.wav, dis/disco.00048.wav, dis/disco.00037.wav,
+    dis/disco.00087.wav, dis/disco.00010.wav, dis/disco.00004.wav, dis/disco.00045.wav,
+    dis/disco.00088.wav, dis/disco.00008.wav, dis/disco.00019.wav, dis/disco.00052.wav,
+    dis/disco.00098.wav, dis/disco.00073.wav, dis/disco.00097.wav, dis/disco.00078.wav,
+    dis/disco.00072.wav, dis/disco.00055.wav, dis/disco.00032.wav, dis/disco.00083.wav,
+    dis/disco.00040.wav, dis/disco.00044.wav, dis/disco.00086.wav, dis/disco.00051.wav,
+    dis/disco.00053.wav, dis/disco.00071.wav, dis/disco.00070.wav, dis/disco.00099.wav,
+    dis/disco.00077.wav, dis/disco.00050.wav, dis/disco.00007.wav, dis/disco.00028.wav,
+    dis/disco.00076.wav, dis/disco.00075.wav, dis/disco.00060.wav, dis/disco.00017.wav,
+    dis/disco.00038.wav, dis/disco.00024.wav, dis/disco.00014.wav, dis/disco.00090.wav,
+    dis/disco.00095.wav, dis/disco.00092.wav, dis/disco.00081.wav, dis/disco.00094.wav,
+    dis/disco.00022.wav, dis/disco.00079.wav, dis/disco.00061.wav, dis/disco.00035.wav,
+    dis/disco.00029.wav, dis/disco.00091.wav, dis/disco.00030.wav, dis/disco.00002.wav]
+  hip: [dis/disco.00084.wav, dis/disco.00080.wav, dis/disco.00085.wav, dis/disco.00027.wav,
+    dis/disco.00003.wav, dis/disco.00063.wav, dis/disco.00054.wav]
+  jaz: [dis/disco.00047.wav]
+  met: [dis/disco.00006.wav]
+  pop: [dis/disco.00026.wav, dis/disco.00023.wav, dis/disco.00021.wav, dis/disco.00025.wav,
+    dis/disco.00011.wav, dis/disco.00018.wav]
+  reg: [dis/disco.00065.wav, dis/disco.00059.wav, dis/disco.00000.wav]
+  roc: [dis/disco.00013.wav, dis/disco.00036.wav, dis/disco.00031.wav, dis/disco.00033.wav,
+    dis/disco.00049.wav, dis/disco.00015.wav, dis/disco.00056.wav, dis/disco.00067.wav,
+    dis/disco.00020.wav, dis/disco.00057.wav, dis/disco.00042.wav]
+hip:
+  dis: [hip/hiphop.00030.wav, hip/hiphop.00021.wav, hip/hiphop.00000.wav, hip/hiphop.00038.wav]
+  hip: [hip/hiphop.00055.wav, hip/hiphop.00058.wav, hip/hiphop.00017.wav, hip/hiphop.00064.wav,
+    hip/hiphop.00052.wav, hip/hiphop.00073.wav, hip/hiphop.00060.wav, hip/hiphop.00093.wav,
+    hip/hiphop.00049.wav, hip/hiphop.00018.wav, hip/hiphop.00067.wav, hip/hiphop.00062.wav,
+    hip/hiphop.00016.wav, hip/hiphop.00074.wav, hip/hiphop.00077.wav, hip/hiphop.00092.wav,
+    hip/hiphop.00036.wav, hip/hiphop.00039.wav, hip/hiphop.00081.wav, hip/hiphop.00063.wav,
+    hip/hiphop.00050.wav, hip/hiphop.00046.wav, hip/hiphop.00024.wav, hip/hiphop.00041.wav,
+    hip/hiphop.00076.wav, hip/hiphop.00032.wav, hip/hiphop.00068.wav, hip/hiphop.00086.wav,
+    hip/hiphop.00025.wav, hip/hiphop.00037.wav, hip/hiphop.00007.wav, hip/hiphop.00048.wav,
+    hip/hiphop.00096.wav, hip/hiphop.00008.wav, hip/hiphop.00087.wav, hip/hiphop.00012.wav,
+    hip/hiphop.00085.wav, hip/hiphop.00072.wav, hip/hiphop.00035.wav, hip/hiphop.00011.wav,
+    hip/hiphop.00070.wav, hip/hiphop.00057.wav, hip/hiphop.00053.wav, hip/hiphop.00009.wav,
+    hip/hiphop.00091.wav, hip/hiphop.00078.wav, hip/hiphop.00097.wav, hip/hiphop.00065.wav,
+    hip/hiphop.00015.wav, hip/hiphop.00099.wav, hip/hiphop.00010.wav, hip/hiphop.00066.wav,
+    hip/hiphop.00056.wav, hip/hiphop.00031.wav, hip/hiphop.00059.wav, hip/hiphop.00026.wav,
+    hip/hiphop.00005.wav, hip/hiphop.00047.wav, hip/hiphop.00084.wav, hip/hiphop.00090.wav,
+    hip/hiphop.00022.wav, hip/hiphop.00098.wav, hip/hiphop.00079.wav, hip/hiphop.00001.wav,
+    hip/hiphop.00033.wav, hip/hiphop.00083.wav, hip/hiphop.00094.wav, hip/hiphop.00071.wav,
+    hip/hiphop.00075.wav, hip/hiphop.00027.wav, hip/hiphop.00080.wav, hip/hiphop.00006.wav,
+    hip/hiphop.00003.wav, hip/hiphop.00034.wav, hip/hiphop.00019.wav, hip/hiphop.00089.wav,
+    hip/hiphop.00088.wav, hip/hiphop.00020.wav, hip/hiphop.00045.wav, hip/hiphop.00082.wav,
+    hip/hiphop.00069.wav, hip/hiphop.00054.wav]
+  met: [hip/hiphop.00014.wav, hip/hiphop.00095.wav]
+  pop: [hip/hiphop.00029.wav]
+  reg: [hip/hiphop.00004.wav, hip/hiphop.00002.wav, hip/hiphop.00013.wav, hip/hiphop.00044.wav,
+    hip/hiphop.00040.wav, hip/hiphop.00051.wav, hip/hiphop.00028.wav, hip/hiphop.00043.wav,
+    hip/hiphop.00061.wav, hip/hiphop.00042.wav]
+  roc: [hip/hiphop.00023.wav]
+jaz:
+  blu: [jaz/jazz.00041.wav, jaz/jazz.00049.wav, jaz/jazz.00008.wav]
+  cla: [jaz/jazz.00000.wav, jaz/jazz.00057.wav, jaz/jazz.00003.wav, jaz/jazz.00002.wav]
+  cou: [jaz/jazz.00079.wav]
+  dis: [jaz/jazz.00082.wav]
+  hip: [jaz/jazz.00021.wav]
+  jaz: [jaz/jazz.00015.wav, jaz/jazz.00080.wav, jaz/jazz.00031.wav, jaz/jazz.00026.wav,
+    jaz/jazz.00090.wav, jaz/jazz.00012.wav, jaz/jazz.00067.wav, jaz/jazz.00019.wav,
+    jaz/jazz.00073.wav, jaz/jazz.00062.wav, jaz/jazz.00089.wav, jaz/jazz.00045.wav,
+    jaz/jazz.00022.wav, jaz/jazz.00071.wav, jaz/jazz.00060.wav, jaz/jazz.00010.wav,
+    jaz/jazz.00051.wav, jaz/jazz.00005.wav, jaz/jazz.00017.wav, jaz/jazz.00096.wav,
+    jaz/jazz.00077.wav, jaz/jazz.00016.wav, jaz/jazz.00069.wav, jaz/jazz.00086.wav,
+    jaz/jazz.00053.wav, jaz/jazz.00095.wav, jaz/jazz.00027.wav, jaz/jazz.00055.wav,
+    jaz/jazz.00035.wav, jaz/jazz.00009.wav, jaz/jazz.00001.wav, jaz/jazz.00006.wav,
+    jaz/jazz.00092.wav, jaz/jazz.00054.wav, jaz/jazz.00066.wav, jaz/jazz.00065.wav,
+    jaz/jazz.00024.wav, jaz/jazz.00074.wav, jaz/jazz.00037.wav, jaz/jazz.00036.wav,
+    jaz/jazz.00088.wav, jaz/jazz.00091.wav, jaz/jazz.00013.wav, jaz/jazz.00052.wav,
+    jaz/jazz.00094.wav, jaz/jazz.00099.wav, jaz/jazz.00050.wav, jaz/jazz.00070.wav,
+    jaz/jazz.00020.wav, jaz/jazz.00072.wav, jaz/jazz.00040.wav, jaz/jazz.00083.wav,
+    jaz/jazz.00025.wav, jaz/jazz.00085.wav, jaz/jazz.00039.wav, jaz/jazz.00029.wav,
+    jaz/jazz.00018.wav, jaz/jazz.00063.wav, jaz/jazz.00097.wav, jaz/jazz.00011.wav,
+    jaz/jazz.00007.wav, jaz/jazz.00093.wav, jaz/jazz.00048.wav, jaz/jazz.00076.wav,
+    jaz/jazz.00038.wav, jaz/jazz.00042.wav, jaz/jazz.00046.wav, jaz/jazz.00032.wav,
+    jaz/jazz.00084.wav, jaz/jazz.00075.wav, jaz/jazz.00047.wav, jaz/jazz.00059.wav,
+    jaz/jazz.00028.wav, jaz/jazz.00043.wav, jaz/jazz.00033.wav, jaz/jazz.00058.wav,
+    jaz/jazz.00056.wav, jaz/jazz.00023.wav, jaz/jazz.00087.wav, jaz/jazz.00078.wav,
+    jaz/jazz.00014.wav, jaz/jazz.00064.wav, jaz/jazz.00030.wav, jaz/jazz.00061.wav,
+    jaz/jazz.00068.wav, jaz/jazz.00098.wav, jaz/jazz.00044.wav, jaz/jazz.00034.wav,
+    jaz/jazz.00004.wav]
+  pop: [jaz/jazz.00081.wav]
+met:
+  blu: [met/metal.00091.wav, met/metal.00090.wav, met/metal.00089.wav]
+  cou: [met/metal.00022.wav]
+  dis: [met/metal.00045.wav, met/metal.00008.wav, met/metal.00066.wav]
+  hip: [met/metal.00088.wav, met/metal.00070.wav]
+  met: [met/metal.00025.wav, met/metal.00013.wav, met/metal.00002.wav, met/metal.00086.wav,
+    met/metal.00054.wav, met/metal.00072.wav, met/metal.00060.wav, met/metal.00080.wav,
+    met/metal.00053.wav, met/metal.00028.wav, met/metal.00046.wav, met/metal.00015.wav,
+    met/metal.00039.wav, met/metal.00011.wav, met/metal.00005.wav, met/metal.00004.wav,
+    met/metal.00082.wav, met/metal.00056.wav, met/metal.00059.wav, met/metal.00044.wav,
+    met/metal.00033.wav, met/metal.00006.wav, met/metal.00001.wav, met/metal.00075.wav,
+    met/metal.00000.wav, met/metal.00007.wav, met/metal.00050.wav, met/metal.00027.wav,
+    met/metal.00085.wav, met/metal.00076.wav, met/metal.00095.wav, met/metal.00081.wav,
+    met/metal.00043.wav, met/metal.00041.wav, met/metal.00055.wav, met/metal.00057.wav,
+    met/metal.00032.wav, met/metal.00074.wav, met/metal.00016.wav, met/metal.00012.wav,
+    met/metal.00097.wav, met/metal.00014.wav, met/metal.00021.wav, met/metal.00069.wav,
+    met/metal.00065.wav, met/metal.00051.wav, met/metal.00031.wav, met/metal.00042.wav,
+    met/metal.00018.wav, met/metal.00063.wav, met/metal.00024.wav, met/metal.00067.wav,
+    met/metal.00019.wav, met/metal.00098.wav, met/metal.00047.wav, met/metal.00029.wav,
+    met/metal.00037.wav, met/metal.00078.wav, met/metal.00026.wav, met/metal.00049.wav,
+    met/metal.00093.wav, met/metal.00048.wav, met/metal.00073.wav, met/metal.00036.wav,
+    met/metal.00064.wav, met/metal.00083.wav, met/metal.00017.wav, met/metal.00061.wav,
+    met/metal.00040.wav, met/metal.00079.wav, met/metal.00099.wav, met/metal.00087.wav,
+    met/metal.00035.wav, met/metal.00023.wav, met/metal.00077.wav, met/metal.00020.wav,
+    met/metal.00071.wav, met/metal.00038.wav, met/metal.00096.wav, met/metal.00068.wav,
+    met/metal.00030.wav, met/metal.00052.wav, met/metal.00010.wav, met/metal.00084.wav,
+    met/metal.00003.wav, met/metal.00062.wav, met/metal.00009.wav]
+  roc: [met/metal.00092.wav, met/metal.00034.wav, met/metal.00094.wav, met/metal.00058.wav]
+pop:
+  cla: [pop/pop.00011.wav]
+  cou: [pop/pop.00081.wav, pop/pop.00010.wav, pop/pop.00007.wav, pop/pop.00041.wav,
+    pop/pop.00004.wav]
+  dis: [pop/pop.00014.wav, pop/pop.00021.wav, pop/pop.00082.wav, pop/pop.00072.wav,
+    pop/pop.00086.wav, pop/pop.00012.wav, pop/pop.00033.wav, pop/pop.00038.wav]
+  hip: [pop/pop.00064.wav, pop/pop.00079.wav, pop/pop.00050.wav, pop/pop.00070.wav]
+  jaz: [pop/pop.00063.wav]
+  met: [pop/pop.00069.wav]
+  pop: [pop/pop.00043.wav, pop/pop.00091.wav, pop/pop.00058.wav, pop/pop.00009.wav,
+    pop/pop.00057.wav, pop/pop.00039.wav, pop/pop.00095.wav, pop/pop.00052.wav, pop/pop.00096.wav,
+    pop/pop.00013.wav, pop/pop.00027.wav, pop/pop.00028.wav, pop/pop.00022.wav, pop/pop.00087.wav,
+    pop/pop.00042.wav, pop/pop.00000.wav, pop/pop.00015.wav, pop/pop.00026.wav, pop/pop.00076.wav,
+    pop/pop.00088.wav, pop/pop.00017.wav, pop/pop.00040.wav, pop/pop.00098.wav, pop/pop.00097.wav,
+    pop/pop.00071.wav, pop/pop.00085.wav, pop/pop.00049.wav, pop/pop.00080.wav, pop/pop.00089.wav,
+    pop/pop.00032.wav, pop/pop.00034.wav, pop/pop.00078.wav, pop/pop.00061.wav, pop/pop.00044.wav,
+    pop/pop.00092.wav, pop/pop.00045.wav, pop/pop.00090.wav, pop/pop.00005.wav, pop/pop.00018.wav,
+    pop/pop.00023.wav, pop/pop.00020.wav, pop/pop.00074.wav, pop/pop.00008.wav, pop/pop.00059.wav,
+    pop/pop.00051.wav, pop/pop.00083.wav, pop/pop.00025.wav, pop/pop.00054.wav, pop/pop.00002.wav,
+    pop/pop.00036.wav, pop/pop.00053.wav, pop/pop.00048.wav, pop/pop.00084.wav, pop/pop.00037.wav,
+    pop/pop.00019.wav, pop/pop.00016.wav, pop/pop.00029.wav, pop/pop.00031.wav, pop/pop.00077.wav,
+    pop/pop.00073.wav, pop/pop.00046.wav, pop/pop.00024.wav, pop/pop.00062.wav, pop/pop.00055.wav,
+    pop/pop.00099.wav, pop/pop.00075.wav, pop/pop.00093.wav, pop/pop.00060.wav, pop/pop.00065.wav,
+    pop/pop.00094.wav, pop/pop.00003.wav, pop/pop.00047.wav, pop/pop.00056.wav, pop/pop.00067.wav,
+    pop/pop.00068.wav, pop/pop.00030.wav, pop/pop.00001.wav, pop/pop.00035.wav, pop/pop.00066.wav]
+  roc: [pop/pop.00006.wav]
+reg:
+  blu: [reg/reggae.00029.wav, reg/reggae.00040.wav, reg/reggae.00001.wav, reg/reggae.00010.wav]
+  cla: [reg/reggae.99986.wav]
+  cou: [reg/reggae.00046.wav, reg/reggae.00094.wav, reg/reggae.00067.wav, reg/reggae.00083.wav,
+    reg/reggae.00043.wav, reg/reggae.00000.wav, reg/reggae.00097.wav]
+  dis: [reg/reggae.00021.wav, reg/reggae.00042.wav, reg/reggae.00086.wav, reg/reggae.00012.wav]
+  hip: [reg/reggae.00052.wav, reg/reggae.00023.wav, reg/reggae.00022.wav, reg/reggae.00028.wav,
+    reg/reggae.00090.wav]
+  pop: [reg/reggae.00072.wav, reg/reggae.00093.wav, reg/reggae.00055.wav, reg/reggae.00061.wav,
+    reg/reggae.00095.wav, reg/reggae.00087.wav, reg/reggae.00088.wav, reg/reggae.00059.wav,
+    reg/reggae.00044.wav]
+  reg: [reg/reggae.00049.wav, reg/reggae.00048.wav, reg/reggae.00051.wav, reg/reggae.00058.wav,
+    reg/reggae.00098.wav, reg/reggae.00057.wav, reg/reggae.00032.wav, reg/reggae.00091.wav,
+    reg/reggae.00078.wav, reg/reggae.00036.wav, reg/reggae.00045.wav, reg/reggae.00004.wav,
+    reg/reggae.00039.wav, reg/reggae.00002.wav, reg/reggae.00025.wav, reg/reggae.00065.wav,
+    reg/reggae.00015.wav, reg/reggae.00092.wav, reg/reggae.00026.wav, reg/reggae.00041.wav,
+    reg/reggae.00077.wav, reg/reggae.00030.wav, reg/reggae.00084.wav, reg/reggae.00075.wav,
+    reg/reggae.00014.wav, reg/reggae.00033.wav, reg/reggae.00070.wav, reg/reggae.00017.wav,
+    reg/reggae.00003.wav, reg/reggae.00018.wav, reg/reggae.00063.wav, reg/reggae.00006.wav,
+    reg/reggae.00064.wav, reg/reggae.00053.wav, reg/reggae.00007.wav, reg/reggae.00047.wav,
+    reg/reggae.00073.wav, reg/reggae.00034.wav, reg/reggae.00054.wav, reg/reggae.00071.wav,
+    reg/reggae.00076.wav, reg/reggae.00068.wav, reg/reggae.00011.wav, reg/reggae.00035.wav,
+    reg/reggae.00037.wav, reg/reggae.00062.wav, reg/reggae.00089.wav, reg/reggae.00027.wav,
+    reg/reggae.00082.wav, reg/reggae.00024.wav, reg/reggae.00081.wav, reg/reggae.00013.wav,
+    reg/reggae.00074.wav, reg/reggae.00066.wav, reg/reggae.00085.wav, reg/reggae.00038.wav,
+    reg/reggae.00050.wav, reg/reggae.00031.wav, reg/reggae.00060.wav, reg/reggae.00005.wav,
+    reg/reggae.00008.wav, reg/reggae.00079.wav, reg/reggae.00096.wav, reg/reggae.00019.wav,
+    reg/reggae.00080.wav, reg/reggae.00020.wav, reg/reggae.00069.wav, reg/reggae.00009.wav,
+    reg/reggae.00056.wav]
+  roc: [reg/reggae.00016.wav]
+roc:
+  blu: [roc/rock.00013.wav, roc/rock.00006.wav, roc/rock.00066.wav, roc/rock.00024.wav,
+    roc/rock.00011.wav, roc/rock.00090.wav]
+  cou: [roc/rock.00007.wav, roc/rock.00048.wav, roc/rock.00063.wav, roc/rock.00032.wav,
+    roc/rock.00033.wav, roc/rock.00076.wav, roc/rock.00061.wav, roc/rock.00023.wav,
+    roc/rock.00099.wav, roc/rock.00044.wav]
+  dis: [roc/rock.00057.wav, roc/rock.00071.wav, roc/rock.00088.wav, roc/rock.00043.wav,
+    roc/rock.00037.wav, roc/rock.00086.wav, roc/rock.00054.wav, roc/rock.00077.wav,
+    roc/rock.00031.wav, roc/rock.00075.wav, roc/rock.00038.wav, roc/rock.00027.wav,
+    roc/rock.00047.wav, roc/rock.00040.wav]
+  met: [roc/rock.00091.wav, roc/rock.00092.wav, roc/rock.00025.wav, roc/rock.00018.wav,
+    roc/rock.00056.wav, roc/rock.00016.wav, roc/rock.00019.wav, roc/rock.00097.wav]
+  pop: [roc/rock.00051.wav, roc/rock.00050.wav, roc/rock.00058.wav, roc/rock.00062.wav]
+  reg: [roc/rock.00012.wav, roc/rock.00014.wav, roc/rock.00052.wav, roc/rock.00015.wav]
+  roc: [roc/rock.00082.wav, roc/rock.00020.wav, roc/rock.00084.wav, roc/rock.00089.wav,
+    roc/rock.00030.wav, roc/rock.00046.wav, roc/rock.00005.wav, roc/rock.00064.wav,
+    roc/rock.00010.wav, roc/rock.00004.wav, roc/rock.00095.wav, roc/rock.00049.wav,
+    roc/rock.00021.wav, roc/rock.00034.wav, roc/rock.00009.wav, roc/rock.00036.wav,
+    roc/rock.00026.wav, roc/rock.00078.wav, roc/rock.00067.wav, roc/rock.00001.wav,
+    roc/rock.00029.wav, roc/rock.00087.wav, roc/rock.00002.wav, roc/rock.00041.wav,
+    roc/rock.00045.wav, roc/rock.00098.wav, roc/rock.00068.wav, roc/rock.00094.wav,
+    roc/rock.00096.wav, roc/rock.00042.wav, roc/rock.00059.wav, roc/rock.00028.wav,
+    roc/rock.00080.wav, roc/rock.00017.wav, roc/rock.00069.wav, roc/rock.00073.wav,
+    roc/rock.00053.wav, roc/rock.00008.wav, roc/rock.00085.wav, roc/rock.00065.wav,
+    roc/rock.00003.wav, roc/rock.00083.wav, roc/rock.00039.wav, roc/rock.00022.wav,
+    roc/rock.00035.wav, roc/rock.00072.wav, roc/rock.00074.wav, roc/rock.00079.wav,
+    roc/rock.00081.wav, roc/rock.00000.wav, roc/rock.00060.wav, roc/rock.00055.wav,
+    roc/rock.00070.wav, roc/rock.00093.wav]
