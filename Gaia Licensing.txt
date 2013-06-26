@@ -26,6 +26,9 @@ Mersenne Twister © Takuji Nishimura and Makoto Matsumoto, Hiroshima University 
 
 Getopt © Copyright (c) 2003, 2004, froglogic Porten & Stadlbauer GbR
 
+doxy2swig.py (c) Prabhu Ramachandran, Under the BSD license.
+
+
 Dependent libraries not in the code distribution 
 QT; Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies), under the GNU LGLP2.1 license. Project page at http://qt-project.org/  License at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html 
 
