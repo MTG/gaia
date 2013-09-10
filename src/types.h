@@ -81,7 +81,7 @@ class Array : public GVarLengthArray<T, 1> {
   //friend QDataStream& operator>> <>(QDataStream& in, Array<T>& array);
 
   const T& at(int i) const { return (*this)[i]; }
-  Array& operator<<(const T& x) { append(x); return *this; }
+  Array& operator<<(const T& x) { this->append(x); return *this; }
   T& front() { return (*this)[0]; }
   const T& front() const { return at(0); }
   Array& fill(const T& val, int size) {

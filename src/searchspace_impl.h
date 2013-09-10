@@ -219,7 +219,7 @@ void BaseSearchSpace<SearchPointType, DataSetType>::filterAndSort(int n) {
 template <typename SearchPointType, typename DataSetType>
 void BaseSearchSpace<SearchPointType, DataSetType>::addPoints(const DataSetType* dataset, const QList<QString>& ids) {
   foreach (const QString& id, ids) {
-    push_back(SearchPointType(dataset->point(id),
+    this->push_back(SearchPointType(dataset->point(id),
                               dataset->referenceDataSet()->point(id)));
   }
 }
@@ -241,7 +241,7 @@ void BaseSearchSpace<SearchPointType, DataSetType>::removePoints(const QList<QSt
 
   // TODO: this is not the most efficient way to do it...
   for (int i=(int)positionsToRemove.size()-1; i>=0; i--) {
-    erase(this->begin() + positionsToRemove[i]);
+    this->erase(this->begin() + positionsToRemove[i]);
   }
 
   // update values for _sortedUpto and _filteredUpTo, as they might now be bigger
