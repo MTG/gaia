@@ -29,6 +29,16 @@
 
 namespace gaia2 {
 
+inline QTextStream& operator<<(QTextStream& out, const QPair<int, int>& p) {
+  return out << '<' << p.first << ", " << p.second << '>';
+}
+
+
+inline QTextStream& operator<<(QTextStream& out, const QStringList& slist) {
+  if (slist.empty()) return out << "[]";
+  return out << "[ " << slist.join(", ") << " ]";
+}
+
 /**
  * Exception class that can take up to 3 arguments of any type, which will
  * be serialized into a QString for the error message.
@@ -77,17 +87,6 @@ class GaiaException : public gaia2std::GException {
   const QString& msg() const throw () { return _msg; }
   QString& msg() throw () { return _msg; }
 };
-
-
-inline QTextStream& operator<<(QTextStream& out, const QPair<int, int>& p) {
-  return out << '<' << p.first << ", " << p.second << '>';
-}
-
-
-inline QTextStream& operator<<(QTextStream& out, const QStringList& slist) {
-  if (slist.empty()) return out << "[]";
-  return out << "[ " << slist.join(", ") << " ]";
-}
 
 
 /**
