@@ -18,7 +18,8 @@ win32:INCLUDEPATH = $$quote(C:/Documents and Settings/Build Bot/build-space/gaia
 macx:INCLUDEPATH = ../../../src \
                    ../../../src/3rdparty \
                    ../../../src/metrics \
-                   /opt/local/include
+                   /opt/local/include \
+                   /usr/local/include
 
 SOURCES += ../../../src/yamlcpp.cpp \
            ../../../src/utils.cpp \
