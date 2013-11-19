@@ -68,3 +68,6 @@ packaging/win32/install_gaia2.exe
 
 packaging/darwin/*/*.o
 packaging/darwin/*/*.dylib
+
+# file generated from make_release_tarball.sh in packaging/darwin
+packaging/darwin/tmp
