@@ -1,6 +1,6 @@
 #!/bin/sh
 
-INSTDIR=/tmp/gaia23
+INSTDIR=tmp/gaia2
 
 rm -fr $INSTDIR
 
@@ -9,7 +9,7 @@ mkdir -p $INSTDIR/python
 
 cp -r ../../src/bindings/pygaia/ $INSTDIR/python/gaia2
 cp Gaia2Python/libGaia2Python.1.0.0.dylib $INSTDIR/python/gaia2/_gaia2.so
-cp Gaia2Python/gaia2.py $INSTDIR/python/gaia2/__init__.py
+cp ../../src/bindings/gaia2.py $INSTDIR/python/gaia2/__init__.py
 
 # copy gaia tools
 mkdir -p $INSTDIR/tools
