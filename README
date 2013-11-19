@@ -30,9 +30,42 @@ Linux:
    $ ./waf install [--destdir=/where/ever/]
 
 
-Windows / MacOS X:
+MacOS X:
 
-- for Windows and Mac users there are QtCreator projects inside the packaging/ directory.
+(Gaia2lib)
+
+- install qt libraries 4.8 (including debug libraries) and QtCreator from http://qt-project.org/downloads
+
+- install libYAML and swig dependencies using homebrew (we assume you already have a python 
+  installation, otherwise you can also install it using homebrew):
+	$ brew install swig
+	$ brew install libyaml
+
+- use QtCreator to open the project file 'Gaia2lib.pro' in packaging/darwin/Gaia2lib/
+
+- compile the project (you will probably need to configure QtCreator to work with your Qt 
+  installation and also to set up the build folder for the project)
+
+(Gaia2Python - python bindings)
+
+- use swig to generate the file 'gaia_wrap.cxx' that will be needed to compile 'Gaia2Python':
+	$ swig -c++ -python -w451 /path_to_gaia_source/src/bindings/gaia.swig 
+
+- copy the generated 'gaia_wrap.cxx' to the Gaia2Python project folder:
+	$ cp /path_to_gaia_source/src/bindings/gaia_wrap.cxx /path_to_gaia_source/packaging/darwin/Gaia2Python/
+
+- use QtCreator to open the project file 'Gaia2Python.pro' in packaging/darwin/Gaia2Python/ and compile
+
+- run ./make_release_tarball in packaging/darwin:
+	$ ./make_release_tarball
+	
+- copy the folder packaging/darwin/tmp/gaia2/python/gaia2 (created when running make_release_tarball.sh) 
+  to the site-packages directory of your python distribution. you can now import gaia2 from python
+
+
+Windows:
+
+- use the QtCreator projects inside the packaging/win32 directory.
 
 
 
