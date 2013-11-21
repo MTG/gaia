@@ -179,58 +179,54 @@ static const YYMINORTYPE yyzerominor = { 0 };
 **                     shifting non-terminals after a reduce.
 **  yy_default[]       Default action for each state.
 */
-#define YY_ACTTAB_COUNT (90)
 static const YYACTIONTYPE yy_action[] = {
- /*     0 */    21,   20,   18,   16,   19,   17,   30,   22,   33,   23,
- /*    10 */    57,   15,   29,   34,   39,    1,    2,    4,   42,    3,
- /*    20 */    63,   62,   61,   54,   53,   12,   11,   67,   66,   10,
- /*    30 */     2,    4,   58,   37,   63,   62,   61,   57,   38,   28,
- /*    40 */     2,    4,   65,   41,   22,    7,   23,   25,   22,   14,
- /*    50 */    23,   31,   22,   36,   23,   24,   22,   10,   23,   13,
- /*    60 */    56,   13,   45,    4,   43,   54,   53,   44,   44,    6,
- /*    70 */     9,   32,   27,   26,   40,    8,   97,   55,   52,   51,
- /*    80 */    50,   49,   48,   35,   47,   46,   64,   60,   59,    5,
+ /*     0 */    18,   19,   14,   20,   15,   13,   25,   22,   38,   23,
+ /*    10 */    42,   17,   30,   37,   32,    1,    5,    4,   59,    3,
+ /*    20 */    54,   53,   50,   62,   63,   11,   12,   21,   61,   24,
+ /*    30 */    22,    9,   23,   34,   54,   53,   50,   46,   33,   29,
+ /*    40 */    22,    8,   23,   10,   60,   22,   41,   23,   40,   22,
+ /*    50 */    42,   23,   28,    5,    4,   62,   63,   16,   55,   31,
+ /*    60 */    52,   97,   39,   58,   16,   49,   10,   57,   27,   44,
+ /*    70 */     5,    4,   58,    4,   45,   48,   67,   26,    2,   43,
+ /*    80 */     6,   66,   56,   36,   64,   65,   47,   51,   35,    7,
 };
 static const YYCODETYPE yy_lookahead[] = {
  /*     0 */     3,    4,    5,    6,    7,    8,   23,   24,   11,   26,
- /*    10 */    26,   14,   28,   16,   11,   12,    1,    2,   15,   12,
- /*    20 */    17,   18,   19,   20,   21,    3,    4,    0,   13,   10,
- /*    30 */     1,    2,   13,   11,   17,   18,   19,   26,   16,   28,
- /*    40 */     1,    2,   13,   23,   24,   12,   26,   23,   24,    1,
- /*    50 */    26,   23,   24,   16,   26,   23,   24,   10,   26,   10,
- /*    60 */    13,   10,   13,    2,   13,   20,   21,   24,   24,   12,
- /*    70 */    12,   16,   29,   29,   25,   12,   27,   24,   24,   24,
- /*    80 */    24,   24,   24,   24,   24,   24,   26,   26,   26,    9,
+ /*    10 */    26,   14,   28,   16,   11,   12,    1,    2,   15,    9,
+ /*    20 */    17,   18,   19,   20,   21,    3,    4,    1,   13,   23,
+ /*    30 */    24,   12,   26,   11,   17,   18,   19,   26,   16,   23,
+ /*    40 */    24,   12,   26,   10,   23,   24,   13,   26,   23,   24,
+ /*    50 */    26,   26,   28,    1,    2,   20,   21,   10,   26,   25,
+ /*    60 */    13,   27,   16,   24,   10,   13,   10,   13,   29,   13,
+ /*    70 */     1,    2,   24,    2,   24,   26,    0,   29,   12,   24,
+ /*    80 */    12,   24,   24,   24,   24,   24,   24,   24,   16,   12,
 };
 #define YY_SHIFT_USE_DFLT (-4)
-#define YY_SHIFT_COUNT (40)
-#define YY_SHIFT_MIN   (-3)
-#define YY_SHIFT_MAX   (80)
+#define YY_SHIFT_MAX 40
 static const signed char yy_shift_ofst[] = {
- /*     0 */    80,    3,    3,    3,    3,    3,   17,   17,   45,   45,
- /*    10 */    17,   17,   17,   45,   45,   45,   45,   45,   45,   45,
- /*    20 */    45,   45,   -3,   22,   29,   15,   51,   49,   47,   19,
- /*    30 */    39,   61,   63,   55,   58,   48,   57,   37,   33,    7,
- /*    40 */    27,
+ /*     0 */    10,    3,    3,    3,    3,    3,   17,   17,   35,   35,
+ /*    10 */    17,   17,   17,   35,   35,   35,   35,   35,   35,   35,
+ /*    20 */    35,   35,   -3,   22,   52,   15,   54,   47,   33,   69,
+ /*    30 */    56,   76,   66,   68,   72,   77,   26,   19,   46,   29,
+ /*    40 */    71,
 };
 #define YY_REDUCE_USE_DFLT (-18)
-#define YY_REDUCE_COUNT (21)
-#define YY_REDUCE_MIN   (-17)
-#define YY_REDUCE_MAX   (62)
+#define YY_REDUCE_MAX 21
 static const signed char yy_reduce_ofst[] = {
- /*     0 */    49,   32,   28,   24,   20,  -17,   11,  -16,   44,   43,
- /*    10 */    62,   61,   60,   61,   60,   59,   58,   57,   56,   55,
- /*    20 */    54,   53,
+ /*     0 */    34,  -17,    6,   16,   21,   25,  -16,   24,   39,   48,
+ /*    10 */    11,   32,   49,   50,   55,   57,   58,   59,   60,   61,
+ /*    20 */    62,   63,
 };
 static const YYACTIONTYPE yy_default[] = {
  /*     0 */    96,   96,   96,   96,   96,   96,   96,   96,   96,   96,
  /*    10 */    96,   96,   96,   96,   96,   96,   96,   96,   96,   96,
- /*    20 */    96,   96,   96,   96,   96,   96,   96,   96,   96,   96,
- /*    30 */    68,   78,   96,   96,   96,   96,   96,   96,   96,   96,
- /*    40 */    96,   77,   86,   90,   72,   89,   71,   85,   84,   83,
- /*    50 */    82,   81,   80,   95,   94,   79,   88,   70,   87,   69,
- /*    60 */    76,   93,   92,   91,   75,   74,   73,
+ /*    20 */    96,   96,   96,   96,   96,   96,   96,   96,   96,   68,
+ /*    30 */    96,   96,   96,   96,   96,   96,   96,   96,   96,   96,
+ /*    40 */    78,   88,   70,   82,   87,   83,   69,   84,   76,   73,
+ /*    50 */    93,   85,   90,   92,   91,   75,   71,   89,   72,   86,
+ /*    60 */    77,   74,   94,   95,   79,   80,   81,
 };
+#define YY_SZ_ACTTAB (int)(sizeof(yy_action)/sizeof(yy_action[0]))
 
 /* The next table maps tokens into fallback tokens.  If a construct
 ** like the following:
@@ -524,13 +520,12 @@ static int yy_find_shift_action(
   int i;
   int stateno = pParser->yystack[pParser->yyidx].stateno;
  
-  if( stateno>YY_SHIFT_COUNT
-   || (i = yy_shift_ofst[stateno])==YY_SHIFT_USE_DFLT ){
+  if( stateno>YY_SHIFT_MAX || (i = yy_shift_ofst[stateno])==YY_SHIFT_USE_DFLT ){
     return yy_default[stateno];
   }
   assert( iLookAhead!=YYNOCODE );
   i += iLookAhead;
-  if( i<0 || i>=YY_ACTTAB_COUNT || yy_lookahead[i]!=iLookAhead ){
+  if( i<0 || i>=YY_SZ_ACTTAB || yy_lookahead[i]!=iLookAhead ){
     if( iLookAhead>0 ){
 #ifdef YYFALLBACK
       YYCODETYPE iFallback;            /* Fallback token */
@@ -548,15 +543,7 @@ static int yy_find_shift_action(
 #ifdef YYWILDCARD
       {
         int j = i - iLookAhead + YYWILDCARD;
-        if( 
-#if YY_SHIFT_MIN+YYWILDCARD<0
-          j>=0 &&
-#endif
-#if YY_SHIFT_MAX+YYWILDCARD>=YY_ACTTAB_COUNT
-          j<YY_ACTTAB_COUNT &&
-#endif
-          yy_lookahead[j]==YYWILDCARD
-        ){
+        if( j>=0 && j<YY_SZ_ACTTAB && yy_lookahead[j]==YYWILDCARD ){
 #ifndef NDEBUG
           if( yyTraceFILE ){
             fprintf(yyTraceFILE, "%sWILDCARD %s => %s\n",
@@ -588,22 +575,22 @@ static int yy_find_reduce_action(
 ){
   int i;
 #ifdef YYERRORSYMBOL
-  if( stateno>YY_REDUCE_COUNT ){
+  if( stateno>YY_REDUCE_MAX ){
     return yy_default[stateno];
   }
 #else
-  assert( stateno<=YY_REDUCE_COUNT );
+  assert( stateno<=YY_REDUCE_MAX );
 #endif
   i = yy_reduce_ofst[stateno];
   assert( i!=YY_REDUCE_USE_DFLT );
   assert( iLookAhead!=YYNOCODE );
   i += iLookAhead;
 #ifdef YYERRORSYMBOL
-  if( i<0 || i>=YY_ACTTAB_COUNT || yy_lookahead[i]!=iLookAhead ){
+  if( i<0 || i>=YY_SZ_ACTTAB || yy_lookahead[i]!=iLookAhead ){
     return yy_default[stateno];
   }
 #else
-  assert( i>=0 && i<YY_ACTTAB_COUNT );
+  assert( i>=0 && i<YY_SZ_ACTTAB );
   assert( yy_lookahead[i]==iLookAhead );
 #endif
   return yy_action[i];
@@ -767,86 +754,86 @@ static void yy_reduce(
 {
   parseResult._pred = yymsp[0].minor.yy12;
 }
-#line 771 "grammar.c"
+#line 758 "grammar.c"
         break;
       case 1: /* filter ::= WHERE predicate */
 #line 59 "grammar.y"
 {
   yygotominor.yy12 = yymsp[0].minor.yy12;
 }
-#line 778 "grammar.c"
+#line 765 "grammar.c"
         break;
       case 2: /* string_list ::= string_list COMMA label */
       case 3: /* string_list ::= label */ yytestcase(yyruleno==3);
 #line 65 "grammar.y"
 { parseResult._slist.append(yymsp[0].minor.yy7->value()); delete yymsp[0].minor.yy7; }
-#line 784 "grammar.c"
+#line 771 "grammar.c"
         break;
       case 4: /* value_list ::= value_list COMMA value */
       case 5: /* value_list ::= value */ yytestcase(yyruleno==5);
 #line 70 "grammar.y"
 { parseResult._vlist.append(yymsp[0].minor.yy24->value()); delete yymsp[0].minor.yy24; }
-#line 790 "grammar.c"
+#line 777 "grammar.c"
         break;
       case 6: /* predicate ::= NOT PAREN_OPEN predicate PAREN_CLOSE */
 #line 74 "grammar.y"
 { yygotominor.yy12 = new PredNegate(yymsp[-1].minor.yy12); }
-#line 795 "grammar.c"
+#line 782 "grammar.c"
         break;
       case 7: /* predicate ::= PAREN_OPEN predicate PAREN_CLOSE */
 #line 75 "grammar.y"
 { yygotominor.yy12 = yymsp[-1].minor.yy12; }
-#line 800 "grammar.c"
+#line 787 "grammar.c"
         break;
       case 8: /* predicate ::= label EQ label */
 #line 77 "grammar.y"
 { yygotominor.yy12 = new PredLabelComparison(yymsp[-2].minor.yy7, EQ, yymsp[0].minor.yy7);  }
-#line 805 "grammar.c"
+#line 792 "grammar.c"
         break;
       case 9: /* predicate ::= label NEQ label */
 #line 78 "grammar.y"
 { yygotominor.yy12 = new PredLabelComparison(yymsp[-2].minor.yy7, NEQ, yymsp[0].minor.yy7); }
-#line 810 "grammar.c"
+#line 797 "grammar.c"
         break;
       case 10: /* predicate ::= predicate OR predicate */
 #line 80 "grammar.y"
 { yygotominor.yy12 = new PredLogicalOp(yymsp[-2].minor.yy12, OR,  yymsp[0].minor.yy12); }
-#line 815 "grammar.c"
+#line 802 "grammar.c"
         break;
       case 11: /* predicate ::= predicate AND predicate */
 #line 81 "grammar.y"
 { yygotominor.yy12 = new PredLogicalOp(yymsp[-2].minor.yy12, AND, yymsp[0].minor.yy12); }
-#line 820 "grammar.c"
+#line 807 "grammar.c"
         break;
       case 12: /* predicate ::= value EQ value */
 #line 83 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, EQ, yymsp[0].minor.yy24);  }
-#line 825 "grammar.c"
+#line 812 "grammar.c"
         break;
       case 13: /* predicate ::= value NEQ value */
 #line 84 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, NEQ, yymsp[0].minor.yy24); }
-#line 830 "grammar.c"
+#line 817 "grammar.c"
         break;
       case 14: /* predicate ::= value LT value */
 #line 85 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, LT, yymsp[0].minor.yy24);  }
-#line 835 "grammar.c"
+#line 822 "grammar.c"
         break;
       case 15: /* predicate ::= value GT value */
 #line 86 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, GT, yymsp[0].minor.yy24);  }
-#line 840 "grammar.c"
+#line 827 "grammar.c"
         break;
       case 16: /* predicate ::= value LTE value */
 #line 87 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, LTE, yymsp[0].minor.yy24); }
-#line 845 "grammar.c"
+#line 832 "grammar.c"
         break;
       case 17: /* predicate ::= value GTE value */
 #line 88 "grammar.y"
 { yygotominor.yy12 = new PredValueComparison(yymsp[-2].minor.yy24, GTE, yymsp[0].minor.yy24); }
-#line 850 "grammar.c"
+#line 837 "grammar.c"
         break;
       case 18: /* predicate ::= value BETWEEN value AND value */
 #line 90 "grammar.y"
@@ -858,14 +845,14 @@ static void yy_reduce(
   delete yymsp[-2].minor.yy24;
   delete yymsp[0].minor.yy24;
 }
-#line 862 "grammar.c"
+#line 849 "grammar.c"
         break;
       case 19: /* predicate ::= BOOL_CONSTANT */
 #line 99 "grammar.y"
 {
   yygotominor.yy12 = new BooleanConstant(yymsp[0].minor.yy0.boolv);
 }
-#line 869 "grammar.c"
+#line 856 "grammar.c"
         break;
       case 20: /* predicate ::= label IN PAREN_OPEN string_list PAREN_CLOSE */
 #line 103 "grammar.y"
@@ -873,7 +860,7 @@ static void yy_reduce(
   yygotominor.yy12 = new PredLabelIsIn(yymsp[-4].minor.yy7, parseResult._slist);
   parseResult._slist.clear();
 }
-#line 877 "grammar.c"
+#line 864 "grammar.c"
         break;
       case 21: /* predicate ::= label NOT IN PAREN_OPEN string_list PAREN_CLOSE */
 #line 108 "grammar.y"
@@ -881,7 +868,7 @@ static void yy_reduce(
   yygotominor.yy12 = new PredNegate(new PredLabelIsIn(yymsp[-5].minor.yy7, parseResult._slist));
   parseResult._slist.clear();
 }
-#line 885 "grammar.c"
+#line 872 "grammar.c"
         break;
       case 22: /* predicate ::= value IN PAREN_OPEN value_list PAREN_CLOSE */
 #line 113 "grammar.y"
@@ -889,7 +876,7 @@ static void yy_reduce(
   yygotominor.yy12 = new PredValueIsIn(yymsp[-4].minor.yy24, parseResult._vlist);
   parseResult._vlist.clear();
 }
-#line 893 "grammar.c"
+#line 880 "grammar.c"
         break;
       case 23: /* predicate ::= value NOT IN PAREN_OPEN value_list PAREN_CLOSE */
 #line 118 "grammar.y"
@@ -897,7 +884,7 @@ static void yy_reduce(
   yygotominor.yy12 = new PredNegate(new PredValueIsIn(yymsp[-5].minor.yy24, parseResult._vlist));
   parseResult._vlist.clear();
 }
-#line 901 "grammar.c"
+#line 888 "grammar.c"
         break;
       case 24: /* label ::= STRING */
 #line 123 "grammar.y"
@@ -906,7 +893,7 @@ static void yy_reduce(
   // got it, now we can safely remove the ref we got in the lexer
   delete yymsp[0].minor.yy0.name;
 }
-#line 910 "grammar.c"
+#line 897 "grammar.c"
         break;
       case 25: /* label ::= LABEL_VARIABLE */
 #line 129 "grammar.y"
@@ -915,21 +902,21 @@ static void yy_reduce(
   // got it, now we can safely remove the ref we got in the lexer
   delete yymsp[0].minor.yy0.name;
 }
-#line 919 "grammar.c"
+#line 906 "grammar.c"
         break;
       case 26: /* label ::= POINT_ID */
 #line 135 "grammar.y"
 {
   yygotominor.yy7 = new LabelPointID();
 }
-#line 926 "grammar.c"
+#line 913 "grammar.c"
         break;
       case 27: /* value ::= VALUE_CONSTANT */
 #line 140 "grammar.y"
 {
   yygotominor.yy24 = new ValueConstant(yymsp[0].minor.yy0.value);
 }
-#line 933 "grammar.c"
+#line 920 "grammar.c"
         break;
       case 28: /* value ::= VALUE_VARIABLE */
 #line 144 "grammar.y"
@@ -938,7 +925,7 @@ static void yy_reduce(
   // got it, now we can safely remove the ref we got in the lexer
   delete yymsp[0].minor.yy0.name;
 }
-#line 942 "grammar.c"
+#line 929 "grammar.c"
         break;
       default:
         break;
@@ -1003,7 +990,7 @@ static void yy_syntax_error(
 #line 40 "grammar.y"
 
   throw GaiaException("Syntax error: could not parse expression");
-#line 1007 "grammar.c"
+#line 994 "grammar.c"
   ParseARG_STORE; /* Suppress warning about unused %extra_argument variable */
 }
 
