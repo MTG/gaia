@@ -484,53 +484,23 @@ namespace gaia2 {
                 /* check if name contains dimension number in the form n.a.m.e.[#], where # is the number.
                  * in case it contains the dimension number strip it from the name and save it to _dimension_number */
 
-                qDebug() << name;
-                qDebug() << QString::number(name.lastIndexOf("["));
                 if (name.lastIndexOf("[") != -1 && name.lastIndexOf("]") != -1){
-                    qDebug() << "it has dimension";
+                //if (name.lastIndexOf(QRegExp("\[[0-9]*\]$")) != -1){
                     _varname = name.left(name.lastIndexOf("["));
-                    qDebug() << _varname;
-                    QString dimension_number_str = _varname = name.right(name.lastIndexOf("["));
-                    //dimension_number_str.chop(1);
-                    qDebug() << dimension_number_str;
+
+                    QString dimension_number_str = name.section('[', 1);
+                    dimension_number_str.chop(1);
+                    bool ok;
+                    int dimension_number = dimension_number_str.toInt(&ok, 10);
+                    if (ok) {
+                        // conversion succeeded
+                        _dimension_number = dimension_number;
+                    }else{
+                        throw GaiaException("dimension number malformated for descriptor ", _varname, "...");
+                    }
                 }else{
-                    qDebug() << "it has no dimension";
                     _varname = name;
                 }
-
-                /*
-                if (name.lastIndexOf(QRegExp("\[[0-9]*\]"), 0) != -1){
-                    qDebug() << "it has dimension";
-                    _varname = name.left(name.lastIndexOf(QRegExp("\[[0-9]*\]"), 0));
-                    qDebug() << _varname;
-                    QString dimension_number_str = _varname = name.right(name.lastIndexOf(QRegExp("\[[0-9]*\]"), 0));
-                    dimension_number_str.chop(1);
-                    qDebug() << dimension_number_str;
-
-
-                }else{
-                    // it has no dimension indicated
-                    qDebug() << "it has no dimension";
-                    _varname = name;
-                }*/
-
-
-                /* Try to guess if the descriptor name contains the dimension index at the end.
-                   To do that we split the name at '.' and check if last bit can be converted to an integer.
-                   If the conversion works we assume this last bit indicates the dimension index, otherwise no dimension
-                   index is indicated and the filter will not work for multidimensional descriptors.
-                
-                QString last_name_part = name.section('.', -1);
-                bool ok;
-                int dimension_number = last_name_part.toInt(&ok, 10);
-                if (ok) {
-                    // conversion succeeded
-                    _dimension_number = dimension_number;
-                    _varname = name.section('.', 0, -2);
-                }else{
-                    // conversion failed
-                    _varname = name;
-                }*/
             }
             
             QString name() const {
