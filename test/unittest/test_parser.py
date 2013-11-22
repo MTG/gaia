@@ -107,28 +107,29 @@ class TestParser(unittest.TestCase):
             self.assertEqual(testValidPoint(d, clause), expected)
 
         d.point('p')['d'] = 'Hello'
-
         test('label.d = "Hello"', True)
         test('label.d = "goodbye"', False)
 
         d.point('p')['b'] = 23.
-
         test('value.b < 23', False)
         test('value.b <= 23', True)
         test('value.b != 23', False)
         test('value.b > 23', False)
         test('value.b == 23', True)
         test('value.b = 23', True)
-
         test('value.b <= 23', True)
+        
+        d.point('p')['e'] = [23.0, 24.0, 25.0]
+        test('value.e[0] < 23', False)
+        test('value.e[1] > 23', True)
+        test('value.e[2] > 24.3 and value.e[2] <= 25', True)
 
         test('value.b = 23.0 and label.d = "Hello"', True)
         test('value.b = 23.0 or label.d = "Ho ho"', True)
         test('value.b < 23.0 and label.d = "Hello"', False)
         test('value.b = 23.0 and label.d = "Hell"', False)
-
+       
         d.point('p')['a.1'] = 17
-
         test('value.a.1 == 17', True)
         test('value.a.1 < 20 and value.b > 20 and label.d != "ooh yeah"', True)
 
@@ -154,7 +155,7 @@ class TestParser(unittest.TestCase):
     def testEnumerateFixLength(self):
         testdata.useEnumerate = True
         self.testFixLength()
-
+        
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestParser)
 
