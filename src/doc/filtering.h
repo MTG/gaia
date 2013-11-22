@@ -91,7 +91,7 @@
  *
  * When using multidimensional descriptors in a filter, you need to specify which dimension
  * to consider. For instance, mfcc's have 13 dimensions, when filtering with mfcc's you need to tell
- * which dimension should be filtered. To do that, you add ".#" to the name of the descriptor in the
+ * which dimension should be filtered. To do that, you add "[#]" to the name of the descriptor in the
  * filter, where "#" is the number of the dimension (first dimension is 0, see example below).
  *
  * @section examples Examples
@@ -102,7 +102,7 @@
  * <pre class="fragment">
  * WHERE value.tempotap_bpm.mean > 100
  * WHERE value.danceability < 3 AND (label.genre = "classical" OR label.genre = "jazz")
- * WHERE value.lowlevel.mfcc.mean.3 > 20
+ * WHERE value.lowlevel.mfcc.mean[3] > 20
  * etc...</pre>
  *
  * @section indexing Indexing views on certain descriptors
