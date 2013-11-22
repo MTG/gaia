@@ -485,7 +485,6 @@ namespace gaia2 {
                  * in case it contains the dimension number strip it from the name and save it to _dimension_number */
 
                 if (name.lastIndexOf("[") != -1 && name.lastIndexOf("]") != -1){
-                //if (name.lastIndexOf(QRegExp("\[[0-9]*\]$")) != -1){
                     _varname = name.left(name.lastIndexOf("["));
 
                     QString dimension_number_str = name.section('[', 1);
@@ -524,8 +523,8 @@ namespace gaia2 {
                 _point = pointLocation;
                 _ltype = layout.descriptorLocation(name()).lengthType();
                 
-                QVector< int > listIndices = layout.descriptorLocation(name()).listIndices(layout.descriptorLocation(name()).type(), layout.descriptorLocation(name()).lengthType());
-                
+                // Detect if the descriptor is multidimensional by checking the length of listIndices (NOTE: requires fix length transformation)
+                QVector< int > listIndices = layout.descriptorLocation(name()).listIndices(layout.descriptorLocation(name()).type(), layout.descriptorLocation(name()).lengthType());                
                 if (listIndices.size() == 1){
                     // If descriptor is not multidimensional, we get the first index
                     _idx = layout.descriptorLocation(name()).index();
