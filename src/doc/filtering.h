@@ -93,6 +93,8 @@
  * to consider. For instance, mfcc's have 13 dimensions, when filtering with mfcc's you need to tell
  * which dimension should be filtered. To do that, you add "[#]" to the name of the descriptor in the
  * filter, where "#" is the number of the dimension (first dimension is 0, see example below).
+ * Multidimensional filtering <b> only </b> works with fixed-length descriptors and <b> requires </b>
+ * the application of the 'FixLength' transformation to your dataset.
  *
  * @section examples Examples
  *
