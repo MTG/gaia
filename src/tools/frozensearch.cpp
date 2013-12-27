@@ -80,27 +80,6 @@ float CosineDistance::operator()(const float* const p1, const float* const p2) c
 }
 
 
-//   0-100 : colfilter  cosine dist
-// 100-150 : context    cosine dist
-// 150-175 : content    euclidean dist
-FrozenBmatDistance::FrozenBmatDistance(const FrozenDataSet& dataset, int offset, int size) :
-  FrozenDistance(dataset),
-  colfiltDist(dataset, "colfilter"),
-  contextDist(dataset, "context"),
-  contentDist(dataset, "pca") {}
-
-
-void FrozenBmatDistance::prepare(const Eigen::RowVectorXf& query) {
-  colfiltDist.prepare(query);
-  contextDist.prepare(query);
-  contentDist.prepare(query);
-}
-
-Real FrozenBmatDistance::operator()(int i, const Eigen::RowVectorXf& query) const {
-  return 0.4*colfiltDist(i, query) + 0.4*contextDist(i, query) + 0.2*contentDist(i, query);
-}
-
-
 void gaia2::deepFreeze(FrozenDataSet& frozenDS, const FrozenDistance& dist,
                        const Eigen::RowVectorXf& query, int N) {
   const int npoints = frozenDS.rows();

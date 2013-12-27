@@ -201,30 +201,6 @@ int main(int argc, char* argv[]) {
 
   // ---------------------------------------------------------------------------
 
-  frozenSearch(dataset, frozenDataSet, 175, fquery, N, BmatDistance(0.4, 0.4, 0.2));
-
-  // ---------------------------------------------------------------------------
-
-  deepFreeze(frozenDS, FrozenBmatDistance(frozenDS),
-             Eigen::RowVectorXf::Map(fquery, 175), N);
-
-  // ---------------------------------------------------------------------------
-
-  G_INFO("(Folding data so that it can fit into L2 cache, but doing the\n"
-         " exact same amount of computation as the previous line)");
-  G_DEBUG(GTools, "[[[ Note that the results here will be incorrect ]]]");
-  deepFoldedFreeze(frozenDS, FrozenBmatDistance(frozenDS),
-                   Eigen::RowVectorXf::Map(fquery, 175), N);
-
-  // ---------------------------------------------------------------------------
-
-  multiQuery<FrozenBmatDistance, 0, 175>(frozenDS, 2);
-  multiQuery<FrozenBmatDistance, 0, 175>(frozenDS, 5);
-  multiQuery<FrozenBmatDistance, 0, 175>(frozenDS, 10);
-  multiQuery<FrozenBmatDistance, 0, 175>(frozenDS, 20);
-
-  // ---------------------------------------------------------------------------
-
   G_INFO('\n' << G_TITLE("USING ONLY EUCLIDEAN DISTANCE") << '\n');
   N = 100;
 

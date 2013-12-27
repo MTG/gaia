@@ -62,41 +62,6 @@ public:
 };
 
 
-//   0-100 : colfilter  cosine dist
-// 100-150 : context    cosine dist
-// 150-175 : content    euclidean dist
-class BmatDistance {
-public:
-  float a1, a2, a3;
-  CosineDistance colfilter;
-  CosineDistance context;
-  EuclideanDistance content;
-
-  BmatDistance(float a1, float a2, float a3) :
-    a1(a1), a2(a2), a3(a3), colfilter(100), context(50), content(25)
-  {}
-
-  float operator()(const float* const p1, const float* const p2) const {
-    return a1*colfilter(p1, p2) + a2*context(p1+100, p2+100) + a3*content(p1+150, p2+150);
-  }
-};
-
-
-//   0-100 : colfilter  cosine dist
-// 100-150 : context    cosine dist
-// 150-175 : content    euclidean dist
-class FrozenBmatDistance : public FrozenDistance {
-public:
-  FrozenBmatDistance(const FrozenDataSet& dataset, int offset = 0, int size = 175);
-  void prepare(const Eigen::RowVectorXf& query);
-  Real operator()(int i, const Eigen::RowVectorXf& query) const;
-
-protected:
-  FrozenCosineAngleDistance colfiltDist;
-  FrozenCosineAngleDistance contextDist;
-  FrozenEuclideanDistance contentDist;
-};
-
 
 //typedef pair<float, qint32> fspoint;
 typedef std::pair<float, int> fspoint;
