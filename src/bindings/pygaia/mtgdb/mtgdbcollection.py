@@ -40,7 +40,7 @@ class MtgdbCollection(collection.Collection):
         except KeyError:
             raise ValueError('Collection "%s" is not known by Gaia. Available collections are: %s' % (name, ALL_MTGDB_COLLECTIONS.keys()))
 
-        super(MtgdbCollection, self).__init__(collection['location'], groundTruth)
+        super(MtgdbCollection, self).__init__(join(environment.MTGDB_AUDIO,collection['location']), groundTruth)
         self.name = name
         self._properties = collection
 

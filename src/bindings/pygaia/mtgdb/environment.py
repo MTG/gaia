@@ -31,24 +31,14 @@ for l in subprocess.Popen('/sbin/ifconfig', stdout = subprocess.PIPE).communicat
 username = subprocess.Popen('whoami', stdout = subprocess.PIPE).communicate()[0].strip()
 
 
-G_ENV = { # Nico
-          ('10.80.4.166', 'nwack'): { 'mtgdb_audio': '/mnt/mtgdb-audio',
-                                      'base_dir': '/home/nwack/dev/gaia2' },
-          # Nico griller
-          ('10.55.0.230', 'nwack'): { 'mtgdb_audio': '/raid/audio',
-                                      'base_dir': '/home/nwack/dev/gaia' },
-          # Nico casa
-          #('192.168.1.3', 'download'): { 'mtgdb_audio': '/tmp',
-          #                               'base_dir': '/home/download/dev/gaia' },
-
-          # Marco griller
-          ('10.55.0.230', 'mmarchini'): { 'mtgdb_audio': '/raid/audio',
-                                          'base_dir': '/home/mmarchini/gaia' },
+G_ENV = { 
+          # Dmitry 
+          ('10.80.25.171', 'dbogdanov'): { 'mtgdb_audio': '/mnt/mtgdb',
+                                           'base_dir': '/home/dbogdanov/gaia' },
           }
 
-G_MOUNT_POINTS = { '10.80.4.166': '/mnt/mtgdb-audio', # Nico
-                   '10.55.0.230': '/raid/audio',      # Griller
-                   '10.80.6.78':  '/raid/audio'       # Buildbot
+G_MOUNT_POINTS = { 
+                   '10.80.25.171': '/mnt/mtgdb' # Dmitry
                    }
 
 try:

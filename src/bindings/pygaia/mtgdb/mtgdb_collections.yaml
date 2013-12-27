@@ -10,11 +10,9 @@
   type: genre
   location: stable/genre_dortmund
 
-# Deactivated rosamerica at the moment, as it is split in 2 folds (train/test)
-# and we're not exactly sure what to use to train the collection
-#- name: genre_rosamerica
-#  type: genre
-#  location: stable/genre_rosamerica
+- name: genre_rosamerica
+  type: genre
+  location: stable/genre_rosamerica
 
 - name: genre_rentfrow
   type: genre
@@ -41,13 +39,11 @@
   location: stable/perceptual_speed
 
 
-#- name: danceability
-#  type: rhythm
-#  location: benchmarks/danceability
-#  groundtruthType: txt
-#  # NB: this also contains a runnability value contained in the same
-#  #     file as txt GT but with .runnability extension
-#
+- name: danceability
+  type: rhythm
+  location: stable/danceability
+  # NB: this collection also contains a runnability value contained in the 
+  # txt GT files but with .runnability extension
 
 
 # Gender database
@@ -76,6 +72,10 @@
 - name: key_mode
   type: tonality
   location: stable/key_mode
+
+- name: tonal_atonal
+  type: tonality
+  location: stable/tonal_atonal
 
 
 # Live/Studio database
