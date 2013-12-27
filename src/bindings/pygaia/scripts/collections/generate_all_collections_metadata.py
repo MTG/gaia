@@ -25,16 +25,17 @@ from os.path import *
 
 
 def usage():
-    print '%s mtgdb_audio_mount_point' % sys.argv[0]
+    print '%s <mtgdb_audio_mount_point> <path_to_mtgdb_collections_yaml>' % sys.argv[0]
     sys.exit(1)
 
 if __name__ == '__main__':
     try:
         mtgdb = sys.argv[1]
+        mtgdb_yaml = sys.argv[2]
     except:
         usage()
 
-    for db in yaml.load(open('mtgdb_collections.yaml').read()):
+    for db in yaml.load(open(mtgdb_yaml).read()):
         cmd = [ 'python', 'generate_collection_metadata.py',
                 '-g', db['groundtruthType'], join(mtgdb, db['location']), db['type'] ]
 

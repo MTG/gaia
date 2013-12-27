@@ -74,6 +74,7 @@ def generateProjectFromCollection():
         parser.print_help()
         sys.exit(1)
 
+    # create collection from a directory collection_name if it exists, use an MTG-DB collection otherwise
     if os.path.isdir(collection_name):
         collec = gaia2.mtgdb.Collection(collection_name, groundTruth = options.desiredGroundTruth)
     else:
