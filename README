@@ -29,6 +29,9 @@ Linux:
    $ ./waf
    $ ./waf install [--destdir=/where/ever/]
 
+- build documentation (optional), it will be located at build/doc/ folder:
+   $ ./python src/doc/regenerate_docstring.py
+
 
 MacOS X:
 
