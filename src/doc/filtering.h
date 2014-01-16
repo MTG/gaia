@@ -89,6 +89,13 @@
  * <code>value.tempotap_bpm.mean</code> to refer to the real value named tempotap_bpm.mean, or<br>
  * <code>label.key_mode.value</code> to refer the the string label named key_mode.value.
  *
+ * When using multidimensional descriptors in a filter, you need to specify which dimension
+ * to consider. For instance, mfcc's have 13 dimensions, when filtering with mfcc's you need to tell
+ * which dimension should be filtered. To do that, you add "[#]" to the name of the descriptor in the
+ * filter, where "#" is the number of the dimension (first dimension is 0, see example below).
+ * Multidimensional filtering <b> only </b> works with fixed-length descriptors and <b> requires </b>
+ * the application of the 'FixLength' transformation to your dataset.
+ *
  * @section examples Examples
  *
  * Here are some concrete examples of possible filter terms for those of you not
@@ -97,6 +104,7 @@
  * <pre class="fragment">
  * WHERE value.tempotap_bpm.mean > 100
  * WHERE value.danceability < 3 AND (label.genre = "classical" OR label.genre = "jazz")
+ * WHERE value.lowlevel.mfcc.mean[3] > 20
  * etc...</pre>
  *
  * @section indexing Indexing views on certain descriptors

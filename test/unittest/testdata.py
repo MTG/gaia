@@ -33,6 +33,7 @@ TEST_DATABASE_VARLENGTH_STRING = [ 'chords_progression*' ]
 TEST_SMALLDB = 'data/verysmall.db'
 TEST_SMALLDB_VARLENGTH = [ 'tempotap_intervals*', 'tempotap_rubato*', 'tempotap_ticks*', 'key_key*' ]
 
+GAIA20_DB = 'data/gaia_2_0.db'
 
 # variable used to determine whether we should use fixed-length descriptors
 # whenever possible. This shouldn't change nothing to the tests being performed
@@ -64,6 +65,7 @@ def createSimpleLayout():
     l.add('c', RealType)
     l.add('b', RealType)
     l.add('d', StringType)
+    l.add('e', RealType, FixedLength, 3)
     return l
 
 
@@ -103,6 +105,19 @@ def loadTestDB():
 def loadSmallDB():
     ds = DataSet()
     ds.load(TEST_SMALLDB)
+
+    if useFixedLength:
+        ds = fixLength(ds)
+
+    if useEnumerate:
+        ds = enumerateStrings(ds)
+
+    return ds
+    
+    
+def loadGaia20DB():
+    ds = DataSet()
+    ds.load(GAIA20_DB)
 
     if useFixedLength:
         ds = fixLength(ds)

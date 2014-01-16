@@ -32,7 +32,7 @@ FLOAT         {PUREFLOAT}|{INTEGER}
 PUREFLOAT     "-"?[0-9]*\.[0-9]*
 INTEGER       "-"?[0-9]+
 STRING        \"[^\"]*\"
-ID            [[:alpha:]][[:alnum:]_"-"\.]*
+ID            [a-zA-Z0-9\[\]_"-"\.]*
 
 %%
 

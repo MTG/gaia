@@ -9,4 +9,4 @@ order, compiling lexer.l depends on the compilation of the grammar):
 $ lemon grammar.y && flex -i lexer.l
 
 That will generate grammar.{c,h} and lex.yy.c, which are needed to compile
-the gaia library
+the gaia library. The you need to rename lex.yy.c to lex.yy.cpp.
