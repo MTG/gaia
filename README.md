@@ -1,17 +1,15 @@
-            ______________
-           |              |
-           |  Gaia 2.4.3  |
-           |______________|
-
+Gaia 2.4.3
+==========
 
 ABOUT
 -----
 
- - dependencies:
-   - Qt >= 4.5
-   - libYAML >= 0.1.1
-   - Python >= 2.4
-   - SWIG >= 1.3.31
+Dependencies:
+  
+  * Qt >= 4.5
+  * libYAML >= 0.1.1
+  * Python >= 2.4
+  * SWIG >= 1.3.31
 
 
 INSTALL
@@ -19,23 +17,32 @@ INSTALL
 
 Linux:
 
+- Install dependencies (Ubuntu/Debian):
+
+    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev
+
 - online help for WAF (build system)
-   $ ./waf --help
+
+    $ ./waf --help
 
 - configure with the desired options:
-   $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
 
+    $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+    
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
 - compile libgaia.a:
-   $ ./waf
-   $ ./waf install [--destdir=/where/ever/]
+
+    $ ./waf
+    $ ./waf install [--destdir=/where/ever/]
 
 - build documentation (optional), it will be located at build/doc/ folder:
-   $ ./python src/doc/regenerate_docstring.py
+
+    $ ./python src/doc/regenerate_docstring.py
 
 
 MacOS X:
+
 
 (Gaia2lib)
 
