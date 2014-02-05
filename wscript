@@ -125,6 +125,10 @@ def configure(conf):
         conf.env['CXXFLAGS'] = [ conf.env['CXXFLAGS'] ]
 
     conf.env['CXXFLAGS'] += [ '-Wall', '-Werror', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
+
+    # add this key otherwise gcc 4.8 will complain
+    conf.env['CXXFLAGS'] += [ '-Wno-unused-local-typedefs' ]
+
     # big fat hack for centos, which is still in stone age...
     if sys.version_info[1] > 4:
         # option not available in centos' gcc...
