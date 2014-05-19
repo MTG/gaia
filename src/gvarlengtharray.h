@@ -64,6 +64,7 @@
 #include <QtCore/qcontainerfwd.h>
 #include <QtCore/qglobal.h>
 #include <new>
+#include <cstdlib>
 
 QT_BEGIN_HEADER
 
@@ -91,7 +92,7 @@ public:
                 i->~T();
         }
         if (ptr != reinterpret_cast<T *>(array))
-            qFree(ptr);
+            std::free(ptr);
     }
     inline GVarLengthArray<T, Prealloc> &operator=(const GVarLengthArray<T, Prealloc> &other)
     {
@@ -158,7 +159,7 @@ template <class T, int Prealloc>
 Q_INLINE_TEMPLATE GVarLengthArray<T, Prealloc>::GVarLengthArray(int asize)
     : s(asize) {
     if (s > Prealloc) {
-        ptr = reinterpret_cast<T *>(qMalloc(s * sizeof(T)));
+        ptr = reinterpret_cast<T *>(std::malloc(s * sizeof(T)));
         a = s;
     } else {
         ptr = reinterpret_cast<T *>(array);
@@ -211,7 +212,7 @@ Q_OUTOFLINE_TEMPLATE void GVarLengthArray<T, Prealloc>::realloc(int asize, int a
     s = asize;
 
     if (aalloc != a) {
-        ptr = reinterpret_cast<T *>(qMalloc(aalloc * sizeof(T)));
+        ptr = reinterpret_cast<T *>(std::malloc(aalloc * sizeof(T)));
         if (ptr) {
             a = aalloc;
 
@@ -247,7 +248,7 @@ Q_OUTOFLINE_TEMPLATE void GVarLengthArray<T, Prealloc>::realloc(int asize, int a
     }
 
     if (oldPtr != reinterpret_cast<T *>(array) && oldPtr != ptr)
-        qFree(oldPtr);
+        std::free(oldPtr);
 }
 
 QT_END_NAMESPACE
