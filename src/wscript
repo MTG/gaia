@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import Options
 import os, os.path
+from waflib import Build # TODO DEBUG
 
-
-def set_options(opt):
+def options(opt):
     opt.add_option('--with-stlfacade', action='store_true',
                    dest = 'with_stlfacade', default = False,
                    help = 'whether or not to compile the STL facade inside the Gaia library')
@@ -14,15 +13,14 @@ def set_options(opt):
                    dest = 'with_tests', default = False,
                    help = 'whether ot not to compile the C++ tests inside the test directory')
 
-    # options provided in subdirectories
-    opt.sub_options('bindings')
+    opt.recurse('bindings')
 
 
 def configure(conf):
-    conf.env['WITH_STLFACADE'] = Options.options.with_stlfacade
-    conf.env['WITH_TESTS'] = Options.options.with_tests
-    conf.env['WITH_CYCLOPS'] = Options.options.cyclops
-    conf.sub_config('bindings')
+    conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
+    conf.env['WITH_TESTS'] = conf.options.with_tests
+    conf.env['WITH_CYCLOPS'] = conf.options.cyclops
+    conf.recurse('bindings')
 
 def install_tree(bld, dst, src):
     src = os.path.normpath(src)
@@ -35,43 +33,37 @@ def install_tree(bld, dst, src):
                               os.path.join(root, f))
 
 def build_library(bld):
-    gaialib = bld.new_task_gen('cxx', 'staticlib')
+    bld.post_mode = Build.POST_LAZY
 
-    gaialib.source = '''
-    convert.cpp
-    debugging.cpp
-    gaia.cpp
-    gaiamath.cpp
-    dataset.cpp
-    descriptortree.cpp
-    frozendataset.cpp
-    linalg.cpp
-    parameter.cpp
-    point.cpp
-    pointlayout.cpp
-    region.cpp
-    searchspace.cpp
-    searchspacepool.cpp
-    timer.cpp
-    transformation.cpp
-    utils.cpp
-    yamlcpp.cpp
-    parser/lex.yy.cpp
-    parser/filter.cpp
-    parser/filterwrapper.cpp
-    3rdparty/libsvm/svm.cpp
-    3rdparty/libsvm/gaiasvmutils.cpp
-    '''
+    sources =  bld.path.ant_glob('*.cpp')   
+    sources += bld.path.ant_glob('algorithms/*.cpp')
+    sources += bld.path.ant_glob('metrics/*.cpp')
+    sources += bld.path.ant_glob('3rdparty/alglib/*.cpp')
+    sources += bld.path.ant_glob('3rdparty/libsvm/*.cpp')
+    sources += bld.path.ant_glob('parser/*.cpp')
 
-    gaialib.find_sources_in_dirs([ 'algorithms', 'metrics', '3rdparty/alglib' ])
+    bld.stlib(
+        source   = sources,
+        target   = 'gaia2',
+        use      = bld.env['USELIB'],
+        install_path = '${PREFIX}/lib',
+        includes = [ '.', 'metrics', '3rdparty' ]
+    )
+    
+    def write_pcfile(task):
+        open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
 
-    if bld.env['WITH_STLFACADE']:
+    bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
+    bld.add_group()
+
+
+    if bld.env['WITH_STLFACADE']:   # TODO: test if works -with-stlfacade 
         gaialib.find_sources_in_dirs('stlfacade')
         bld.install_files('${PREFIX}/include/gaia2', 'stlfacade/*.h')
         bld.install_files('${PREFIX}/include/gaia2', 'baseexception.h')
     else:
         # we shouldn't redistribute these headers (they contain Qt code)
-        bld.install_files('${PREFIX}/include/gaia2', '*.h')
+        bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('*.h'))
         bld.install_files('${PREFIX}/include/gaia2', [ 'algorithms/analyzer.h',
                                                        'algorithms/applier.h' ])
         bld.install_files('${PREFIX}/include/gaia2', [ 'metrics/distancefunction.h',
@@ -80,7 +72,7 @@ def build_library(bld):
         bld.install_files('${PREFIX}/include/gaia2/parser', [ 'parser/filter.h',
                                                               'parser/parsertypes.h',
                                                               'parser/grammar.h' ])
-
+    
         # also install all Eigen headers
         import os
         os.chdir('src')
@@ -89,34 +81,38 @@ def build_library(bld):
     bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')
 
-    gaialib.uselib = bld.env['USELIB']
-    gaialib.includes = [ '.', 'metrics', '3rdparty' ]
-    gaialib.target   = 'gaia2'
 
 
 def build_with_gaia(bld, prog):
     prog.includes = [ '.', 'metrics', '3rdparty' ]
     prog.uselib_local = 'gaia2'
     prog.uselib = bld.env['USELIB']
+    print prog.uselib 
+
 
 def is_dev_version(bld):
     mainws = os.path.join(bld.curdir, '..', 'wscript')
     version_line = [ l.strip() for l in open(mainws) if l.startswith('VERSION') ][0]
     return '-dev' in version_line
 
+
 def build_tools(bld):
     # merge utility
-    merge_prog = bld.new_task_gen('cxx', 'program')
-    merge_prog.target = 'tools/gaiamerge'
-    merge_prog.source = 'tools/gaiamerge.cpp'
-    build_with_gaia(bld, merge_prog)
+    bld.program(
+        source = 'tools/gaiamerge.cpp',
+        target = 'tools/gaiamerge',
+        includes = [ '.', 'metrics', '3rdparty' ],
+        use = ['gaia2'] + bld.env['USELIB'])
 
     # info utility
-    info_prog = bld.new_task_gen('cxx', 'program')
-    info_prog.target = 'tools/gaiainfo'
-    info_prog.source = 'tools/gaiainfo.cpp'
-    build_with_gaia(bld, info_prog)
-
+    bld.program(
+        source = 'tools/gaiainfo.cpp',
+        target = 'tools/gaiainfo',
+        includes = [ '.', 'metrics', '3rdparty' ],
+        use = ['gaia2'] + bld.env['USELIB'])
+    
+    # TODO refactor below
+    """
     # GaiaFusion
     bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
 
@@ -126,11 +122,12 @@ def build_tools(bld):
     gaiafreeze_prog.source = 'tools/gaiafreeze.cpp'
     build_with_gaia(bld, gaiafreeze_prog)
 
-    # gaia22to23fl utility
-    gaia22to23fl_prog = bld.new_task_gen('cxx', 'program')
-    gaia22to23fl_prog.target = 'tools/gaia22to23fl'
-    gaia22to23fl_prog.source = 'tools/gaia22to23fl.cpp'
-    build_with_gaia(bld, gaia22to23fl_prog)
+    # gaia22to23fl utility -- we don't need this anymore,
+    # old gaia versions are obsolete and related code is not accessible via github
+    #gaia22to23fl_prog = bld.new_task_gen('cxx', 'program')
+    #gaia22to23fl_prog.target = 'tools/gaia22to23fl'
+    #gaia22to23fl_prog.source = 'tools/gaia22to23fl.cpp'
+    #build_with_gaia(bld, gaia22to23fl_prog)
 
     if is_dev_version(bld):
         # Note: we don't want to build this with a released version, because
@@ -175,7 +172,7 @@ def build_tools(bld):
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
         bld.install_files('/etc/init.d', 'tools/cyclops_server/initscripts/*', chmod=0755)
-
+    """
 
 def build(bld):
     build_library(bld)

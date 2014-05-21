@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import sys
-import Options
 
 def print_env(env):
     for n in env.m_table.keys():
@@ -10,14 +9,14 @@ def print_env(env):
             print n, ':', env[n]
 
 
-def set_options(opt):
+def options(opt):
     opt.add_option('--with-python-bindings', action='store_true',
                    dest = 'with_python_bindings', default = False,
                    help = 'whether or not to compile the python bindings')
 
 
 def configure(conf):
-    conf.env['WITH_PYTHON_BINDINGS'] = Options.options.with_python_bindings
+    conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
     if conf.env['WITH_PYTHON_BINDINGS']:
         conf.check_tool('swig python')
         conf.check_swig_version((1,3,31))
