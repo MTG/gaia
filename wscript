@@ -13,13 +13,8 @@ out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c')
+    opt.load('compiler_cxx compiler_c qt4')
     opt.recurse('src')
-    
-    ## options provided by the modules
-    ##opt.tool_options('compiler_cc')
-    ##opt.tool_options('cxx')
-    ##opt.tool_options('qt4')
 
     # whether or not to use the "bz2-encryption"
     opt.add_option('--with-bz2-encryption', action = 'store_true',
@@ -94,31 +89,27 @@ def configure(conf):
     print('→ configuring the project in ' + conf.path.abspath())
 
     # compiler flags
-    conf.env['CXXFLAGS'] += [ '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
+    conf.env.CXXFLAGS += [ '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
     
     # define this to be stricter, but sometimes some libraries can give problems...
-    #conf.env['CXXFLAGS'] += [ '-Werror' ]
-    """
+    #conf.env.CXXFLAGS += [ '-Werror' ]
+    
     if conf.options.MODE == 'debug':
         print ('→ Building in debug mode')
-        conf.env['CXXFLAGS'] += [ '-g' ]
+        conf.env.CXXFLAGS += [ '-g' ]
     
     elif conf.options.MODE == 'release':        
         print ('→ Building in release mode')
-        conf.env['CXXFLAGS'] += [ '-O2', '-msse2' ]
-    
+        conf.env.CXXFLAGS += [ '-O2', '-msse2' ]
     else:
         raise ValueError('mode should be either "debug" or "release"')
-    """
+    
     if conf.options.optimized:
-        conf.env['CXXFLAGS'] += [ '-DNDEBUG', '-DQT_NO_DEBUG' ]
+        conf.env.CXXFLAGS += [ '-DNDEBUG', '-DQT_NO_DEBUG' ]
 
     # super optimized flags
     #conf.env['CXXFLAGS'] += [ '-Wall -Werror -O3 -fPIC -DNDEBUG -DQT_NO_DEBUG -ffast-math -fomit-frame-pointer -funroll-loops' ]
 
-
-
-    conf.check_cfg(package='QtCore', uselib_store='QTCORE', args='--cflags --libs')
 
     # NOTE: Debian Squeeze doesn't provide pkg-config files for libyaml, but
     #       Debian Wheezy does... Mac OS X (brew) does it also.
@@ -143,20 +134,21 @@ def configure(conf):
     if conf.env['WITH_BZ2_ENCRYPTION']:
         check_bz2(conf)
 
-    
-    # system-wide flags
-    conf.env.DEFINES = 'GAIA_VERSION="' + VERSION + '"'
-    if type(conf.env['CXXFLAGS']) == str:
-        conf.env['CXXFLAGS'] = [ conf.env['CXXFLAGS'] ]
+    # optional dependency: QtNetwork for Cyclops Server
+    conf.env['WITH_CYCLOPS'] = conf.options.cyclops
+    if conf.env['WITH_CYCLOPS']:
+        conf.env['USELIB'] += [ 'QTNETWORK' ]
 
-    # TODO 
+    
+    conf.env.DEFINES = 'GAIA_VERSION="' + VERSION + '"'
+
     if sys.platform == 'darwin':
         # force the use of clang as compiler, we don't want gcc anymore on mac
         conf.env.CC = 'clang'
         conf.env.CXX = 'clang++'
         
         ###conf.env.DEFINES   += [ 'GTEST_HAS_TR1_TUPLE=0' ]
-        conf.env.CXXFLAGS = [ '-stdlib=libc++', '-Wno-gnu' ] # '-std=c++11' produces errors in Eigen
+        conf.env.CXXFLAGS += [ '-stdlib=libc++', '-Wno-gnu' ] # '-std=c++11' produces errors in Eigen
         conf.env.LINKFLAGS = [ '-stdlib=libc++' ]
         # for defining static const variables in header
         conf.env.CXXFLAGS += [ '-Wno-static-float-init' ]
@@ -164,7 +156,7 @@ def configure(conf):
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
    
-    conf.load('compiler_cxx compiler_c')
+    conf.load('compiler_cxx compiler_c qt4')
 
     conf.env['LINKFLAGS'] += [ '-Wl'] 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag? 
@@ -172,8 +164,9 @@ def configure(conf):
     # add this key otherwise gcc 4.8 will complain
     # conf.env['CXXFLAGS'] += [ '-Wno-unused-local-typedefs' ] #  --- outdated?
 
-    # don't care about centos for now
-    ## big fat hack for centos, which is still in stone age...
+    # commented below as we don't care about centos for now:
+    
+    # big fat hack for centos, which is still in stone age...
     #if sys.version_info[1] > 4:
     #    # option not available in centos' gcc...
     #    conf.env['CXXFLAGS'] += [  '-Wno-unused-result' ]
@@ -189,7 +182,6 @@ def configure(conf):
     prefix = normpath(conf.options.prefix)
     
     if sys.platform == 'linux2':
-        # TODO check if this still works for linux
         opts = { 'prefix': prefix,
              'qtlibdir': conf.env['LIBPATH_QTCORE'] or '/usr/lib',
              'qtincludedir': '-I' + ' -I'.join(conf.env['CPPPATH_QTCORE']),
@@ -235,7 +227,7 @@ def configure(conf):
 
     pcfile = '\n'.join([ l.strip() for l in pcfile.split('\n') ])
     conf.env.pcfile = pcfile
-    #open('build/gaia2.pc', 'w').write(pcfile)
+    #open('build/gaia2.pc', 'w').write(pcfile) # we'll do it later on the build stage
 
 
 def build(bld):

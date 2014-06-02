@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import os, os.path
-from waflib import Build # TODO DEBUG
 
 def options(opt):
     opt.add_option('--with-stlfacade', action='store_true',
@@ -19,7 +18,6 @@ def options(opt):
 def configure(conf):
     conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
     conf.env['WITH_TESTS'] = conf.options.with_tests
-    conf.env['WITH_CYCLOPS'] = conf.options.cyclops
     conf.recurse('bindings')
 
 def install_tree(bld, dst, src):
@@ -33,8 +31,6 @@ def install_tree(bld, dst, src):
                               os.path.join(root, f))
 
 def build_library(bld):
-    bld.post_mode = Build.POST_LAZY
-
     sources =  bld.path.ant_glob('*.cpp')   
     sources += bld.path.ant_glob('algorithms/*.cpp')
     sources += bld.path.ant_glob('metrics/*.cpp')
@@ -91,7 +87,7 @@ def build_with_gaia(bld, prog):
 
 
 def is_dev_version(bld):
-    mainws = os.path.join(bld.curdir, '..', 'wscript')
+    mainws = os.path.join(os.curdir, '..', 'wscript')
     version_line = [ l.strip() for l in open(mainws) if l.startswith('VERSION') ][0]
     return '-dev' in version_line
 
@@ -112,18 +108,20 @@ def build_tools(bld):
         use = ['gaia2'] + bld.env['USELIB'])
     
     # TODO refactor below
-    """
+    
     # GaiaFusion
     bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
 
     # gaiafreeze utility
-    gaiafreeze_prog = bld.new_task_gen('cxx', 'program')
-    gaiafreeze_prog.target = 'tools/gaiafreeze'
-    gaiafreeze_prog.source = 'tools/gaiafreeze.cpp'
-    build_with_gaia(bld, gaiafreeze_prog)
-
-    # gaia22to23fl utility -- we don't need this anymore,
-    # old gaia versions are obsolete and related code is not accessible via github
+    bld.program(
+        source = 'tools/gaiafreeze.cpp',
+        target = 'tools/gaiafreeze',
+        includes = [ '.', 'metrics', '3rdparty' ],
+        use = ['gaia2'] + bld.env['USELIB'])
+        
+    # we do not need gaia22to23fl utility anymore, because old gaia versions are obsolete and related code is not
+    # accessible via github 
+    # TODO delete gaia22to23fl in future
     #gaia22to23fl_prog = bld.new_task_gen('cxx', 'program')
     #gaia22to23fl_prog.target = 'tools/gaia22to23fl'
     #gaia22to23fl_prog.source = 'tools/gaia22to23fl.cpp'
@@ -133,47 +131,45 @@ def build_tools(bld):
         # Note: we don't want to build this with a released version, because
         # otherwise rpm insists on including it also in the distributed binary
         # gaiabench utility
-        gaiabench_prog = bld.new_task_gen('cxx', 'program')
-        gaiabench_prog.target = 'tools/gaiabench'
-        gaiabench_prog.source = 'tools/gaiabench.cpp tools/frozensearch.cpp'
-        build_with_gaia(bld, gaiabench_prog)
+        bld.program(
+            source = 'tools/gaiabench.cpp tools/frozensearch.cpp',
+            target = 'tools/gaiabench',
+            includes = [ '.', 'metrics', '3rdparty' ],
+            use = ['gaia2'] + bld.env['USELIB'])
 
     # Cyclops server
     if bld.env['WITH_CYCLOPS']:
         # cyclops "normal" server
-        cyclops_prog = bld.new_task_gen('cxx', 'program')
-        cyclops_prog.target = 'tools/cyclops'
-        cyclops_prog.source = '''
-        tools/cyclops_server/cyclopsserver.cpp
-        tools/cyclops_server/cyclopsproxy.cpp
-        tools/cyclops_server/cyclops.cpp
-        tools/cyclops_server/yamlrpcserver.cpp
-        '''
-        build_with_gaia(bld, cyclops_prog)
-
-        cyclops_prog.includes += [ 'tools/cyclops_server/' ]
-        cyclops_prog.uselib += [ 'QTNETWORK' ]
+        bld(
+            features = 'qt4 cxx cxxprogram',
+            source = '''
+            tools/cyclops_server/cyclopsserver.cpp
+            tools/cyclops_server/cyclopsproxy.cpp
+            tools/cyclops_server/cyclops.cpp
+            tools/cyclops_server/yamlrpcserver.cpp
+            ''',
+            target = 'tools/cyclops',
+            includes = [ '.', 'metrics', '3rdparty' ],
+            use = ['gaia2'] + bld.env['USELIB'])
 
         # cyclops "master" server
-        cyclopsmaster_prog = bld.new_task_gen('cxx', 'program')
-        cyclopsmaster_prog.target = 'tools/cyclopsmaster'
-        cyclopsmaster_prog.source = '''
-        tools/cyclops_server/cyclopsmasterserver.cpp
-        tools/cyclops_server/cyclopsproxy.cpp
-        tools/cyclops_server/cyclopsmaster.cpp
-        tools/cyclops_server/cyclops.cpp
-        tools/cyclops_server/yamlrpcserver.cpp
-        '''
-        build_with_gaia(bld, cyclopsmaster_prog)
-
-        cyclopsmaster_prog.includes += [ 'tools/cyclops_server/' ]
-        cyclopsmaster_prog.uselib += [ 'QTNETWORK' ]
+        bld(
+            features = 'qt4 cxx cxxprogram',
+            source = '''
+            tools/cyclops_server/cyclopsmasterserver.cpp
+            tools/cyclops_server/cyclopsproxy.cpp
+            tools/cyclops_server/cyclopsmaster.cpp
+            tools/cyclops_server/cyclops.cpp
+            tools/cyclops_server/yamlrpcserver.cpp
+            ''',
+            target = 'tools/cyclopsmaster',
+            includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+            use = ['gaia2'] + bld.env['USELIB'])
 
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', 'tools/cyclops_server/initscripts/*', chmod=0755)
-    """
-
+        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0755)
+    
 def build(bld):
     build_library(bld)
     build_tools(bld)
@@ -184,3 +180,14 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.add_subdirs('bindings')
 
+
+# use the following to add the include paths for generated *.moc files automatically
+from waflib.TaskGen import feature, before, after
+@feature('cxx')
+@after('process_source')
+@before('apply_incpaths')
+def add_includes_paths(self):
+    incs = set(self.to_list(getattr(self, 'includes', '')))
+    for x in self.compiled_tasks:
+        incs.add(x.inputs[0].parent.path_from(self.path))
+    self.includes = list(incs)
