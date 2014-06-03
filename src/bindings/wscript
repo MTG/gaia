@@ -18,8 +18,13 @@ def options(opt):
 def configure(conf):
     conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
     if conf.env['WITH_PYTHON_BINDINGS']:
-        conf.check_tool('swig python')
-        conf.check_swig_version((1,3,31))
+        conf.load('swig python')
+
+        if type(conf.env.SWIG) == str:
+            conf.env.SWIG = [ conf.env.SWIG ]
+        if conf.check_swig_version() < (1,3,31):
+            conf.fatal('this swig version is too old')
+
         conf.check_python_version((2,4))
         conf.check_python_headers()
 
@@ -33,34 +38,35 @@ def configure(conf):
                                          '../../src/metrics',
                                          '../../src/3rdparty'
                                          ]
-        conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ]
+        conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 
 def build(bld):
     # fix for waf/python2.6 install paths
-    major, minor, _, _, _ = sys.version_info
-    if major >= 2 and minor >= 6:
-        bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
+    #major, minor, _, _, _ = sys.version_info
+    #if major >= 2 and minor >= 6:
+    #    bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
 
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
         swig_flags = '-c++ -python -w451',
-        uselib = bld.env['USELIB'] + [ 'BINDINGS' ],
-        uselib_local = 'gaia2',
+        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}/gaia2'
         )
 
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
-    bld.install_files('${PYTHONDIR}/gaia2', 'pygaia/*.py')
+    bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
 
     subfolders = [ 'classification', 'linalg', 'mtgdb',
                    'scripts', 'scripts/classification', 'scripts/collections' ]
 
     for folder in subfolders:
-        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, 'pygaia/%s/*.py' % folder)
-        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, 'pygaia/%s/*.yaml' % folder)
+        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.py' % folder))
+        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.yaml' % folder))
 
     if bld.env['WITH_CYCLOPS']:
         bld.install_as('${PYTHONDIR}/gaia2/cyclops/__init__.py', '../tools/cyclops_client/cyclops.py')
+

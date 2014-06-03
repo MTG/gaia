@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
-def build_with_gaia(bld, prog):
-    prog.includes = [ '.', '..', '../3rdparty', '../algorithms', '../metrics' ]
-    prog.uselib_local = 'gaia2'
-    prog.uselib = bld.env['USELIB']
-    prog.install_path = 0 # do not install
-
-
 def build_prog(bld, progname):
-    prog = bld.new_task_gen('cxx', 'program')
-    prog.target = progname
-    prog.source = progname + '.cpp'
-    build_with_gaia(bld, prog)
+    bld.program(
+        source = progname + '.cpp',
+        target = progname,
+        includes = [ '.', '..', '../3rdparty', '../algorithms', '../metrics' ],
+        use = ['gaia2'] + bld.env['USELIB'],
+        install_path = 0 # do not install
+        )
+    
 
 def build(bld):
     list_progs = [ 'nnsearch', 'unittest',
@@ -22,7 +18,7 @@ def build(bld):
     for prog in list_progs:
         build_prog(bld, prog)
 
-    if bld.env_of_name('default')['WITH_STLFACADE']:
+    if bld.env['WITH_STLFACADE']:
         build_prog(bld, 'facadetest')
 
 

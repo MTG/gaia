@@ -88,6 +88,8 @@ def configure(conf):
 
     print('→ configuring the project in ' + conf.path.abspath())
 
+    conf.env.APP_VERSION = VERSION
+
     # compiler flags
     conf.env.CXXFLAGS += [ '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
     

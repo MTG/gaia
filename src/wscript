@@ -38,7 +38,10 @@ def build_library(bld):
     sources += bld.path.ant_glob('3rdparty/libsvm/*.cpp')
     sources += bld.path.ant_glob('parser/*.cpp')
 
-    bld.stlib(
+    if bld.env['WITH_STLFACADE']:
+        sources += bld.path.ant_glob('stlfacade/*.cpp')
+
+    gaialib = bld.stlib(
         source   = sources,
         target   = 'gaia2',
         use      = bld.env['USELIB'],
@@ -52,10 +55,8 @@ def build_library(bld):
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
     bld.add_group()
 
-
-    if bld.env['WITH_STLFACADE']:   # TODO: test if works -with-stlfacade 
-        gaialib.find_sources_in_dirs('stlfacade')
-        bld.install_files('${PREFIX}/include/gaia2', 'stlfacade/*.h')
+    if bld.env['WITH_STLFACADE']: 
+        bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('stlfacade/*.h'))
         bld.install_files('${PREFIX}/include/gaia2', 'baseexception.h')
     else:
         # we shouldn't redistribute these headers (they contain Qt code)
@@ -78,18 +79,8 @@ def build_library(bld):
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')
 
 
-
-def build_with_gaia(bld, prog):
-    prog.includes = [ '.', 'metrics', '3rdparty' ]
-    prog.uselib_local = 'gaia2'
-    prog.uselib = bld.env['USELIB']
-    print prog.uselib 
-
-
 def is_dev_version(bld):
-    mainws = os.path.join(os.curdir, '..', 'wscript')
-    version_line = [ l.strip() for l in open(mainws) if l.startswith('VERSION') ][0]
-    return '-dev' in version_line
+    return '-dev' in bld.env.APP_VERSION
 
 
 def build_tools(bld):
@@ -106,8 +97,6 @@ def build_tools(bld):
         target = 'tools/gaiainfo',
         includes = [ '.', 'metrics', '3rdparty' ],
         use = ['gaia2'] + bld.env['USELIB'])
-    
-    # TODO refactor below
     
     # GaiaFusion
     bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
@@ -141,7 +130,7 @@ def build_tools(bld):
     if bld.env['WITH_CYCLOPS']:
         # cyclops "normal" server
         bld(
-            features = 'qt4 cxx cxxprogram',
+            features = 'qt4 cxx cxxprogram cyclops',
             source = '''
             tools/cyclops_server/cyclopsserver.cpp
             tools/cyclops_server/cyclopsproxy.cpp
@@ -154,7 +143,7 @@ def build_tools(bld):
 
         # cyclops "master" server
         bld(
-            features = 'qt4 cxx cxxprogram',
+            features = 'qt4 cxx cxxprogram cyclops',
             source = '''
             tools/cyclops_server/cyclopsmasterserver.cpp
             tools/cyclops_server/cyclopsproxy.cpp
@@ -175,15 +164,14 @@ def build(bld):
     build_tools(bld)
 
     if bld.env['WITH_TESTS']:
-        bld.add_subdirs('test')
+        bld.recurse('test')
 
     if bld.env['WITH_PYTHON_BINDINGS']:
-        bld.add_subdirs('bindings')
-
+        bld.recurse('bindings')
 
 # use the following to add the include paths for generated *.moc files automatically
 from waflib.TaskGen import feature, before, after
-@feature('cxx')
+@feature('cyclops')
 @after('process_source')
 @before('apply_incpaths')
 def add_includes_paths(self):
