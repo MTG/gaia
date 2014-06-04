@@ -160,7 +160,6 @@ def configure(conf):
    
     conf.load('compiler_cxx compiler_c qt4')
 
-    conf.env['LINKFLAGS'] += [ '-Wl'] 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag? 
 
     # add this key otherwise gcc 4.8 will complain
