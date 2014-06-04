@@ -19,7 +19,7 @@ Linux:
 
 - Install dependencies (Ubuntu/Debian):
 
-    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev
+    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
 
 - online help for WAF (build system)
 
@@ -27,13 +27,14 @@ Linux:
 
 - configure with the desired options:
 
-    $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+    $ ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
     
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
 - compile libgaia.a:
 
     $ ./waf
+
     $ ./waf install [--destdir=/where/ever/]
 
 - build documentation (optional), it will be located at build/doc/ folder:
@@ -43,6 +44,22 @@ Linux:
 
 MacOS X:
 
+Build from commmand-line (recommended):
+
+- Install python, qt libraries 4.8, libYAML and swig dependencies using homebrew:	
+
+    $ brew install python --framework
+
+    $ brew install swig libyaml qt
+
+- Install pyyaml pip package in case use want to build with python bindings:
+
+    $ pip install pyyaml
+
+- Configure and build similarly to Linux (see above).
+
+
+Build with QtCreator (alternative):
 
 (Gaia2lib)
 
@@ -50,7 +67,9 @@ MacOS X:
 
 - install libYAML and swig dependencies using homebrew (we assume you already have a python 
   installation, otherwise you can also install it using homebrew):
+
 	$ brew install swig
+
 	$ brew install libyaml
 
 - use QtCreator to open the project file 'Gaia2lib.pro' in packaging/darwin/Gaia2lib/
@@ -61,14 +80,17 @@ MacOS X:
 (Gaia2Python - python bindings)
 
 - use swig to generate the file 'gaia_wrap.cxx' that will be needed to compile 'Gaia2Python':
+
 	$ swig -c++ -python -w451 /path_to_gaia_source/src/bindings/gaia.swig 
 
 - copy the generated 'gaia_wrap.cxx' to the Gaia2Python project folder:
+
 	$ cp /path_to_gaia_source/src/bindings/gaia_wrap.cxx /path_to_gaia_source/packaging/darwin/Gaia2Python/
 
 - use QtCreator to open the project file 'Gaia2Python.pro' in packaging/darwin/Gaia2Python/ and compile
 
 - run ./make_release_tarball in packaging/darwin:
+
 	$ ./make_release_tarball
 	
 - copy the folder packaging/darwin/tmp/gaia2/python/gaia2 (created when running make_release_tarball.sh) 
