@@ -56,8 +56,9 @@ Build from commmand-line (recommended):
 
     $ pip install pyyaml
 
-- Configure and build similarly to Linux (see above).
-
+- Configure, build and install similarly to Linux (see above). You might need to run waf command with sudo
+        
+    $ sudo ./waf configure --download --with-python --with-asserts --with-cyclops
 
 Build with QtCreator (alternative):
 
