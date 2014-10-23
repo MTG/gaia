@@ -41,18 +41,25 @@ G_MOUNT_POINTS = {
                    '10.80.25.171': '/mnt/mtgdb' # Dmitry
                    }
 
-try:
-    userid = (ipaddr, username)
-    MTGDB_AUDIO = G_ENV[userid]['mtgdb_audio']
-    BASE_DIR = G_ENV[userid]['base_dir']
 
-except:
-    BASE_DIR = None
-    MTGDB_AUDIO = '/raid/audio' # this seems like a reasonable default
+import os
+if os.environ.has_key('MTGDB_AUDIO'):
+    # read value from environment variable
+    MTGDB_AUDIO = os.environ['MTGDB_AUDIO']
+else:
 
     try:
-        MTGDB_AUDIO = G_MOUNT_POINTS[ipaddr]
+        userid = (ipaddr, username)
+        MTGDB_AUDIO = G_ENV[userid]['mtgdb_audio']
+        BASE_DIR = G_ENV[userid]['base_dir']
+
     except:
-        print 'Warning: could not detect on which computer this program is running.'
-        print 'IP address:', ipaddr, '- username:', username
-        print 'Please edit the mtgdb/environment.py file to add your data to it to be able to run it.'
+        BASE_DIR = None
+        MTGDB_AUDIO = '/raid/audio' # this seems like a reasonable default
+
+        try:
+            MTGDB_AUDIO = G_MOUNT_POINTS[ipaddr]
+        except:
+            print 'Warning: could not detect on which computer this program is running.'
+            print 'IP address:', ipaddr, '- username:', username
+            print 'Please edit the mtgdb/environment.py file to add your data to it to be able to run it.'
