@@ -56,6 +56,7 @@ class ClassificationResults(object):
             r = [ (cm.correct() * 100. / cm.total(), filename, param)
                   for (filename, cm, param) in self.results ]
 
+        print "number of results ====", len(r)
         r = sorted(r)[::-1][:n]
 
         return r
