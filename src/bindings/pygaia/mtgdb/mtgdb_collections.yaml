@@ -30,7 +30,7 @@
 
 
 # Rhythm databases
-- name: mirex_ballroom
+- name: ismir04_rhythm
   type: rhythm
   location: stable/ismir04_rhythm
 
