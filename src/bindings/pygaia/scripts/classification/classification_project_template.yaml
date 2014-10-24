@@ -38,8 +38,7 @@ preprocessing:
                                                     '*.min', '*.max', '*cov',
                                                     'tonal.thpcp', # because of division by zero
                                                     'lowlevel.spectral_energyband_high.*', # 0 for low samplerate
-                                                    'lowlevel.silence_rate*', # funky behavior in general
-                                                    'rhythm.beats_position' # can be a vector of any size
+                                                    'lowlevel.silence_rate*' # funky behavior in general
                                                     ] }
         - transfo: enumerate
           params: { descriptorNames: &stringDescs [ # 'rhythm.perceptual_tempo', # removed from new extractor
