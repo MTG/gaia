@@ -4,9 +4,21 @@
 import sys, glob
 ##import Options, Scripting
 from os.path import join, exists, normpath
+import os
+
+def get_git_version():
+    """ try grab the current version number from git"""
+    version = "Undefined"
+    if os.path.exists(".git"):
+        try:
+            version = os.popen("git describe --dirty --always").read().strip()
+        except Exception, e:
+            print e
+    return version
 
 APPNAME = 'gaia'
 VERSION = '2.4-dev'
+GIT_SHA = get_git_version();
 
 top = '.'
 out = 'build'
@@ -92,20 +104,20 @@ def configure(conf):
 
     # compiler flags
     conf.env.CXXFLAGS += [ '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
-    
+
     # define this to be stricter, but sometimes some libraries can give problems...
     #conf.env.CXXFLAGS += [ '-Werror' ]
-    
+
     if conf.options.MODE == 'debug':
         print ('→ Building in debug mode')
         conf.env.CXXFLAGS += [ '-g' ]
-    
-    elif conf.options.MODE == 'release':        
+
+    elif conf.options.MODE == 'release':
         print ('→ Building in release mode')
         conf.env.CXXFLAGS += [ '-O2', '-msse2' ]
     else:
         raise ValueError('mode should be either "debug" or "release"')
-    
+
     if conf.options.optimized:
         conf.env.CXXFLAGS += [ '-DNDEBUG', '-DQT_NO_DEBUG' ]
 
@@ -141,14 +153,13 @@ def configure(conf):
     if conf.env['WITH_CYCLOPS']:
         conf.env['USELIB'] += [ 'QTNETWORK' ]
 
-    
-    conf.env.DEFINES = 'GAIA_VERSION="' + VERSION + '"'
+    conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
     if sys.platform == 'darwin':
         # force the use of clang as compiler, we don't want gcc anymore on mac
         conf.env.CC = 'clang'
         conf.env.CXX = 'clang++'
-        
+
         ###conf.env.DEFINES   += [ 'GTEST_HAS_TR1_TUPLE=0' ]
         conf.env.CXXFLAGS += [ '-stdlib=libc++', '-Wno-gnu' ] # '-std=c++11' produces errors in Eigen
         conf.env.LINKFLAGS = [ '-stdlib=libc++' ]
@@ -157,16 +168,16 @@ def configure(conf):
         # add /usr/local/include as the brew formula for yaml doesn't have
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
-   
+
     conf.load('compiler_cxx compiler_c qt4')
 
-    #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag? 
+    #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
     # add this key otherwise gcc 4.8 will complain
     # conf.env['CXXFLAGS'] += [ '-Wno-unused-local-typedefs' ] #  --- outdated?
 
     # commented below as we don't care about centos for now:
-    
+
     # big fat hack for centos, which is still in stone age...
     #if sys.version_info[1] > 4:
     #    # option not available in centos' gcc...
@@ -181,7 +192,7 @@ def configure(conf):
 
     # write pkg-config file
     prefix = normpath(conf.options.prefix)
-    
+
     if sys.platform == 'linux2':
         print conf.env
         print "========"
@@ -211,7 +222,7 @@ def configure(conf):
 
     elif sys.platform == 'darwin':
         opts = { 'prefix': prefix,
-             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QTCORE'][0] + 
+             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QTCORE'][0] +
                          ' -framework ' + conf.env['FRAMEWORK_QTCORE'][0],
              'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
              'version': VERSION,
