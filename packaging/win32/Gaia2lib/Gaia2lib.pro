@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 DEFINES += YAML_DECLARE_STATIC \
-    GAIA_VERSION=\\\"2.4.3\\\"
+    GAIA_VERSION=\\\"2.4.4\\\"
 
 INCLUDEPATH = ../../../../gaia2-thirdparty/include \
     ../../../../gaia2-thirdparty/yaml-0.1.3/include \

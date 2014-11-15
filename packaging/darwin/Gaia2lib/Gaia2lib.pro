@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 DEFINES += YAML_DECLARE_STATIC \
-           GAIA_VERSION=\\\"2.4.3\\\"
+           GAIA_VERSION=\\\"2.4.4\\\"
 
 win32:INCLUDEPATH = $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/include) \
                     $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/yaml-0.1.3/include) \
