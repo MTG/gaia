@@ -17,7 +17,7 @@ def get_git_version():
     return version
 
 APPNAME = 'gaia'
-VERSION = '2.4.4'
+VERSION = open('VERSION', 'r').read().strip('\n')
 GIT_SHA = get_git_version();
 
 top = '.'
