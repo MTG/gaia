@@ -51,8 +51,10 @@ located.
             data = json.load(open(json_file))
 
             # remove descriptors, that will otherwise break gaia_fusion due to incompatibility of layouts
-            if data['metadata'].has_key('tags'):
+            if 'tags' in data['metadata']:
                 del data['metadata']['tags']
+            if 'sample_rate' in data['metadata']['audio_properties']:
+                del data['metadata']['audio_properties']['sample_rate']
 
             sig_file = os.path.splitext(json_file)[0] + '.sig'
             

@@ -12,11 +12,11 @@ className: %(className)s
 
 # Path to the directory where the preprocessed datasets are going to be stored
 # This can be absolute or relative to where you launch the main classification script
-datasetsDirectory: datasets
+datasetsDirectory: %(datasetsDirectory)s
 
 # Path to the directory where the results are going to be stored
 # This can be absolute or relative to where you launch the main classification script
-resultsDirectory: results
+resultsDirectory: %(resultsDirectory)s
 
 
 # Path to the yaml file containing the list of files to be merged in the original dataset
