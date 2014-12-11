@@ -32,7 +32,7 @@ def trainModel():
 """
 Project generation and related data preprocessing will be skipped if 'project_file' 
 already exists. Specify a non-existent 'project_file' or remove it if you want to 
-recreate the project.
+recreate the project. The filelist is expected to have "*.sig" files (yaml format)
 """
                          )
 
@@ -51,10 +51,6 @@ recreate the project.
     if not os.path.isfile(project_file):
         print "Creating classification project", project_file
 
-        # temporary filelist location
-        filelist_file_sig = splitext(basename(filelist_file))[0] + '.sig.yaml'
-        filelist_file_sig = join(project_dir, filelist_file_sig)
-
         # /datasets and /results location
         datasets_dir = join(project_dir, 'datasets')
         results_dir = join(project_dir, 'results')
@@ -63,19 +59,26 @@ recreate the project.
             os.makedirs(project_dir)
         else:
             # remove /datasets and /results in the case old results are there 
-            shutil.rmtree(datasets_dir)
-            shutil.rmtree(results_dir)
+            if os.path.exists(datasets_dir):
+                shutil.rmtree(datasets_dir)
+            if os.path.exists(results_dir):
+                shutil.rmtree(results_dir)
 
-        # convert json to sig
-        sys.argv = ['json_to_sig.py', filelist_file, filelist_file_sig]
+        ## convert json to sig
+        # temporary filelist location
+        #filelist_file_sig = splitext(basename(filelist_file))[0] + '.sig.yaml'
+        #filelist_file_sig = join(project_dir, filelist_file_sig)
+
+        #sys.argv = ['json_to_sig.py', filelist_file, filelist_file_sig]
     
-        # do not allow any missing sig files
-        if convertJsonToSig():
-            print "Error: some descriptor files are missing; training failed."
-            sys.exit(2)
+        ## do not allow any missing sig files
+        #if convertJsonToSig():
+        #    print "Error: some descriptor files are missing; training failed."
+        #    sys.exit(2)
 
         # generate classification project
-        sys.argv = ['generate_classification_project.py', groundtruth_file, filelist_file_sig, project_file, datasets_dir, results_dir]
+        sys.argv = ['generate_classification_project.py', groundtruth_file, filelist_file, project_file, datasets_dir, results_dir]
+        generateProject()
 
     else:
         print "Project file", project_file, "has been found. Skipping project generation step."

@@ -34,7 +34,7 @@ def selectBestModel():
 
     try:
         project_file = args[0]
-        result_model_file = args[1]
+        results_model_file = args[1]
     except:
         parser.print_help()
         sys.exit(1)
@@ -53,7 +53,7 @@ def selectBestModel():
         cr.readResults(results_dir)
 
         accuracy, filename, params = cr.best(1, classifierType)[0]
-        print "RESULT " + project_file + '\t' + accuracy + '\t' + filename
+        print "RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename
 
         f.write('<h1>%s (%s)</h1>\nAccuracy: %s\n' % (className, project_file, accuracy))
 

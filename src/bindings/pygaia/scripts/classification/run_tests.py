@@ -60,7 +60,7 @@ def runTests():
     except OSError:
         pass
 
-    test = ClassificationTaskManager(yamlfile)
+    test = ClassificationTaskManager(project_file)
     test.run()
 
 
