@@ -25,13 +25,24 @@ from gaia2.classification import ClassificationTaskManager
 import os, os.path
 import sys
 import logging
+from optparse import OptionParser
 
 debugLevel = logging.INFO
 
-if __name__ == '__main__':
+def runTests():
+    parser = OptionParser(usage = '%prog [options] project_file')
+
+    options, args = parser.parse_args()
+
+    try:
+        project_file = args[0]
+    except:
+        parser.print_help()
+        sys.exit(1)
+
     # open the yaml file describing the analysis to perform
     try:
-        yamlfile = os.path.abspath(sys.argv[1])
+        project_file = os.path.abspath(sys.argv[1])
     except:
         print 'ERROR: You need to specify a yaml project file...'
         print 'Exiting...'
@@ -45,10 +56,15 @@ if __name__ == '__main__':
 
     # move to the project file directory so all paths can be relative
     try:
-        os.chdir(os.path.split(yamlfile)[0])
+        os.chdir(os.path.split(project_file)[0])
     except OSError:
         pass
 
     test = ClassificationTaskManager(yamlfile)
     test.run()
+
+
+if __name__ == '__main__':
+    runTests()
+
 

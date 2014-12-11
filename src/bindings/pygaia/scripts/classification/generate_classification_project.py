@@ -32,7 +32,7 @@ PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml'))
 
 
 def generateProject():
-    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file')
+    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file datasets_dir results_dir')
 
     options, args = parser.parse_args()
 
@@ -40,6 +40,8 @@ def generateProject():
         groundtruth_file = args[0]
         filelist_file = args[1]
         project_file = args[2]
+        datasets_dir = args[3]
+        results_dir = args[4]
     except:
         parser.print_help()
         sys.exit(1)
@@ -74,6 +76,8 @@ def generateProject():
     # write the project file
     with open(project_file, 'w') as pfile:
         pfile.write(PROJECT_TEMPLATE % { 'className': className,
+                                         'datasetsDirectory': abspath(datasets_dir),
+                                         'resultsDirectory': abspath(results_dir),
                                          'filelist': abspath(filelist_file),
                                          'groundtruth': abspath(groundtruth_file) })
 

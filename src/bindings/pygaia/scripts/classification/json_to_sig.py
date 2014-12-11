@@ -67,7 +67,7 @@ located.
     print "Failed to convert", len(errors), "files:"
     for e in errors:
         print e
-
+    return len(errors)
 
 if __name__ == '__main__':
     convertJsonToSig()
