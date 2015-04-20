@@ -11,7 +11,7 @@ __version__ = _gaia2.cvar.version
 
 #### ParameterMap and Factories adjustments ###################################
 
-# shortcut for easily creating ParameterMap given a python map
+/* shortcut for easily creating ParameterMap given a python map */
 def pmap(param_map):
     if isinstance(param_map, ParameterMap):
         return param_map
@@ -24,7 +24,7 @@ def pmap(param_map):
         if not isinstance(key, basestring):
             raise TypeError('A key in the map is not a string; can not convert it')
 
-        # until python 3, everything should always be utf-8 encoded bytestrings
+        /* until python 3, everything should always be utf-8 encoded bytestrings */
         if isinstance(key, unicode):
             key = key.encode('utf-8')
         if isinstance(value, unicode):
@@ -39,7 +39,7 @@ def pmap(param_map):
 
 ParameterMap.setParameterMap = lambda pm, key, value: _gaia2.ParameterMap_setParameterMap(pm, key, pmap(value))
 
-# converts a TransfoChain to a python list of maps
+/* converts a TransfoChain to a python list of maps */
 def TransfoChain_toPython(history):
     result = []
     for i in range(history.size()):
@@ -49,16 +49,16 @@ def TransfoChain_toPython(history):
 TransfoChain.toPython = TransfoChain_toPython
 
 
-# useful typedefs
+/* useful typedefs */
 MetricFactory = DistanceFunctionFactory
 InputSpace = ResultSet
 
-# oh my, now that's some hack: we don't want python users to access Filter* directly
-# but through the FilterWrapper, so we override (python) the Filter class with the
-# FilterWrapper one...
+/* oh my, now that's some hack: we don't want python users to access Filter* directly
+but through the FilterWrapper, so we override (python) the Filter class with the
+FilterWrapper one... */
 Filter = FilterWrapper
 
-# make conversion to ParameterMap automatic when calling AnalyzerFactory::create()
+/* make conversion to ParameterMap automatic when calling AnalyzerFactory::create() */
 def _AnalyzerFactory_create(name, params = {}):
     result = _gaia2.AnalyzerFactory_create(name, pmap(params))
     try:
@@ -68,7 +68,7 @@ def _AnalyzerFactory_create(name, params = {}):
 
 AnalyzerFactory.create = staticmethod(_AnalyzerFactory_create)
 
-# make conversion to ParameterMap automatic when calling MetricFactory::create()
+/* make conversion to ParameterMap automatic when calling MetricFactory::create() */
 def _MetricFactory_create(name, layout, params = {}):
     result = _gaia2.DistanceFunctionFactory_create(name, layout, pmap(params))
     try:
@@ -89,7 +89,7 @@ FrozenDistanceFactory.create = staticmethod(_FrozenDistanceFactory_create)
 
 FrozenMetricFactory = FrozenDistanceFactory
 
-# complete transformation in just one function call
+/* complete transformation in just one function call */
 def transform(dataset, transfoName, params = {}):
     analyzer = AnalyzerFactory.create(transfoName, params)
     return analyzer.analyze(dataset).applyToDataSet(dataset)
@@ -124,7 +124,7 @@ def addMultiChildRef(cls, method):
 
     def newMethod(*args, **kwargs):
         result = origMethod(*args, **kwargs)
-        # args[0] == self
+        /* args[0] == self */
         try:
             args[0]._childRef += [ (args[1:], kwargs) ]
         except AttributeError:
@@ -187,7 +187,7 @@ Point.__setitem__ = autoSetValue
 
 #### Descriptors pythonization ################################################
 
-# print methods
+/* print methods */
 def printDescriptor(x):
     result = []
     i = 0
@@ -200,8 +200,8 @@ def printDescriptor(x):
 
     return repr(result)
 
-# remove surrounding quotes only if it is the empty string or a single string
-# (repr for list of strings do not have these surrounding quotes)
+/* remove surrounding quotes only if it is the empty string or a single string */
+/* (repr for list of strings do not have these surrounding quotes) */
 def stripQuotes(x):
     if x.size() < 2:
         return repr(x)[1:-1]
@@ -217,10 +217,10 @@ Transformation.__repr__ = lambda x: repr(_gaia2.Transformation_toPython(x))
 
 PointLayout.__str__ = lambda x: x.toYaml()
 
-# automatic coercion
+/* automatic coercion */
 RealDescriptor.__float__ = lambda x: x.toSingleValue()
 
-# real descriptors comparisons
+/* real descriptors comparisons */
 def _realDescComp(a, b):
     if isinstance(b, list) or isinstance(b, float) or isinstance(b, int):
         return a == RealDescriptor(b)
@@ -228,20 +228,20 @@ def _realDescComp(a, b):
 
 RealDescriptor.__eq__ = _realDescComp
 
-# commutativity of RealDescriptor operators
+/* commutativity of RealDescriptor operators */
 RealDescriptor.__radd__ = RealDescriptor.__add__
 RealDescriptor.__rsub__ = lambda x, y: -RealDescriptor.__sub__(x, y)
 
-# string comparison (between StringDescriptor and python string, for instance)
+/* string comparison (between StringDescriptor and python string, for instance) */
 StringDescriptor.__eq__ = lambda x, y: str(x) == str(y)
 StringDescriptor.__neq__ = lambda x, y: str(x) != str(y)
 StringDescriptor.__hash__ = lambda x: hash(str(x))
 
 
-# enhanced polymorphism for Parameters
+/* enhanced polymorphism for Parameters */
 
-# should be self.toParameterMap(), but it seems it gets deleted before we even
-# reach the end of the line...
+/* should be self.toParameterMap(), but it seems it gets deleted before we even 
+reach the end of the line... */
 Parameter.__getitem__ = lambda self, x: self.toPython().__getitem__(x)
 
 
