@@ -26,6 +26,7 @@ for label in gt:
 min_class_len = min(len(gt[label]) for label in gt)
 print 'Minimum class length:', min_class_len
 
+input_gt['groundTruth'] = {}
 for label in gt:
     shuffle(gt[label])
     for track in gt[label][:min_class_len]:
