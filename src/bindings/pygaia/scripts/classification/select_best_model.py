@@ -15,30 +15,17 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 import sys, os.path, shutil
 from gaia2.fastyaml import yaml
 from get_classification_results import ClassificationResults
-from generate_svm_history_from_config import trainSVMHistory 
+from generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
 from optparse import OptionParser
 
-
-def selectBestModel():
-
-    parser = OptionParser(usage = '%prog [options] project_file results_model_file')
-
-    options, args = parser.parse_args()
-
-    try:
-        project_file = args[0]
-        results_model_file = args[1]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
+def selectBestModel(project_file, results_model_file):
     f = open(results_model_file + '.results.html', 'w')
 
     project = yaml.load(open(project_file, 'r'))
@@ -60,9 +47,9 @@ def selectBestModel():
         cm = ConfusionMatrix()
         cm.load(filename)
         f.write(cm.toHtml())
-        
+
         filename = filename.replace('.result', '.param')
-    
+
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
 
@@ -72,4 +59,15 @@ def selectBestModel():
 
 
 if __name__ == '__main__':
-    selectBestModel()
+    parser = OptionParser(usage = '%prog [options] project_file results_model_file')
+
+    options, args = parser.parse_args()
+
+    try:
+        project_file = args[0]
+        results_model_file = args[1]
+    except:
+        parser.print_help()
+        sys.exit(1)
+
+    selectBestModel(project_file, results_model_file)

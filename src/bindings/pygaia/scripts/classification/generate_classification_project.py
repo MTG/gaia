@@ -15,7 +15,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -29,27 +29,11 @@ import gaia2.fastyaml as yaml
 
 PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml')).read()
 
-
-
-def generateProject():
-    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file datasets_dir results_dir')
-
-    options, args = parser.parse_args()
-
-    try:
-        groundtruth_file = args[0]
-        filelist_file = args[1]
-        project_file = args[2]
-        datasets_dir = args[3]
-        results_dir = args[4]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
+def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir):
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
         className = gt['className']
-        groundTruth = gt['groundTruth']   
+        groundTruth = gt['groundTruth']
     except:
         print groundtruth_file, "groundtruth file has incorrect format"
         sys.exit(2)
@@ -59,14 +43,14 @@ def generateProject():
     gt_trackids = groundTruth.keys()
     fl_trackids = fl.keys()
 
-    # check that there are no dublicate ids 
+    # check that there are no dublicate ids
     if len(gt_trackids) != len(set(gt_trackids)):
         print groundtruth_file, "contains dublicate track ids"
         sys.exit(3)
-    
+
     if len(fl_trackids) != len(set(fl_trackids)):
         print filelist_file, "contains dublicate track ids"
-        sys.exit(3)  
+        sys.exit(3)
 
     # check if filelist is consistent with groundtruth (no files missing)
     if set(gt_trackids) != set(fl_trackids):
@@ -84,7 +68,20 @@ def generateProject():
     print 'Successfully written', project_file
 
 
-
 if __name__ == '__main__':
-    generateProject()
+    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file datasets_dir results_dir')
+
+    options, args = parser.parse_args()
+
+    try:
+        groundtruth_file = args[0]
+        filelist_file = args[1]
+        project_file = args[2]
+        datasets_dir = args[3]
+        results_dir = args[4]
+    except:
+        parser.print_help()
+        sys.exit(1)
+
+    generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir)
 

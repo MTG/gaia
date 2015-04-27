@@ -15,7 +15,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -29,20 +29,10 @@ from optparse import OptionParser
 
 debugLevel = logging.INFO
 
-def runTests():
-    parser = OptionParser(usage = '%prog [options] project_file')
-
-    options, args = parser.parse_args()
-
-    try:
-        project_file = args[0]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
+def runTests(project_file):
     # open the yaml file describing the analysis to perform
     try:
-        project_file = os.path.abspath(sys.argv[1])
+        project_file = os.path.abspath(project_file)
     except:
         print 'ERROR: You need to specify a yaml project file...'
         print 'Exiting...'
@@ -55,6 +45,7 @@ def runTests():
         cvar.verbose = False
 
     # move to the project file directory so all paths can be relative
+    olddir = os.getcwd()
     try:
         os.chdir(os.path.split(project_file)[0])
     except OSError:
@@ -63,8 +54,21 @@ def runTests():
     test = ClassificationTaskManager(project_file)
     test.run()
 
+    try:
+        os.chdir(olddir)
+    except OSError:
+        pass
 
 if __name__ == '__main__':
-    runTests()
+    parser = OptionParser(usage = '%prog [options] project_file')
 
+    options, args = parser.parse_args()
+
+    try:
+        project_file = args[0]
+    except:
+        parser.print_help()
+        sys.exit(1)
+
+    runTests(project_file)
 
