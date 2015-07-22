@@ -105,11 +105,7 @@ int main(int argc, char* argv[]) {
   // get command-line options
   ParameterMap options = parseOptions(argc, argv);
 
-#ifdef USE_BZ2_ENCRYPTION
-  yaml::Node filelist = yaml::loadFromPlainFile(options.value("inputFiles"));
-#else
   yaml::Node filelist = yaml::loadFromFile(options.value("inputFiles"));
-#endif
 
   const yaml::Mapping& tracks = filelist.mapping();
 

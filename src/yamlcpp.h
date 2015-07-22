@@ -224,10 +224,6 @@ QByteArray dump(const Node& node);
  */
 Node loadFromFile(const QString& filename, bool markQuotedScalars = false);
 
-#ifdef USE_BZ2_ENCRYPTION
-Node loadFromPlainFile(const QString& filename, bool markQuotedScalars = false);
-#endif
-
 
 inline Stringifier& operator<<(Stringifier& out, const Node& node) {
   switch (node.type()) {

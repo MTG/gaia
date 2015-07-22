@@ -28,11 +28,6 @@ def options(opt):
     opt.load('compiler_cxx compiler_c qt4')
     opt.recurse('src')
 
-    # whether or not to use the "bz2-encryption"
-    opt.add_option('--with-bz2-encryption', action = 'store_true',
-                   dest = 'bz2_encryption', default = False,
-                   help = 'whether to load signature files using the "bz2-encryption"')
-
     # whether or not to have all the asserts working
     opt.add_option('--with-asserts', action = 'store_false',
                    dest = 'optimized', default = True,
@@ -79,18 +74,6 @@ def check_tbb(conf):
     conf.env['CXXDEFINES_TBB'] = 'HAVE_TBB'
     conf.env['LIB_TBB'] = 'tbb'
     conf.env['USELIB'] += [ 'TBB' ]
-
-
-def check_bz2(conf):
-    conf.check_cxx(header_name = 'bzlib.h', mandatory = 1,
-                   errmsg = 'libbz2 is required in order to compile Gaia with encryption support.')
-
-    conf.env['LIB_BZ2'] = 'bz2'
-    conf.env['CXXDEFINES_BZ2'] = 'USE_BZ2_ENCRYPTION'
-    conf.env['USELIB'] += [ 'BZ2' ]
-
-
-
 
 
 def configure(conf):
@@ -142,11 +125,6 @@ def configure(conf):
     conf.env['WITH_TBB'] = conf.options.tbb
     if conf.env['WITH_TBB']:
         check_tbb(conf)
-
-    # optional dependency: libbz2, if asked for bz2-encryption
-    conf.env['WITH_BZ2_ENCRYPTION'] = conf.options.bz2_encryption
-    if conf.env['WITH_BZ2_ENCRYPTION']:
-        check_bz2(conf)
 
     # optional dependency: QtNetwork for Cyclops Server
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops

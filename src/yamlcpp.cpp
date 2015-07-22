@@ -22,10 +22,6 @@
 #include <iostream>
 #include "yamlcpp.h"
 
-#ifdef USE_BZ2_ENCRYPTION
-#include "bzlib.h"
-#endif
-
 using namespace std;
 
 namespace gaia2 {
@@ -34,70 +30,6 @@ namespace yaml {
 // adapted from the one in libyaml/tests/example-reformatter.c
 QString errorMessage(const yaml_parser_t& parser);
 
-
-#ifdef USE_BZ2_ENCRYPTION
-
-Node loadFromByteArray(QByteArray& encrypted, bool markQuotedScalars) {
-  // add some magic
-  encrypted.prepend("BZ");
-
-  char* buffer = 0;
-  uint size = 4096;
-  int status;
-  do {
-    delete buffer;
-    size *= 2;
-    buffer = new char[size];
-
-    status = BZ2_bzBuffToBuffDecompress(buffer, &size,
-                                        encrypted.data(), encrypted.size(),
-                                        0, 0);
-  } while (status == BZ_OUTBUFF_FULL);
-
-  if (status != BZ_OK) {
-    throw GaiaException("Error while trying to read encrypted file, error code: ", status);
-  }
-
-  Node result = load(buffer, size, markQuotedScalars);
-  delete buffer;
-  return result;
-}
-
-Node loadFromString(const string& str, bool markQuotedScalars) {
-  QByteArray encrypted = QByteArray(str.c_str(), str.size());
-  return loadFromByteArray(encrypted, markQuotedScalars);
-}
-
-Node loadFromFile(const QString& filename, bool markQuotedScalars) {
-  QFile file(filename);
-  if (!file.open(QIODevice::ReadOnly)) {
-    file.setFileName(QString(filename).remove("\\"));
-    if (!file.open(QIODevice::ReadOnly)) {
-      throw GaiaException("Yaml::loadFromFile: Could not open file: ", filename);
-    }
-  }
-
-  QByteArray encrypted = file.readAll();
-  return loadFromByteArray(encrypted, markQuotedScalars);
-}
-
-Node loadFromPlainFile(const QString& filename, bool markQuotedScalars) {
-  QFile file(filename);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    file.setFileName(QString(filename).remove("\\"));
-    if (!file.open(QIODevice::ReadOnly)) {
-      throw GaiaException("Yaml::loadFromFile: Could not open file: ", filename);
-    }
-  }
-
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
-
-  QByteArray asciiStr = stream.readAll().toUtf8();
-  return yaml::load(asciiStr.constData(), asciiStr.size(), markQuotedScalars);
-}
-
-#else // USE_BZ2_ENCRYPTION
 
 Node loadFromString(const string& str, bool markQuotedScalars) {
   return load(str.c_str(), (uint)str.size(), markQuotedScalars);
@@ -118,8 +50,6 @@ Node loadFromFile(const QString& filename, bool markQuotedScalars) {
   QByteArray asciiStr = stream.readAll().toUtf8();
   return yaml::load(asciiStr.constData(), asciiStr.size(), markQuotedScalars);
 }
-
-#endif // USE_BZ2_ENCRYPTION
 
 
 Node load(const QString& str) {
