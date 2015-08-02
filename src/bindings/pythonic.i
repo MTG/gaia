@@ -2,7 +2,7 @@
 // python code (swig wtf?) where it is normally a reserved keyword
 #undef range
 
-%pythoncode {
+%pythoncode %{
 
 import sys
 import os.path
@@ -266,4 +266,4 @@ def rootdir():
     return os.path.dirname(__file__)
 
 
-} //# %pythoncode
+%} //# %pythoncode

@@ -43,12 +43,12 @@
     return self->size();
   }
 
-  %pythoncode {
+  %pythoncode %{
     def __abs__(self):
       result = RealDescriptor(self)
       result.abs()
       return result
-  }
+  %}
 }
 
 %extend gaia2::SingleValueMorphable<QString> {

@@ -7,10 +7,10 @@
     return convert::SearchResults_to_StlTypes(qlist);
   }
 
-  %pythoncode {
+  %pythoncode %{
     def get(self, n, offset = 0):
       return self._get(n, offset)
-  }
+  %}
 
   void addPoints(const DataSet* dataset, const std::vector<std::string>& ids) {
     self->addPoints(dataset, convert::VectorString_to_QStringList(ids));
@@ -30,8 +30,8 @@
     return convert::SearchResults_to_StlTypes(qlist);
   }
 
-  %pythoncode {
+  %pythoncode %{
     def get(self, n, offset = 0):
       return self._get(n, offset)
-  }
+  %}
 }

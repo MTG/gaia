@@ -39,10 +39,10 @@
     return result;
   }
 
-  %pythoncode {
+  %pythoncode %{
     def scope(self, seg):
       return self._scope(seg)
-  }
+  %}
 
   void setScope(int segment, Real start, Real end) {
     self->scope(segment).start = start;
@@ -60,13 +60,13 @@
                                                               QString::fromUtf8(name.c_str(), name.size())));
   }
 
-  %pythoncode {
+  %pythoncode %{
     def value(self, *args):
       result = self._value(*args)
       if len(result) == 1:
         return result[0]
       return result
-  }
+  %}
 
   void setValue(const std::string& name, const RealDescriptor& value) {
     self->setValue(QString::fromUtf8(name.c_str(), name.size()), value);
@@ -104,13 +104,13 @@
     return convert::StringDescriptor_to_VectorString(self->label(nsegment, QString::fromUtf8(name.c_str(), name.size())));
   }
 
-  %pythoncode {
+  %pythoncode %{
     def label(self, *args):
       result = self._label(*args)
       if len(result) == 1:
         return result[0]
       return result
-  }
+  %}
 
 
   // TODO: deprecate those, as we shouldn't be using the RealDescriptor wrapper in python anymore

@@ -8,13 +8,13 @@
     return convert::QStringList_to_VectorString(self->differenceWith(other));
   }
 
-  %pythoncode {
+  %pythoncode %{
     def symmetricDifferenceWith(self, other):
       return self._symmetricDifferenceWith(other)
 
     def differenceWith(self, other):
       return self._differenceWith(other)
-  }
+  %}
 
   Region descriptorLocation(const std::string& name) const {
     return self->descriptorLocation(QString::fromUtf8(name.c_str(), name.size()));

@@ -8,7 +8,7 @@
 }
 
 
-%pythoncode {
+%pythoncode %{
 
 import fnmatch
 import collections
@@ -211,7 +211,7 @@ class FrozenPoint(tuple):
 
         return result
 
-}
+%}
 
 %extend gaia2::FrozenDataSet {
 
@@ -253,7 +253,7 @@ class FrozenPoint(tuple):
                               self->row(i).data() + self->dimension());
   }
 
-  %pythoncode {
+  %pythoncode %{
     def point(self, name):
       return FrozenPoint(self._point_tuple(name), name, self)
 
@@ -263,7 +263,7 @@ class FrozenPoint(tuple):
     def layout(self):
         return FrozenLayout(self)
 
-  }
+  %}
 
 
   std::vector<std::string> pointNames() const {
@@ -274,10 +274,10 @@ class FrozenPoint(tuple):
     return self->pointName(idx).toUtf8().data();
   }
 
-  %pythoncode {
+  %pythoncode %{
     def pointName(self, idx):
       return self._pointName(idx)
-  }
+  %}
 
   std::vector<std::string> descriptorNames() const {
     return convert::QStringList_to_VectorString(self->descriptorNames());

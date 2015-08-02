@@ -18,13 +18,13 @@
     return self->layout();
   }
 
-  %pythoncode {
+  %pythoncode %{
     def name(self):
       return self._name()
 
     def layout(self):
       return self._layout()
-  }
+  %}
 
 
   void setName(const std::string& name) {
