@@ -37,6 +37,8 @@ def convertJsonToSig(filelist_file, result_filelist_file):
                 del data['metadata']['tags']
             if 'sample_rate' in data['metadata']['audio_properties']:
                 del data['metadata']['audio_properties']['sample_rate']
+            if 'lossless' in data['metadata']['audio_properties']:
+                del data['metadata']['audio_properties']['lossless']
 
             sig_file = os.path.splitext(json_file)[0] + '.sig'
 
