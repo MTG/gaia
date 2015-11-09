@@ -17,27 +17,29 @@ INSTALL
 
 Linux:
 
-- Install dependencies (Ubuntu/Debian):
+- Install dependencies (Ubuntu/Debian)
 
     $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
 
-- online help for WAF (build system)
+- Online help for WAF (build system)
 
     $ ./waf --help
 
-- configure with the desired options:
+- Configure with the desired options
 
     $ ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
     
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
-- compile libgaia.a:
+- Compile libgaia.a:
 
     $ ./waf
+    
+- Install (to install system-wide you might need ```sudo```)
 
     $ ./waf install [--destdir=/where/ever/]
 
-- build documentation (optional), it will be located at build/doc/ folder:
+- Build documentation (optional), it will be located at build/doc/ folder
 
     $ ./python src/doc/regenerate_docstring.py
 
