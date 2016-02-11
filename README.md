@@ -20,7 +20,7 @@ Dependencies:
 INSTALL
 -------
 
-## Linux:
+## Linux
 
 - Install dependencies (Ubuntu/Debian)
    ```
@@ -53,9 +53,22 @@ INSTALL
     $ ./python src/doc/regenerate_docstring.py
     ```
 
-## MacOS X:
+## MacOS X
 
-### Build from commmand-line (recommended):
+### Build from command-line using Homebrew (recommended):
+
+- Install homebrew tap:
+    ```
+    brew tap MTG/essentia
+    ```
+
+- Build Gaia (this will also install all the dependencies)
+
+    ```
+    brew install essentia --HEAD
+    ```
+
+### Build from command-line:
 
 - Install python, qt libraries 4.8, libYAML and swig dependencies using homebrew:	
     ```
@@ -112,7 +125,7 @@ INSTALL
   to the site-packages directory of your python distribution. you can now import gaia2 from python
 
 
-## Windows:
+## Windows
 
 - use the QtCreator projects inside the packaging/win32 directory (not tested).
 
