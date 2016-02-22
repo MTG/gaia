@@ -65,7 +65,7 @@ INSTALL
 - Build Gaia (this will also install all the dependencies)
 
     ```
-    brew install essentia --HEAD
+    brew install gaia --HEAD
     ```
 
 ### Build from command-line:
