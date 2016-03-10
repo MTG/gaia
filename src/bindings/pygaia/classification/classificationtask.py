@@ -29,6 +29,7 @@ from gaia2 import DataSet, cvar
 from gaia2.classification import GroundTruth, evaluate, evaluateNfold, utils
 from os.path import exists
 import logging
+import json
 
 log = logging.getLogger('gaia2.classification.ClassificationTask')
 
@@ -170,6 +171,7 @@ class ClassificationTask(object):
                 log.info('Running evaluation %d for: %s with classifier %s and dataset %s' % (i, outfilename,
                                                                                               param['classifier'],
                                                                                               param['preprocessing']))
+                log.info('    PID: %d, parameters: %s' % (os.getpid(), json.dumps(param)))
 
                 # run evaluation
                 confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, **trainingparam)
