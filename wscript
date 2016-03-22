@@ -172,8 +172,6 @@ def configure(conf):
     prefix = normpath(conf.options.prefix)
 
     if sys.platform == 'linux2':
-        print conf.env
-        print "========"
 
         opts = { 'prefix': prefix,
              'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
@@ -181,7 +179,6 @@ def configure(conf):
              'version': VERSION,
              'tbblib': tbblib,
              }
-        print opts
 
         pcfile = '''prefix=%(prefix)s
         libdir=${prefix}/lib
@@ -195,8 +192,6 @@ def configure(conf):
         Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
         Cflags: -I${includedir}/gaia2 ${qtincludes}
         ''' % opts
-        print "---->"
-        print pcfile
 
     elif sys.platform == 'darwin':
         opts = { 'prefix': prefix,
@@ -217,7 +212,7 @@ def configure(conf):
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
         Libs: -L${libdir} ${qtlibdir} -lgaia2 -lyaml %(tbblib)s
-        Cflags: -I${includedir}/gaia2 ${qtincludes}
+        Cflags: -I${includedir} ${qtincludes}
         ''' % opts
 
 
