@@ -190,7 +190,7 @@ def configure(conf):
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
         Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
-        Cflags: -I${includedir}/gaia2 ${qtincludes}
+        Cflags: -I${includedir} ${qtincludes}
         ''' % opts
 
     elif sys.platform == 'darwin':
