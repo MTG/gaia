@@ -22,7 +22,7 @@
 
 #include <QVector>
 #include <QPointer>
-#include <Eigen/Dense>
+#include "Eigen/Dense"
 #include "layoutawarefactory.h"
 #include "frozendataset.h"
 #include "utils.h"
