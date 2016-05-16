@@ -21,7 +21,7 @@
 #define GAIA_PARSER_PARSERTYPES_H
 
 #include <QList>
-#include "filter.h"
+#include "../point.h"
 #include "grammar.h"
 
 namespace gaia2 {
