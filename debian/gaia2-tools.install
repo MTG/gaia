@@ -1,7 +1,6 @@
 debian/tmp/usr/bin/gaiamerge
 debian/tmp/usr/bin/gaiafusion
 debian/tmp/usr/bin/gaiainfo
-debian/tmp/usr/bin/gaia22to23fl
 debian/tmp/usr/bin/gaiafreeze
 debian/tmp/usr/share/man/man1/gaiamerge.1
 debian/tmp/usr/share/man/man1/gaiafusion.1
