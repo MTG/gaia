@@ -34,7 +34,7 @@ INSTALL
    
 - Configure with the desired options
     ```
-    $ ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+    $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
     ```    
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
