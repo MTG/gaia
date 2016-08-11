@@ -54,7 +54,7 @@ class FrozenLayout(object):
 
         if isinstance(pattern, basestring):
             pattern = pattern.lower()
-            # try to be a bit lenient here by allowing to not specify the namespace of a descriptor
+            /* try to be a bit lenient here by allowing to not specify the namespace of a descriptor */
             if pattern[0] not in ('*', '.'):
                 pattern = '*.' + pattern
 
