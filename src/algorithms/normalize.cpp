@@ -222,7 +222,7 @@ ParameterMap Normalize::getNormalizationCoeffs(const QString& descriptorName,
   // happens for 2D arrays, where 2 first values are dimensions, hence constant, but
   // as a vector doesn't get cleaned
   if (a.isinf() || a.isnan()) {
-    throw GaiaException("Normalize: Division by zero in ", descriptorName);
+    throw GaiaException("Normalize: Apply \"cleaner\" transformation before normalization. Division by zero in ", descriptorName);
   }
 
   ParameterMap coeffs;
