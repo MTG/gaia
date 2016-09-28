@@ -19,9 +19,13 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 def main(dirname, options):
-    print "running in dir", dirname
-    project_dir = os.path.abspath(dirname)
-    projname = os.path.basename(dirname)
+    if os.path.isdir(dirname):
+        print "running in dir", dirname
+        project_dir = os.path.abspath(dirname)
+        projname = os.path.basename(project_dir)
+    else:
+        print("Invalid directory: " + dirname)
+        sys.exit(2)
 
     # if config/results exist, need force to rm them
     project_file = os.path.join(project_dir, "%s.project" % projname)
