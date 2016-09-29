@@ -27,6 +27,9 @@ INSTALL
    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
    ```
 
+   Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
+
+
 - Online help for WAF (build system)
    ```
    $ ./waf --help
