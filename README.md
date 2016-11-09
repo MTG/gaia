@@ -82,7 +82,7 @@ INSTALL
 - Install python, qt libraries 4.8, libYAML and swig dependencies using homebrew:	
     ```
     $ brew install python --framework
-    $ brew install swig libyaml qt
+    $ brew install swig libyaml cartr/qt4/qt
     ```
 
 - Install pyyaml pip package in case use want to build with python bindings:
