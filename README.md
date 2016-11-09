@@ -61,6 +61,10 @@ INSTALL
 ## MacOS X
 
 ### Build from command-line using Homebrew (recommended):
+- Install Qt4:
+    ```
+    brew install cartr/qt4/qt
+    ```
 
 - Install homebrew tap:
     ```
