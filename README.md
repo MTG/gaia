@@ -8,6 +8,8 @@ Gaia is a C++ library with python bindings which implements similarity measures 
 
 Licence: [Affero GPLv3 license](http://www.gnu.org/licenses/agpl.html)
 
+Documentation: http://essentia.upf.edu/documentation/gaia 
+
 
 Dependencies:
   
