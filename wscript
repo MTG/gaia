@@ -86,7 +86,7 @@ def configure(conf):
     conf.env.APP_VERSION = VERSION
 
     # compiler flags
-    conf.env.CXXFLAGS += [ '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
+    conf.env.CXXFLAGS += [ '-std=c++03', '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
 
     # define this to be stricter, but sometimes some libraries can give problems...
     #conf.env.CXXFLAGS += [ '-Werror' ]
