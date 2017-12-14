@@ -30,7 +30,7 @@ def convertJsonToSig(filelist_file, result_filelist_file):
 
     for trackid, json_file in fl.iteritems():
         try:
-            data = json.load(open(json_file))
+            data = json.load(open(os.path.dirname(os.path.abspath(filelist_file))+'/'+json_file))
 
             # remove descriptors, that will otherwise break gaia_fusion due to incompatibility of layouts
             if 'tags' in data['metadata']:
@@ -42,7 +42,7 @@ def convertJsonToSig(filelist_file, result_filelist_file):
 
             sig_file = os.path.splitext(json_file)[0] + '.sig'
 
-            yaml.dump(data, open(sig_file, 'w'))
+            yaml.dump(data, open(os.path.dirname(os.path.abspath(filelist_file))+'/'+sig_file, 'w'))
             result_fl[trackid] = sig_file
 
         except:
