@@ -18,7 +18,7 @@
  */
 
 #include "analyzer.h"
-#include "utils.h"
+#include "../utils.h"
 
 // analyzers
 #include "cleaner.h"

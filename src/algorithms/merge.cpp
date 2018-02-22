@@ -18,7 +18,7 @@
  */
 
 #include "merge.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace gaia2;
 
 Merge::~Merge() {}

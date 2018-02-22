@@ -27,7 +27,7 @@ namespace gaia2 {
 
 class FrozenCosineAngleDistance : public FrozenDistance {
 public:
-  static const Real defaultUndefinedDistance = 0.0;
+  static constexpr Real defaultUndefinedDistance = 0.0;
 
   FrozenCosineAngleDistance(const FrozenDataSet& dataset, int offset, int size)
     : FrozenDistance(dataset), _offset(offset), _size(size),

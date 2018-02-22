@@ -19,7 +19,7 @@
 
 #include <cmath>
 #include "center.h"
-#include "utils.h"
+#include "../utils.h"
 #include "algoutils.h"
 
 namespace gaia2 {

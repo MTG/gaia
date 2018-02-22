@@ -1,5 +1,5 @@
 #include "filterwrapper.h"
-#include "convert.h"
+#include "../convert.h"
 using namespace std;
 using namespace gaia2::parser;
 

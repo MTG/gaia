@@ -18,7 +18,7 @@
  */
 
 #include "distancefunction.h"
-#include "utils.h"
+#include "../utils.h"
 
 // distance functions
 #include "euclideandistance.h"

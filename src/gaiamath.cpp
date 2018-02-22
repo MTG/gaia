@@ -18,8 +18,8 @@
  */
 
 #include "gaiamath.h"
-#include "alglib/normaldistr.h"
-#include "alglib/chisquaredistr.h"
+#include "3rdparty/alglib/normaldistr.h"
+#include "3rdparty/alglib/chisquaredistr.h"
 
 namespace gaia2 {
 

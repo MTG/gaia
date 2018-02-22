@@ -36,9 +36,13 @@ def configure(conf):
         conf.env['CPPPATH_BINDINGS'] = [ '../../src',
                                          '../../src/bindings',
                                          '../../src/metrics',
-                                         '../../src/3rdparty'
+                                         '../../src/3rdparty',
+					 '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+					 '/usr/include/c++/7.2.0',
+					 '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+					 '/usr/include'
                                          ]
-        conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+        conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 
 def build(bld):

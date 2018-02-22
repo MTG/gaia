@@ -4,27 +4,14 @@
 // Copyright (C) 2008 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2006-2008 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_COMMAINITIALIZER_H
 #define EIGEN_COMMAINITIALIZER_H
+
+namespace Eigen { 
 
 /** \class CommaInitializer
   * \ingroup Core_Module
@@ -35,14 +22,14 @@
   * the return type of MatrixBase::operator<<, and most of the time this is the only
   * way it is used.
   *
-  * \sa \ref MatrixBaseCommaInitRef "MatrixBase::operator<<", CommaInitializer::finished()
+  * \sa \blank \ref MatrixBaseCommaInitRef "MatrixBase::operator<<", CommaInitializer::finished()
   */
 template<typename XprType>
 struct CommaInitializer
 {
   typedef typename XprType::Scalar Scalar;
-  typedef typename XprType::Index Index;
 
+  EIGEN_DEVICE_FUNC
   inline CommaInitializer(XprType& xpr, const Scalar& s)
     : m_xpr(xpr), m_row(0), m_col(1), m_currentBlockRows(1)
   {
@@ -50,13 +37,27 @@ struct CommaInitializer
   }
 
   template<typename OtherDerived>
+  EIGEN_DEVICE_FUNC
   inline CommaInitializer(XprType& xpr, const DenseBase<OtherDerived>& other)
     : m_xpr(xpr), m_row(0), m_col(other.cols()), m_currentBlockRows(other.rows())
   {
     m_xpr.block(0, 0, other.rows(), other.cols()) = other;
   }
 
+  /* Copy/Move constructor which transfers ownership. This is crucial in 
+   * absence of return value optimization to avoid assertions during destruction. */
+  // FIXME in C++11 mode this could be replaced by a proper RValue constructor
+  EIGEN_DEVICE_FUNC
+  inline CommaInitializer(const CommaInitializer& o)
+  : m_xpr(o.m_xpr), m_row(o.m_row), m_col(o.m_col), m_currentBlockRows(o.m_currentBlockRows) {
+    // Mark original object as finished. In absence of R-value references we need to const_cast:
+    const_cast<CommaInitializer&>(o).m_row = m_xpr.rows();
+    const_cast<CommaInitializer&>(o).m_col = m_xpr.cols();
+    const_cast<CommaInitializer&>(o).m_currentBlockRows = 0;
+  }
+
   /* inserts a scalar value in the target matrix */
+  EIGEN_DEVICE_FUNC
   CommaInitializer& operator,(const Scalar& s)
   {
     if (m_col==m_xpr.cols())
@@ -76,9 +77,10 @@ struct CommaInitializer
 
   /* inserts a matrix expression in the target matrix */
   template<typename OtherDerived>
+  EIGEN_DEVICE_FUNC
   CommaInitializer& operator,(const DenseBase<OtherDerived>& other)
   {
-    if (m_col==m_xpr.cols())
+    if (m_col==m_xpr.cols() && (other.cols()!=0 || other.rows()!=m_currentBlockRows))
     {
       m_row+=m_currentBlockRows;
       m_col = 0;
@@ -86,24 +88,22 @@ struct CommaInitializer
       eigen_assert(m_row+m_currentBlockRows<=m_xpr.rows()
         && "Too many rows passed to comma initializer (operator<<)");
     }
-    eigen_assert(m_col<m_xpr.cols()
+    eigen_assert((m_col + other.cols() <= m_xpr.cols())
       && "Too many coefficients passed to comma initializer (operator<<)");
     eigen_assert(m_currentBlockRows==other.rows());
-    if (OtherDerived::SizeAtCompileTime != Dynamic)
-      m_xpr.template block<OtherDerived::RowsAtCompileTime != Dynamic ? OtherDerived::RowsAtCompileTime : 1,
-                              OtherDerived::ColsAtCompileTime != Dynamic ? OtherDerived::ColsAtCompileTime : 1>
-                    (m_row, m_col) = other;
-    else
-      m_xpr.block(m_row, m_col, other.rows(), other.cols()) = other;
+    m_xpr.template block<OtherDerived::RowsAtCompileTime, OtherDerived::ColsAtCompileTime>
+                    (m_row, m_col, other.rows(), other.cols()) = other;
     m_col += other.cols();
     return *this;
   }
 
+  EIGEN_DEVICE_FUNC
   inline ~CommaInitializer()
+#if defined VERIFY_RAISES_ASSERT && (!defined EIGEN_NO_ASSERTION_CHECKING) && defined EIGEN_EXCEPTIONS
+  EIGEN_EXCEPTION_SPEC(Eigen::eigen_assert_exception)
+#endif
   {
-    eigen_assert((m_row+m_currentBlockRows) == m_xpr.rows()
-         && m_col == m_xpr.cols()
-         && "Too few coefficients passed to comma initializer (operator<<)");
+      finished();
   }
 
   /** \returns the built matrix once all its coefficients have been set.
@@ -113,9 +113,15 @@ struct CommaInitializer
     * quaternion.fromRotationMatrix((Matrix3f() << axis0, axis1, axis2).finished());
     * \endcode
     */
-  inline XprType& finished() { return m_xpr; }
+  EIGEN_DEVICE_FUNC
+  inline XprType& finished() {
+      eigen_assert(((m_row+m_currentBlockRows) == m_xpr.rows() || m_xpr.cols() == 0)
+           && m_col == m_xpr.cols()
+           && "Too few coefficients passed to comma initializer (operator<<)");
+      return m_xpr;
+  }
 
-  XprType& m_xpr;   // target expression
+  XprType& m_xpr;           // target expression
   Index m_row;              // current row id
   Index m_col;              // current col id
   Index m_currentBlockRows; // current block height
@@ -129,11 +135,13 @@ struct CommaInitializer
   *
   * Example: \include MatrixBase_set.cpp
   * Output: \verbinclude MatrixBase_set.out
+  * 
+  * \note According the c++ standard, the argument expressions of this comma initializer are evaluated in arbitrary order.
   *
   * \sa CommaInitializer::finished(), class CommaInitializer
   */
 template<typename Derived>
-inline CommaInitializer<Derived> DenseBase<Derived>::operator<< (const Scalar& s)
+EIGEN_DEVICE_FUNC inline CommaInitializer<Derived> DenseBase<Derived>::operator<< (const Scalar& s)
 {
   return CommaInitializer<Derived>(*static_cast<Derived*>(this), s);
 }
@@ -141,10 +149,12 @@ inline CommaInitializer<Derived> DenseBase<Derived>::operator<< (const Scalar& s
 /** \sa operator<<(const Scalar&) */
 template<typename Derived>
 template<typename OtherDerived>
-inline CommaInitializer<Derived>
+EIGEN_DEVICE_FUNC inline CommaInitializer<Derived>
 DenseBase<Derived>::operator<<(const DenseBase<OtherDerived>& other)
 {
   return CommaInitializer<Derived>(*static_cast<Derived *>(this), other);
 }
+
+} // end namespace Eigen
 
 #endif // EIGEN_COMMAINITIALIZER_H
