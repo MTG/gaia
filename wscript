@@ -25,7 +25,7 @@ out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt4')
+    opt.load('compiler_cxx compiler_c qt5')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -86,7 +86,16 @@ def configure(conf):
     conf.env.APP_VERSION = VERSION
 
     # compiler flags
-    conf.env.CXXFLAGS += [ '-std=c++03', '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
+    conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
+	'-Wint-in-bool-context', \
+        '-Wno-misleading-indentation', \
+	'-Wno-unused-result',\
+        '-fno-strict-aliasing',\
+        '-fPIC', '-fvisibility=hidden',\
+	'-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+					 '-I/usr/include/c++/7.2.0',\
+					 '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+					 '-I/usr/include']
 
     # define this to be stricter, but sometimes some libraries can give problems...
     #conf.env.CXXFLAGS += [ '-Werror' ]
@@ -119,7 +128,8 @@ def configure(conf):
         conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
                       args=['--cflags', '--libs'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+    conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
+    #conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
@@ -147,7 +157,8 @@ def configure(conf):
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
 
-    conf.load('compiler_cxx compiler_c qt4')
+
+    conf.load('compiler_cxx compiler_c qt5')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -174,8 +185,8 @@ def configure(conf):
     if sys.platform == 'linux2':
 
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
+             'qtlibdir': conf.env['USELIB'],
+             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
              }

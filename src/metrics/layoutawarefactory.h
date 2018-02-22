@@ -21,8 +21,8 @@
 #define GAIA_LAYOUTAWAREFACTORY_H
 
 #include <QMap>
-#include "gaia.h"
-#include "pointlayout.h"
+#include "../gaia.h"
+#include "../pointlayout.h"
 
 namespace gaia2 {
 

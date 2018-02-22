@@ -122,7 +122,7 @@ def build_tools(bld):
     if bld.env['WITH_CYCLOPS']:
         # cyclops "normal" server
         bld(
-            features = 'qt4 cxx cxxprogram cyclops',
+            features = 'qt5 cxx cxxprogram cyclops',
             source = '''
             tools/cyclops_server/cyclopsserver.cpp
             tools/cyclops_server/cyclopsproxy.cpp
@@ -135,7 +135,7 @@ def build_tools(bld):
 
         # cyclops "master" server
         bld(
-            features = 'qt4 cxx cxxprogram cyclops',
+            features = 'qt5 cxx cxxprogram cyclops',
             source = '''
             tools/cyclops_server/cyclopsmasterserver.cpp
             tools/cyclops_server/cyclopsproxy.cpp

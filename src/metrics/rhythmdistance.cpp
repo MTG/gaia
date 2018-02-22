@@ -18,7 +18,7 @@
  */
 
 #include "rhythmdistance.h"
-#include "gaiamath.h"
+#include "../gaiamath.h"
 using namespace gaia2;
 
 

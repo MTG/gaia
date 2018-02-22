@@ -21,7 +21,7 @@
 #define GAIA_RANDOMDISTANCE_H
 
 #include "distancefunction.h"
-#include "3rdparty/MersenneTwister.h"
+#include "../3rdparty/MersenneTwister.h"
 
 namespace gaia2 {
 

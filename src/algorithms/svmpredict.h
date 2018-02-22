@@ -22,7 +22,7 @@
 
 #include <QByteArray>
 #include "applier.h"
-#include "3rdparty/libsvm/svm.h"
+#include "../3rdparty/libsvm/svm.h"
 
 namespace gaia2 {
 

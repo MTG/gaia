@@ -18,6 +18,7 @@
  */
 
 #include <QRegExp>
+#include <QString>
 #include <cmath>
 #include <algorithm>
 #include <unistd.h>
@@ -694,7 +695,7 @@ int memoryUsage(QString mtype) {
 
   QString statfile = QString("/proc/%1/status").arg(getpid());
 
-  FILE* f = fopen(statfile.toAscii().data(), "r");
+  FILE* f = fopen(statfile.toLatin1().data(), "r");
   char buf[4096];
   buf[fread(buf, 1, 4096, f)] = '\0';
   fclose(f);

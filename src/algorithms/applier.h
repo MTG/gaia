@@ -20,11 +20,11 @@
 #ifndef GAIA_APPLIER_H
 #define GAIA_APPLIER_H
 
-#include "dataset.h"
-#include "factory.h"
-#include "transformation.h"
-#include "pointlayout.h"
-#include "textprogress.h"
+#include "../dataset.h"
+#include "../factory.h"
+#include "../transformation.h"
+#include "../pointlayout.h"
+#include "../textprogress.h"
 
 namespace gaia2 {
 

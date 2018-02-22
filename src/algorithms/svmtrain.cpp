@@ -22,10 +22,10 @@
 #include <QTextStream>
 #include <QTemporaryFile>
 #include "svmtrain.h"
-#include "3rdparty/libsvm/svm.h"
-#include "3rdparty/libsvm/gaiasvmutils.h"
-#include "utils.h"
-#include "algoutils.h"
+#include "../3rdparty/libsvm/svm.h"
+#include "../3rdparty/libsvm/gaiasvmutils.h"
+#include "../utils.h"
+#include "../algorithms/algoutils.h"
 
 namespace gaia2 {
 
@@ -183,7 +183,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   QString modelFilename = modelFile.fileName();
   modelFile.close();
 
-  if (svm_save_model(modelFilename.toAscii().constData(), model) == -1) {
+  if (svm_save_model(modelFilename.toLatin1().constData(), model) == -1) {
     throw GaiaException("SVMTrain: error while saving SVM model to temp file");
   }
 
@@ -195,7 +195,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   // if we asked for the model to be output specifically, also do it
   if (_params.value("modelFilename", "").toString() != "") {
     QString filename = _params.value("modelFilename").toString();
-    svm_save_model(filename.toAscii().constData(), model);
+    svm_save_model(filename.toLatin1().constData(), model);
   }
 
   // destroy the model allocated by libsvm

@@ -18,7 +18,7 @@
  */
 
 #include "matmult.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace std;
 using namespace gaia2;
 using namespace Eigen;

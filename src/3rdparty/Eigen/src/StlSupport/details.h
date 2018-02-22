@@ -4,24 +4,9 @@
 // Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2009 Hauke Heibel <hauke.heibel@googlemail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_STL_DETAILS_H
 #define EIGEN_STL_DETAILS_H
@@ -37,13 +22,13 @@ namespace Eigen {
   class aligned_allocator_indirection : public EIGEN_ALIGNED_ALLOCATOR<T>
   {
   public:
-    typedef size_t    size_type;
-    typedef ptrdiff_t difference_type;
-    typedef T*        pointer;
-    typedef const T*  const_pointer;
-    typedef T&        reference;
-    typedef const T&  const_reference;
-    typedef T         value_type;
+    typedef std::size_t     size_type;
+    typedef std::ptrdiff_t  difference_type;
+    typedef T*              pointer;
+    typedef const T*        const_pointer;
+    typedef T&              reference;
+    typedef const T&        const_reference;
+    typedef T               value_type;
 
     template<class U>
     struct rebind
@@ -61,7 +46,7 @@ namespace Eigen {
     ~aligned_allocator_indirection() {}
   };
 
-#ifdef _MSC_VER
+#if EIGEN_COMP_MSVC
 
   // sometimes, MSVC detects, at compile time, that the argument x
   // in std::vector::resize(size_t s,T x) won't be aligned and generate an error

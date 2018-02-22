@@ -23,7 +23,7 @@
 #include "dataset.h"
 #include "point.h"
 #include "pointlayout.h"
-#include "Eigen/Core"
+#include "3rdparty/Eigen/Core"
 
 
 // This file contains some useful functions that were not generic enough to go

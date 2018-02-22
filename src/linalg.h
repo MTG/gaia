@@ -21,7 +21,7 @@
 #define GAIA_LINALG_H
 
 #include "dataset.h"
-#include "Eigen/Eigen"
+#include "3rdparty/Eigen/Eigen"
 
 
 namespace gaia2 {

@@ -21,7 +21,7 @@
 #define GAIA_RCA_H
 
 #include "analyzer.h"
-#include "Eigen/Core"
+#include "../3rdparty/Eigen/Core"
 
 namespace gaia2 {
 

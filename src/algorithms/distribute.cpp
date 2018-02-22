@@ -18,7 +18,7 @@
  */
 
 #include "distribute.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace gaia2;
 
 Distribute::~Distribute() {}

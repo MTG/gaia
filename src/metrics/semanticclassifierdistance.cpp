@@ -18,7 +18,7 @@
  */
 
 #include "semanticclassifierdistance.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace gaia2;
 
 
