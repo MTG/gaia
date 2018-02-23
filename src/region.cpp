@@ -57,6 +57,12 @@ QDataStream& gaia2::operator>>(QDataStream& in, Segment& segment) {
     segment.type = (DescriptorType)t;
     segment.ltype = (DescriptorLengthType)l;
     return in;
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading segment, gaia 2.1 format");
+    in >> segment.name >> t >> l >> segment.begin >> segment.end;
+    segment.type = (DescriptorType)t;
+    segment.ltype = (DescriptorLengthType)l;
+    return in;
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading segment, gaia 2.0 format");

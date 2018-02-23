@@ -189,7 +189,8 @@ void checkValidDataStream(QDataStream& in);
 enum BinaryFileFormat {
   Gaia_2_0 = 100,
   Gaia_2_1 = 101,
-  Gaia_2_3 = 102
+  Gaia_2_3 = 102,
+  Gaia_2_4 = 103
 };
 
 /**

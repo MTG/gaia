@@ -636,6 +636,7 @@ int gaiaVersion(const QDataStream& stream) {
   if (qtVersion == QDataStream::Qt_4_2) return Gaia_2_0;
   if (qtVersion == QDataStream::Qt_4_3) return Gaia_2_1;
   if (qtVersion == QDataStream::Qt_4_4) return Gaia_2_3;
+  if (qtVersion == QDataStream::Qt_5_6) return Gaia_2_4;
 
   throw GaiaException("Unknown stream format");
 }
@@ -652,8 +653,8 @@ void setDataStreamVersion(QDataStream& out) {
   // as there are as many qt versions as gaia data format versions. However, in
   // the other case, the correct solution would be to derive from QDataStream and
   // add a setGaiaVersion() and gaiaVersion() method to it.
-  out << (qint32)Gaia_2_3;
-  out.setVersion(QDataStream::Qt_4_4);
+  out << (qint32)Gaia_2_4;
+  out.setVersion(QDataStream::Qt_5_6);
 }
 
 void checkValidDataStream(QDataStream& in) {
@@ -676,6 +677,11 @@ void checkValidDataStream(QDataStream& in) {
   case Gaia_2_3:
     in.setVersion(QDataStream::Qt_4_4);
     G_DEBUG(GIO, "File has gaia version 102 (gaia 2.3.x)");
+    break;
+
+  case Gaia_2_4:
+    in.setVersion(QDataStream::Qt_5_6);
+    G_DEBUG(GIO, "File has gaia version 103 (gaia 2.4.x)");
     break;
 
   default:
