@@ -95,6 +95,7 @@ def configure(conf):
 	'-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
 					 '-I/usr/include/c++/7.2.0',\
 					 '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+					 '-I/opt/intel/mkl/include',\
 					 '-I/usr/include']
 
     # define this to be stricter, but sometimes some libraries can give problems...
