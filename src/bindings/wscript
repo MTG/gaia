@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import sys
 
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
-            print n, ':', env[n]
+            print (n), ':', env[n]
 
 
 def options(opt):
@@ -58,7 +59,7 @@ def build(bld):
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
         swig_flags = '-c++ -python -w451',
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        includes = bld.env['CPPPATH_BINDINGS'],
+        includes = bld.env['CPPPATH_BINDINGS'] + ['/usr/share/swig3.0/python'] + ['/usr/share/swig3.0'],
         install_path = '${PYTHONDIR}'
         )
 
