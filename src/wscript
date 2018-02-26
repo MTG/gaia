@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import os, os.path
 
 def options(opt):
@@ -99,7 +100,7 @@ def build_tools(bld):
         use = ['gaia2'] + bld.env['USELIB'])
     
     # GaiaFusion
-    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
+    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod='0755')
 
     # gaiafreeze utility
     bld.program(
@@ -149,7 +150,7 @@ def build_tools(bld):
 
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0755)
+        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
     
 def build(bld):
     build_library(bld)

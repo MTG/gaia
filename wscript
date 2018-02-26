@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import sys, glob
 ##import Options, Scripting
 from os.path import join, exists, normpath
@@ -12,8 +13,8 @@ def get_git_version():
     if os.path.exists(".git"):
         try:
             version = os.popen("git describe --dirty --always").read().strip()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
     return version
 
 APPNAME = 'gaia'
@@ -77,8 +78,9 @@ def check_tbb(conf):
 
 
 def configure(conf):
-    if sys.platform != 'linux2' and sys.platform != 'darwin':
-        print 'Please use the QtCreator project for building Gaia in Windows...'
+    print ('System platform is',sys.platform)
+    if sys.platform != 'linux2' and sys.platform != 'darwin' and sys.platform != 'linux':
+        print ('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
     print('→ configuring the project in ' + conf.path.abspath())
@@ -183,7 +185,7 @@ def configure(conf):
     # write pkg-config file
     prefix = normpath(conf.options.prefix)
 
-    if sys.platform == 'linux2':
+    if sys.platform == 'linux2' or sys.platform == 'linux':
 
         opts = { 'prefix': prefix,
              'qtlibdir': conf.env['USELIB'],
