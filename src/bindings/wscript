@@ -52,7 +52,7 @@ def build(bld):
     #major, minor, _, _, _ = sys.version_info
     #if major >= 2 and minor >= 6:
     #    bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
-
+    
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
@@ -63,6 +63,7 @@ def build(bld):
         install_path = '${PYTHONDIR}'
         )
 
+    #bld.env['pyext_PATTERN'] = "%s.so"
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
     bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
 
