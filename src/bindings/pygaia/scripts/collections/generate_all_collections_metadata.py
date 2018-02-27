@@ -19,13 +19,13 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import os, sys, subprocess, yaml
 from os.path import *
 
 
 def usage():
-    print '%s <mtgdb_audio_mount_point> <path_to_mtgdb_collections_yaml>' % sys.argv[0]
+    print ('%s <mtgdb_audio_mount_point> <path_to_mtgdb_collections_yaml>' % sys.argv[0])
     sys.exit(1)
 
 if __name__ == '__main__':

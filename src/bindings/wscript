@@ -35,15 +35,15 @@ def configure(conf):
             conf.env['pyext_SUFFIX'] = '.so'
 
         conf.env['CPPPATH_BINDINGS'] = [ '../../src',
-                                         '../../src/bindings',
-                                         '../../src/metrics',
-                                         '../../src/3rdparty',
-					 '/usr/include/x86_64-linux-gnu/c++/7.2.0',
-					 '/usr/include/c++/7.2.0',
-					 '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
-					 '/opt/intel/mkl/include',
-					 '/usr/include'
-                                         ]
+            '../../src/bindings',
+            '../../src/metrics',
+            '../../src/3rdparty',
+            '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+            '/usr/include/c++/7.2.0',
+            '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+            '/opt/intel/mkl/include',
+            '/usr/include'
+            ]
         conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 
@@ -52,6 +52,7 @@ def build(bld):
     #major, minor, _, _, _ = sys.version_info
     #if major >= 2 and minor >= 6:
     #    bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
+    #bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('python3/dist-packages', 'python3.6/dist-packages')
     
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
