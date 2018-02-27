@@ -19,9 +19,11 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import os, sys, errno
 from os.path import join, basename, splitext, abspath
+
+print = functools.partial(print, flush=True)
 
 def toMatrix(vec):
     # TODO: better return a numpy array, maybe?
@@ -68,7 +70,7 @@ def makedir(path):
     This is the equivalent of 'mkdir -p'."""
     try:
         os.makedirs(path)
-    except OSError, e:
+    except OSError as e:
         if e.errno == errno.EEXIST:
             pass
         else: raise
@@ -82,11 +84,9 @@ class TextProgress:
 
     def update(self, current):
         percentage = current*100 // self.total
-        print self.format % { 'current': current, 'total': self.total, 'percent': percentage },
-        if current == self.total: print
-        sys.stdout.flush()
-
-
+        print (self.format % { 'current': current, 'total': self.total, 'percent': percentage }, flush=False)
+        if current == self.total: 
+            print ('')
 
 def generateMergeFilelist(basedir,
                           relative = True,
@@ -113,7 +113,7 @@ def generateMergeFilelist(basedir,
     # make sure we don't have 2 files that didn't accidentally end up with the same ID
     #assert len(result) == len(filenames)
     if len(result) != len(filenames):
-        print '\nERROR: there are some which end up being duplicates when taking their ID:'
+        print ('\nERROR: there are some which end up being duplicates when taking their ID:')
         # need to find which are duplicates and print them
         from collections import defaultdict
         d = defaultdict(list)
@@ -122,9 +122,9 @@ def generateMergeFilelist(basedir,
 
         for pid, filenames in d.items():
             if len(filenames) > 1:
-                print '\n%s:' % pid
+                print ('\n%s:' % pid)
                 for f in filenames:
-                    print ' -', f
+                    print (' -', f)
 
         assert False
 
@@ -133,6 +133,6 @@ def generateMergeFilelist(basedir,
 
 def printHistory(history):
     for t in history.toPython():
-        print 'Transformation:', t['Analyzer name']
-        print 'Parameters:', t['Analyzer parameters']
-        print
+        print ('Transformation:', t['Analyzer name'])
+        print ('Parameters:', t['Analyzer parameters'])
+        print ('')

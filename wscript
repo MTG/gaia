@@ -183,6 +183,7 @@ def configure(conf):
         tbblib = ''
 
     # write pkg-config file
+    #   Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
     prefix = normpath(conf.options.prefix)
 
     if sys.platform == 'linux2' or sys.platform == 'linux':
@@ -203,7 +204,7 @@ def configure(conf):
         Name: libgaia2
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
-        Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
+        Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
         Cflags: -I${includedir} ${qtincludes}
         ''' % opts
 

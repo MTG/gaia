@@ -36,7 +36,7 @@ try:
         dump = yaml.dump
 
 except ImportError:
-    print 'WARNING: could not import yaml module'
+    print ('WARNING: could not import yaml module')
 
 
 def loadfile(filename):

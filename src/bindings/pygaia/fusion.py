@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import gaia2
 from gaia2 import DataSet, transform, applyTransfoChain, fastyaml
 import os, sys, tempfile, subprocess
@@ -27,7 +27,7 @@ from os.path import join, dirname
 
 def transformDataSet(inputFilename, outputFilename, transfoFile = None):
     """Apply the list of transformations given as a yaml sequence to the specified dataset."""
-    print 'Preprocessing dataset chunk for %s...' % outputFilename
+    print ('Preprocessing dataset chunk for %s...' % outputFilename)
     gaia2.cvar.verbose = False
 
     transfoList = '''
@@ -48,7 +48,7 @@ def transformDataSet(inputFilename, outputFilename, transfoFile = None):
 
 
 def horizontalLine():
-    print '\n' + '-'*80 + '\n'
+    print ('\n' + '-'*80 + '\n')
 
 
 def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, select = None, exclude = None):
@@ -156,17 +156,17 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
     # make sure all histories are the same, if not do whatever it takes to reach that point
     # also "simplify" the histories so that they are the minimum history representation required
     # to get to the layout of the final dataset
-    print 'Harmonizing chunks so that they all have the same layout & history...'
+    print ('Harmonizing chunks so that they all have the same layout & history...')
     vldescs, nandescs, rdescs = harmonizeChunks(partfiles)
     rdescs = rdescs | set(excluded)
     horizontalLine()
 
     # merge all those partfiles together
-    print 'Assembling full dataset together...'
+    print ('Assembling full dataset together...')
     dstotal = DataSet()
 
     for pfile in partfiles:
-        print 'Merging partfile', pfile
+        print ('Merging partfile', pfile)
         ds = DataSet()
         ds.load(pfile)
         dstotal.appendDataSet(ds)
@@ -194,7 +194,7 @@ Your dataset has been saved at %s'''
     nandescs = sorted( d[1:] for d in nandescs )
     rdescs = sorted( d[1:] for d in rdescs )
 
-    print msg % (str(dstotal.size()), ', '.join(vldescs), ', '.join(nandescs), ', '.join(rdescs), outputFilename)
+    print (msg % (str(dstotal.size()), ', '.join(vldescs), ', '.join(nandescs), ', '.join(rdescs), outputFilename))
 
     # clean up temporary files
     for pfile in partfiles:
