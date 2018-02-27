@@ -20,6 +20,7 @@
 
 
 from __future__ import print_function
+import functools
 import os, sys, errno
 from os.path import join, basename, splitext, abspath
 

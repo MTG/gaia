@@ -12,18 +12,18 @@ className: genre_tzanetakis
 
 # Path to the directory where the preprocessed datasets are going to be stored
 # This can be absolute or relative to where you launch the main classification script
-datasetsDirectory: /home/gordon/gaia/scripts/classification
+datasetsDirectory: "~/gaia/scripts/classification"
 
 # Path to the directory where the results are going to be stored
 # This can be absolute or relative to where you launch the main classification script
-resultsDirectory: /home/gordon/gaia/scripts/classification
+resultsDirectory: "~/gaia/scripts/classification"
 
 
 # Path to the yaml file containing the list of files to be merged in the original dataset
-filelist: /home/gordon/gaia/scripts/classification/filelist_example.yaml
+filelist: "~/gaia/scripts/classification/filelist_example.yaml"
 
 # Path to the groundtruth file, containing a serialized gaia2.classification.GroundTruth object
-groundtruth: /home/gordon/gaia/scripts/classification/groundtruth_example.yaml
+groundtruth: "~/gaia/scripts/classification/groundtruth_example.yaml"
 
 
 # List of preprocessed datasets to build

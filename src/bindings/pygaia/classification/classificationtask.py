@@ -124,7 +124,7 @@ def getTrainer(classifier, param, ds):
         alpha = param['alpha']
         func1 = param['func1']
         func2 = param['func2']
-        print '\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2
+        print ('\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2)
         trainer = train_1NN_segments
         trainingparam = { 'alpha': alpha, 'func1': func1, 'func2': func2, 'dropBestResult': False }
         newds = addRCA(ds, rcadim)

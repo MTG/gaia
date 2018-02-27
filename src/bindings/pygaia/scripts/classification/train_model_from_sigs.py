@@ -1,4 +1,4 @@
-
+from __future__ import print_function
 import train_model
 import json_to_sig
 
@@ -19,7 +19,7 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 def main(dirname, options):
-    print "running in dir", dirname
+    print ("running in dir", dirname)
     project_dir = os.path.abspath(dirname)
     projname = os.path.basename(dirname)
 
@@ -35,7 +35,7 @@ def main(dirname, options):
 
     classes = [d for d in os.listdir(project_dir) \
             if os.path.isdir(os.path.join(project_dir, d))]
-    print classes
+    print (classes)
 
     groundtruth_name = os.path.join(project_dir, "groundtruth.yaml")
     json_name = os.path.join(project_dir, "filelist.yaml")
@@ -51,7 +51,7 @@ def main(dirname, options):
         if len(files) != len(yamlfiles):
             missingsig = True
 
-        print "got", len(files), "files in", c
+        print ("got", len(files), "files in", c)
         for f in files:
             id = os.path.splitext(os.path.basename(f))[0]
             groundtruth["groundTruth"][id] = c
@@ -63,7 +63,7 @@ def main(dirname, options):
     yaml.dump(groundtruth, open(groundtruth_name, "w"))
 
     if missingsig:
-        print "converting sig"
+        print ("converting sig")
         json_to_sig.convertJsonToSig(json_name, yaml_name)
 
     # run

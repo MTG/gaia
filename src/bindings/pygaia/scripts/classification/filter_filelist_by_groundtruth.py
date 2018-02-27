@@ -1,6 +1,7 @@
 # This script filters descriptors filelist removing mapping for 
 # all tracks that are not present in the ground truth file
 
+from __future__ import print_function
 import sys, yaml
 
 try:
@@ -8,7 +9,7 @@ try:
     filelist_file = sys.argv[2]
     results_filelist_file = sys.argv[3]
 except:
-    print 'usage:', sys.argv[0], '<ground-truth-file> <filelist-file> <result-filelist-file>'
+    print ('usage:', sys.argv[0], '<ground-truth-file> <filelist-file> <result-filelist-file>')
     sys.exit()
 
 gt = yaml.load(open(gt_file, 'r'))

@@ -93,7 +93,7 @@ def generateProjectFromCollection():
                                          'filelist': filelistFilename,
                                          'groundtruth': abspath(collec._groundTruthFile) })
 
-    print 'Successfully written', project_file
+    print ('Successfully written', project_file)
 
 
 

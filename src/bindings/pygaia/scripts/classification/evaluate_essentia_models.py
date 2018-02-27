@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys
 import os
 from os.path import join, exists, dirname
@@ -33,9 +33,8 @@ from gaia2.classification.classificationtaskmanager import taskhash
 
 
 def usage():
-    print 'Usage:'
-    print
-    print '%s essentia_extractor results_dir' % sys.argv[0]
+    print ('Usage:\n')
+    print ('%s essentia_extractor results_dir' % sys.argv[0])
     sys.exit(1)
 
 
@@ -52,7 +51,7 @@ def isExecutable(path):
 
 def evaluateModels(extractor, resultsDir):
     if not isExecutable(extractor):
-        print '%s does not seem to be an executable extractor... Exiting...' % extractor
+        print ('%s does not seem to be an executable extractor... Exiting...' % extractor)
         sys.exit(1)
 
     makedir(resultsDir)
@@ -70,15 +69,15 @@ def evaluateModels(extractor, resultsDir):
 
 
 def evaluateCollection(collectionName, extractor, resultsDir):
-    print '-' * 120
-    print 'Evaluating SVM classifier for:', collectionName
-    print
+    print ('-' * 120)
+    print ('Evaluating SVM classifier for:', collectionName)
+    print ('')
 
     collection = gaia2.mtgdb.MtgdbCollection(collectionName)
 
     # compute the descriptors for all the files in the DB
-    print 'Computing descriptors for %s DB...' % collection.name
-    print
+    print ('Computing descriptors for %s DB...' % collection.name)
+    print ('')
 
     collecDir = join(resultsDir, collectionName)
     sigsDir = join(collecDir, 'descriptors')
@@ -89,8 +88,8 @@ def evaluateCollection(collectionName, extractor, resultsDir):
 
 
     # generate the classification project and run the evaluation
-    print 'Running evaluation of SVM parameters for %s' % collection.name
-    print
+    print ('Running evaluation of SVM parameters for %s' % collection.name)
+    print ('')
 
     evalDir = join(collecDir, 'evaluation')
     evalProject = join(evalDir, collection.name + '.yaml')
@@ -135,24 +134,24 @@ def checkErrors(collectionName, resultsDir):
 
 
     # 3- summary
-    print '-' * 120
-    print 'For collection %s' % collectionName
-    print
+    print ('-' * 120)
+    print ('For collection %s' % collectionName)
+    print ('')
     if missingSigs:
-        print 'Some files failed to be analyzed:'
+        print ('Some files failed to be analyzed:')
         for sig in sorted(missingSigs):
-            print ' - %s' % sig
+            print (' - %s' % sig)
     else:
-        print 'All sigfiles computed successfully!'
+        print ('All sigfiles computed successfully!')
 
     if missingEvals:
-        print 'Some evaluations failed:'
+        print ('Some evaluations failed:')
         for evaluation in missingEvals:
-            print ' - %s' % evaluation
+            print (' - %s' % evaluation)
     else:
-        print 'All evaluations completed successfully!'
+        print ('All evaluations completed successfully!')
 
-    print '-' * 120
+    print ('-' * 120)
 
 
 
