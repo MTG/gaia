@@ -16,7 +16,7 @@ Dependencies:
   * Qt >= 4.5
   * libYAML >= 0.1.1
   * Python >= 2.4
-  * SWIG >= 1.3.31
+  * SWIG >= 3.0.10
 
 
 INSTALL
@@ -26,31 +26,38 @@ INSTALL
 
 - Install dependencies (Ubuntu/Debian)
    ```
-   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
+   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config  
+or
+   $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
 
    Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
 
 
-- Online help for WAF (build system)
+- Online help for WAF (build system in home directory)
    ```
+   $ cd waf
    $ ./waf --help
+
+   $ ./waf configure --tools=swig,qt5,qt4 build
+   $ ./waf
+   $ sudo ./waf install
    ```
    
-- Configure with the desired options
+- Configure `gaia` with the desired options, if python3 wanted use
     ```
-    $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] [--with-cyclops]
     ```    
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
 - Compile libgaia.a:
     ```
-    $ ./waf
+    $ python3 ./waf
     ```
     
 - Install (to install system-wide you might need ```sudo```)
     ```
-    $ ./waf install [--destdir=/where/ever/]
+    $ python3 ./waf install [--destdir=/where/ever/]
     ```
     
 - Build documentation (optional), it will be located at build/doc/ folder
