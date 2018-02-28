@@ -145,10 +145,12 @@ QDataStream& operator>>(QDataStream& in, Transformation& transfo) {
     in >> analyzerParam >> param >> info >> layout;
     break;
 
+#ifdef GAIA_QT5
   case Gaia_2_4:
     G_DEBUG(GIO, "Loading transformation, gaia 2.3 format");
     in >> analyzerParam >> param >> info >> layout;
     break;
+#endif
 
   case Gaia_2_1:
     G_DEBUG(GIO, "Loading transformation, gaia 2.1 format");

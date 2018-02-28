@@ -217,6 +217,20 @@ def configure(conf):
             'version': VERSION,
             'tbblib': tbblib,
             }
+        
+        pcfile = '''prefix=%(prefix)s
+        libdir=${prefix}/lib
+        includedir=${prefix}/include
+        qtlibdir=%(qtlibdir)s
+        qtincludes=%(qtincludedir)s
+
+        Name: libgaia2
+        Description: A library for doing similarity in semimetric spaces
+        Version: %(version)s
+        Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
+        Cflags: -I${includedir} ${qtincludes}
+        ''' % opts
+        
     elif sys.platform.startswith('linux'):
         opts = { 'prefix': prefix,
             'qtlibdir': conf.env['USELIB'],

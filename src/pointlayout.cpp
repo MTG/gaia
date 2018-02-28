@@ -542,10 +542,12 @@ QDataStream& gaia2::operator>>(QDataStream& in, PointLayout& layout) {
     G_DEBUG(GIO, "Loading point layout, gaia 2.1 format");
     in >> *layout._d->tree >> layout._d->enum2str >> layout._d->str2enum;
     break;
+#ifdef GAIA_QT5
   case Gaia_2_4:
     G_DEBUG(GIO, "Loading point layout, gaia 2.1 format");
     in >> *layout._d->tree >> layout._d->enum2str >> layout._d->str2enum;
     break;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading point layout, gaia 2.0 format");

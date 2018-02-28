@@ -18,7 +18,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 from gaia2 import *
 import os, os.path
 import re
@@ -69,7 +69,7 @@ def getDoc(className):
         return docstr
 
     except:
-        print 'Could not find doc for:', className
+        print ('Could not find doc for:', className)
 
 
 for analyzer in AnalyzerFactory.keys():
@@ -94,4 +94,4 @@ out.write(repr(docDict))
 out.write('\n}\n')
 out.close()
 
-print 'Everything OK!'
+print ('Everything OK!')
