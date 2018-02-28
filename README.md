@@ -26,8 +26,10 @@ INSTALL
 
 - Install dependencies (Ubuntu/Debian)
    ```
-   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config  
+   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
+   ``` 
 or
+   ```
    $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
 
@@ -37,8 +39,9 @@ or
 - Online help for WAF (build system in home directory)
    ```
    $ cd waf
+   ```
    $ ./waf --help
-
+   ```
    $ ./waf configure --tools=swig,qt5,qt4 build
    $ ./waf
    $ sudo ./waf install
