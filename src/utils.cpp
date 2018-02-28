@@ -636,11 +636,29 @@ int gaiaVersion(const QDataStream& stream) {
   if (qtVersion == QDataStream::Qt_4_2) return Gaia_2_0;
   if (qtVersion == QDataStream::Qt_4_3) return Gaia_2_1;
   if (qtVersion == QDataStream::Qt_4_4) return Gaia_2_3;
+#ifdef GAIA_QT5
   if (qtVersion == QDataStream::Qt_5_6) return Gaia_2_4;
-
+#endif
   throw GaiaException("Unknown stream format");
 }
 
+#ifndef GAIA_QT5
+void setDataStreamVersion(QDataStream& out) {
+  // write version (of the data format, not gaia). Currently: Gaia_2_3 (102)
+  // also write Qt's binary data format
+  // NB: the following comment is outdated, but you get the idea :-)
+  // IMPORTANT NOTE: at the moment, there are 2 versions of the file format:
+  // 100 for gaia 2.0.x versions, and 101 for gaia 2.1.x versions. To be able to
+  // read both of those, we need to find a way to encode this version number
+  // inside the DataStream. The solution at the moment is to use 100 only with
+  // Qt stream version 4.2, and 101 only with qt 4.3. This will work fine as long
+  // as there are as many qt versions as gaia data format versions. However, in
+  // the other case, the correct solution would be to derive from QDataStream and
+  // add a setGaiaVersion() and gaiaVersion() method to it.
+  out << (qint32)Gaia_2_3;
+  out.setVersion(QDataStream::Qt_4_4);
+}
+#else
 void setDataStreamVersion(QDataStream& out) {
   // write version (of the data format, not gaia). Currently: Gaia_2_3 (102)
   // also write Qt's binary data format
@@ -656,6 +674,8 @@ void setDataStreamVersion(QDataStream& out) {
   out << (qint32)Gaia_2_4;
   out.setVersion(QDataStream::Qt_5_6);
 }
+#endif
+
 
 void checkValidDataStream(QDataStream& in) {
   // read version
@@ -678,11 +698,12 @@ void checkValidDataStream(QDataStream& in) {
     in.setVersion(QDataStream::Qt_4_4);
     G_DEBUG(GIO, "File has gaia version 102 (gaia 2.3.x)");
     break;
-
+#ifdef GAIA_QT5
   case Gaia_2_4:
     in.setVersion(QDataStream::Qt_5_6);
     G_DEBUG(GIO, "File has gaia version 103 (gaia 2.4.x)");
     break;
+#endif
 
   default:
     QStringList msg;

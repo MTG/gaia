@@ -48,6 +48,11 @@ def options(opt):
     opt.add_option('--mode', action='store',
                    dest='MODE', default="release",
                    help='debug or release')
+                   
+    # whether to enable Qt5 or not
+    opt.add_option('--with-gaia-qt5', action='store_true',
+                   dest='gaia_qt5', default=False,
+                   help='whether to use Qt5 and c++11 or not')
 
 
 def debian_version():
@@ -79,7 +84,8 @@ def check_tbb(conf):
 
 def configure(conf):
     print ('System platform is',sys.platform)
-    if sys.platform != 'linux2' and sys.platform != 'darwin' and sys.platform != 'linux':
+    
+    if sys.platform.startswith('linux') != True and sys.platform != 'darwin':
         print ('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
@@ -88,17 +94,31 @@ def configure(conf):
     conf.env.APP_VERSION = VERSION
 
     # compiler flags
-    conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
-        '-Wint-in-bool-context', \
-        '-Wno-misleading-indentation', \
-        '-Wno-unused-result',\
-        '-fno-strict-aliasing',\
-        '-fPIC', '-fvisibility=hidden',\
-        '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
-        '-I/usr/include/c++/7.2.0',\
-        '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
-        '-I/opt/intel/mkl/include',\
-        '-I/usr/include']
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
+            '-DGAIA_QT5',  \
+            '-Wint-in-bool-context', \
+            '-Wno-misleading-indentation', \
+            '-Wno-unused-result',\
+            '-fno-strict-aliasing',\
+            '-fPIC', '-fvisibility=hidden',\
+            '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+            '-I/usr/include/c++/7.2.0',\
+            '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+            '-I/opt/intel/mkl/include',\
+            '-I/usr/include']
+    elif sys.platform.startswith('linux'): 
+        conf.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
+                '-Wint-in-bool-context', \
+                '-Wno-misleading-indentation', \
+                '-Wno-unused-result',\
+                '-fno-strict-aliasing',\
+                '-fPIC', '-fvisibility=hidden',\
+                '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+                '-I/usr/include/c++/7.2.0',\
+                '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+                '-I/opt/intel/mkl/include',\
+                '-I/usr/include']
 
     # define this to be stricter, but sometimes some libraries can give problems...
     #conf.env.CXXFLAGS += [ '-Werror' ]
@@ -131,8 +151,10 @@ def configure(conf):
         conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
                       args=['--cflags', '--libs'])
 
-    conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
-    #conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
+    else :
+        conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
@@ -160,8 +182,10 @@ def configure(conf):
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
 
-
-    conf.load('compiler_cxx compiler_c qt5')
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        conf.load('compiler_cxx compiler_c qt5')
+    else:
+        conf.load('compiler_cxx compiler_c qt4')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -186,14 +210,20 @@ def configure(conf):
     #   Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
     prefix = normpath(conf.options.prefix)
 
-    if sys.platform == 'linux2' or sys.platform == 'linux':
-
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['USELIB'],
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
-             'version': VERSION,
-             'tbblib': tbblib,
-             }
+            'qtlibdir': conf.env['USELIB'],
+            'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
+    elif sys.platform.startswith('linux'):
+        opts = { 'prefix': prefix,
+            'qtlibdir': conf.env['USELIB'],
+            'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT4CORE']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
 
         pcfile = '''prefix=%(prefix)s
         libdir=${prefix}/lib

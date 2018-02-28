@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from __future__ import print_function
-import os, os.path
+import os, os.path, sys
 
 def options(opt):
     opt.add_option('--with-stlfacade', action='store_true',
@@ -11,7 +11,7 @@ def options(opt):
 
     opt.add_option('--with-tests', action='store_true',
                    dest = 'with_tests', default = False,
-                   help = 'whether ot not to compile the C++ tests inside the test directory')
+                   help = 'whether or not to compile the C++ tests inside the test directory')
 
     opt.recurse('bindings')
 
@@ -122,34 +122,66 @@ def build_tools(bld):
             use = ['gaia2'] + bld.env['USELIB'])
 
     # Cyclops server
-    if bld.env['WITH_CYCLOPS']:
-        # cyclops "normal" server
-        bld(
-            features = 'qt5 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclops',
-            includes = [ '.', 'metrics', '3rdparty' ],
-            use = ['gaia2'] + bld.env['USELIB'])
+    if sys.platform.startswith('linux') and bld.options.gaia_qt5:
+        if bld.env['WITH_CYCLOPS']:
+            # cyclops "normal" server
+            bld(
+                features = 'qt5 cxx cxxprogram cyclops',
+                source = '''
+                tools/cyclops_server/cyclopsserver.cpp
+                tools/cyclops_server/cyclopsproxy.cpp
+                tools/cyclops_server/cyclops.cpp
+                tools/cyclops_server/yamlrpcserver.cpp
+                ''',
+                target = 'tools/cyclops',
+                includes = [ '.', 'metrics', '3rdparty' ],
+                use = ['gaia2'] + bld.env['USELIB'])
 
         # cyclops "master" server
-        bld(
-            features = 'qt5 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsmasterserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclopsmaster.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclopsmaster',
-            includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            use = ['gaia2'] + bld.env['USELIB'])
+            bld(
+                features = 'qt5 cxx cxxprogram cyclops',
+                source = '''
+                tools/cyclops_server/cyclopsmasterserver.cpp
+                tools/cyclops_server/cyclopsproxy.cpp
+                tools/cyclops_server/cyclopsmaster.cpp
+                tools/cyclops_server/cyclops.cpp
+                tools/cyclops_server/yamlrpcserver.cpp
+                ''',
+                target = 'tools/cyclopsmaster',
+                includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                use = ['gaia2'] + bld.env['USELIB'])
+        # cyclops init scripts
+        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
+        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
+        
+    else:
+        if bld.env['WITH_CYCLOPS']:
+            # cyclops "normal" server
+            bld(
+                features = 'qt4 cxx cxxprogram cyclops',
+                source = '''
+                tools/cyclops_server/cyclopsserver.cpp
+                tools/cyclops_server/cyclopsproxy.cpp
+                tools/cyclops_server/cyclops.cpp
+                tools/cyclops_server/yamlrpcserver.cpp
+                ''',
+                target = 'tools/cyclops',
+                includes = [ '.', 'metrics', '3rdparty' ],
+                use = ['gaia2'] + bld.env['USELIB'])
 
+        # cyclops "master" server
+            bld(
+                features = 'qt4 cxx cxxprogram cyclops',
+                source = '''
+                tools/cyclops_server/cyclopsmasterserver.cpp
+                tools/cyclops_server/cyclopsproxy.cpp
+                tools/cyclops_server/cyclopsmaster.cpp
+                tools/cyclops_server/cyclops.cpp
+                tools/cyclops_server/yamlrpcserver.cpp
+                ''',
+                target = 'tools/cyclopsmaster',
+                includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                use = ['gaia2'] + bld.env['USELIB'])
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
         bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
