@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import sys
 
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
-            print n, ':', env[n]
+            print (n), ':', env[n]
 
 
 def options(opt):
@@ -30,30 +31,48 @@ def configure(conf):
 
         # do not use the default extension of .bundle on MacOS
         # TODO: still necessary with waf 1.5.x?
+        print ('2', sys.platform, conf.options.gaia_qt5)
         if sys.platform == 'darwin':
             conf.env['pyext_SUFFIX'] = '.so'
 
-        conf.env['CPPPATH_BINDINGS'] = [ '../../src',
-                                         '../../src/bindings',
-                                         '../../src/metrics',
-                                         '../../src/3rdparty'
-                                         ]
-        conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
-
+        if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+        elif sys.platform.startswith('linux') :
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 def build(bld):
     # fix for waf/python2.6 install paths
     #major, minor, _, _, _ = sys.version_info
     #if major >= 2 and minor >= 6:
     #    bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
-
+       
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
         swig_flags = '-c++ -python -w451',
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        includes = bld.env['CPPPATH_BINDINGS'],
+        includes = bld.env['CPPPATH_BINDINGS'] + ['/usr/share/swig3.0/python'] + ['/usr/share/swig3.0'],
         install_path = '${PYTHONDIR}'
         )
 

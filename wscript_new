@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import sys, glob
 ##import Options, Scripting
 from os.path import join, exists, normpath
@@ -12,8 +13,8 @@ def get_git_version():
     if os.path.exists(".git"):
         try:
             version = os.popen("git describe --dirty --always").read().strip()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
     return version
 
 APPNAME = 'gaia'
@@ -25,7 +26,7 @@ out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt4')
+    opt.load('compiler_cxx compiler_c')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -47,7 +48,11 @@ def options(opt):
     opt.add_option('--mode', action='store',
                    dest='MODE', default="release",
                    help='debug or release')
-
+                   
+    # whether to enable Qt5 or not
+    opt.add_option('--with-gaia-qt5', action='store_true',
+                   dest='gaia_qt5', default=False,
+                   help='whether to use Qt5 and c++11 or not')
 
 def debian_version():
     try:
@@ -77,17 +82,51 @@ def check_tbb(conf):
 
 
 def configure(conf):
-    if sys.platform != 'linux2' and sys.platform != 'darwin':
-        print 'Please use the QtCreator project for building Gaia in Windows...'
+        
+    if sys.platform.startswith('linux') != True and sys.platform != 'darwin':
+        print ('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
     print('→ configuring the project in ' + conf.path.abspath())
 
     conf.env.APP_VERSION = VERSION
 
+    print ('1', conf.options.gaia_qt5)
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5: 
+        conf.load('qt5')
+    else:
+        conf.load('qt4')
+    print ('1', sys.platform, conf.options.gaia_qt5)
     # compiler flags
-    conf.env.CXXFLAGS += [ '-std=c++03', '-Wall', '-fno-strict-aliasing', '-fPIC', '-fvisibility=hidden' ]
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        print (sys.platform, conf.options.gaia_qt5)
+        conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
+            '-DGAIA_QT5',  \
+            '-Wint-in-bool-context', \
+            '-Wno-misleading-indentation', \
+            '-Wno-unused-result',\
+            '-fno-strict-aliasing',\
+            '-fPIC', '-fvisibility=hidden',\
+            '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+            '-I/usr/include/c++/7.2.0',\
+            '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+            '-I/opt/intel/mkl/include',\
+            '-I/usr/include']
+    elif sys.platform.startswith('linux'): 
+        print (sys.platform, conf.options.gaia_qt5)
+        conf.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
+                '-Wint-in-bool-context', \
+                '-Wno-misleading-indentation', \
+                '-Wno-unused-result',\
+                '-fno-strict-aliasing',\
+                '-fPIC', '-fvisibility=hidden',\
+                '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+                '-I/usr/include/c++/7.2.0',\
+                '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+                '-I/opt/intel/mkl/include',\
+                '-I/usr/include']
 
+    #cnf.check(features='cxx cxxprogram', lib=['m'], cflags=['-Wall'], defines=['var=foo'], uselib_store='M')
     # define this to be stricter, but sometimes some libraries can give problems...
     #conf.env.CXXFLAGS += [ '-Werror' ]
 
@@ -119,9 +158,16 @@ def configure(conf):
         conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
                       args=['--cflags', '--libs'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+    # optional dependency: gaia_qt5, if asked for on linux platform
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        conf.env['WITH_GAIA_QT5'] = conf.options.tbb
+        conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
+    else :
+        conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
 
-    # optional dependency: tbb, if asked for it
+
+
+    # optional dependency: tbb, if asked for
     conf.env['WITH_TBB'] = conf.options.tbb
     if conf.env['WITH_TBB']:
         check_tbb(conf)
@@ -147,7 +193,10 @@ def configure(conf):
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
 
-    conf.load('compiler_cxx compiler_c qt4')
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+        conf.load('compiler_cxx compiler_c qt5')
+    else:
+        conf.load('compiler_cxx compiler_c qt4')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -168,17 +217,39 @@ def configure(conf):
     else:
         tbblib = ''
 
+    #cnf.check(features='cxx cxxprogram', lib=['m'], cflags=['-Wall'], defines=['var=foo'], uselib_store='M')
     # write pkg-config file
+    #   Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
     prefix = normpath(conf.options.prefix)
 
-    if sys.platform == 'linux2':
-
+    if sys.platform.startswith('linux') and conf.options.gaia_qt5:
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
-             'version': VERSION,
-             'tbblib': tbblib,
-             }
+            'qtlibdir': conf.env['USELIB'],
+            'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
+        
+        pcfile = '''prefix=%(prefix)s
+        libdir=${prefix}/lib
+        includedir=${prefix}/include
+        qtlibdir=%(qtlibdir)s
+        qtincludes=%(qtincludedir)s
+
+        Name: libgaia2
+        Description: A library for doing similarity in semimetric spaces
+        Version: %(version)s
+        Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
+        Cflags: -I${includedir} ${qtincludes}
+        ''' % opts
+        
+    elif sys.platform.startswith('linux'):
+        opts = { 'prefix': prefix,
+            'qtlibdir': conf.env['USELIB'],
+            'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT4CORE']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
 
         pcfile = '''prefix=%(prefix)s
         libdir=${prefix}/lib
@@ -189,7 +260,7 @@ def configure(conf):
         Name: libgaia2
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
-        Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
+        Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
         Cflags: -I${includedir} ${qtincludes}
         ''' % opts
 
@@ -222,5 +293,22 @@ def configure(conf):
 
 
 def build(bld):
+    print ('1a', sys.platform, bld.options.gaia_qt5)
+    print (bld.env.CXXFLAGS)
+    bld.options.gaia_qt5 = False
+    if sys.platform.startswith('linux'):
+        print (sys.platform, bld.options.gaia_qt5)
+        bld.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
+            '-Wint-in-bool-context', \
+            '-Wno-misleading-indentation', \
+            '-Wno-unused-result',\
+            '-fno-strict-aliasing',\
+            '-fPIC', '-fvisibility=hidden',\
+            '-I/usr/include/x86_64-linux-gnu/c++/7.2.0',\
+            '-I/usr/include/c++/7.2.0',\
+            '-I/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',\
+            '-I/opt/intel/mkl/include',\
+            '-I/usr/include']
+    
     print('→ building from ' + bld.path.abspath())
     bld.recurse('src')
