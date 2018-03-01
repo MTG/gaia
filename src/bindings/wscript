@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+from __future__ import print_function
 import sys
 
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
-            print n, ':', env[n]
+            print (n, ':', env[n])
 
 
 def options(opt):
