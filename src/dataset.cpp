@@ -1095,7 +1095,7 @@ int DataSet::load(QDataStream& in, int start, int end, bool readAllPointsFromStr
 
     break;
   }
-
+#ifdef GAIA_QT5
   case Gaia_2_4: {
     // load all points that we asked for
     in >> size;
@@ -1122,7 +1122,7 @@ int DataSet::load(QDataStream& in, int start, int end, bool readAllPointsFromStr
 
     break;
   }
-
+#endif
   }
 
   // make sure dataset is valid & compact memory
