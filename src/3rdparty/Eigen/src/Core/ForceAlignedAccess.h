@@ -3,27 +3,14 @@
 //
 // Copyright (C) 2009-2010 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_FORCEALIGNEDACCESS_H
 #define EIGEN_FORCEALIGNEDACCESS_H
+
+namespace Eigen {
 
 /** \class ForceAlignedAccess
   * \ingroup Core_Module
@@ -52,29 +39,29 @@ template<typename ExpressionType> class ForceAlignedAccess
     typedef typename internal::dense_xpr_base<ForceAlignedAccess>::type Base;
     EIGEN_DENSE_PUBLIC_INTERFACE(ForceAlignedAccess)
 
-    inline ForceAlignedAccess(const ExpressionType& matrix) : m_expression(matrix) {}
+    EIGEN_DEVICE_FUNC explicit inline ForceAlignedAccess(const ExpressionType& matrix) : m_expression(matrix) {}
 
-    inline Index rows() const { return m_expression.rows(); }
-    inline Index cols() const { return m_expression.cols(); }
-    inline Index outerStride() const { return m_expression.outerStride(); }
-    inline Index innerStride() const { return m_expression.innerStride(); }
+    EIGEN_DEVICE_FUNC inline Index rows() const { return m_expression.rows(); }
+    EIGEN_DEVICE_FUNC inline Index cols() const { return m_expression.cols(); }
+    EIGEN_DEVICE_FUNC inline Index outerStride() const { return m_expression.outerStride(); }
+    EIGEN_DEVICE_FUNC inline Index innerStride() const { return m_expression.innerStride(); }
 
-    inline const CoeffReturnType coeff(Index row, Index col) const
+    EIGEN_DEVICE_FUNC inline const CoeffReturnType coeff(Index row, Index col) const
     {
       return m_expression.coeff(row, col);
     }
 
-    inline Scalar& coeffRef(Index row, Index col)
+    EIGEN_DEVICE_FUNC inline Scalar& coeffRef(Index row, Index col)
     {
       return m_expression.const_cast_derived().coeffRef(row, col);
     }
 
-    inline const CoeffReturnType coeff(Index index) const
+    EIGEN_DEVICE_FUNC inline const CoeffReturnType coeff(Index index) const
     {
       return m_expression.coeff(index);
     }
 
-    inline Scalar& coeffRef(Index index)
+    EIGEN_DEVICE_FUNC inline Scalar& coeffRef(Index index)
     {
       return m_expression.const_cast_derived().coeffRef(index);
     }
@@ -103,7 +90,7 @@ template<typename ExpressionType> class ForceAlignedAccess
       m_expression.const_cast_derived().template writePacket<Aligned>(index, x);
     }
 
-    operator const ExpressionType&() const { return m_expression; }
+    EIGEN_DEVICE_FUNC operator const ExpressionType&() const { return m_expression; }
 
   protected:
     const ExpressionType& m_expression;
@@ -140,7 +127,7 @@ template<bool Enable>
 inline typename internal::add_const_on_value_type<typename internal::conditional<Enable,ForceAlignedAccess<Derived>,Derived&>::type>::type
 MatrixBase<Derived>::forceAlignedAccessIf() const
 {
-  return derived();
+  return derived();  // FIXME This should not work but apparently is never used
 }
 
 /** \returns an expression of *this with forced aligned access if \a Enable is true.
@@ -151,7 +138,9 @@ template<bool Enable>
 inline typename internal::conditional<Enable,ForceAlignedAccess<Derived>,Derived&>::type
 MatrixBase<Derived>::forceAlignedAccessIf()
 {
-  return derived();
+  return derived();  // FIXME This should not work but apparently is never used
 }
+
+} // end namespace Eigen
 
 #endif // EIGEN_FORCEALIGNEDACCESS_H

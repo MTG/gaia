@@ -21,7 +21,7 @@
 #define GAIA_ENUMERATEAPPLIER_H
 
 #include "applier.h"
-#include "utils.h"
+#include "../utils.h"
 
 namespace gaia2 {
 

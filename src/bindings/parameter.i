@@ -10,13 +10,13 @@ PyObject* parameterToPython(const QVariant* p) {
   switch ((int)p->type()) {
 
   case QVariant::String: {
-    result = PyString_FromString(p->toString().toUtf8().data());
+    result = PyBytes_FromString(p->toString().toUtf8().data());
     break;
   }
 
   case QVariant::ByteArray: {
     QByteArray array = p->toByteArray();
-    result = PyString_FromStringAndSize(array.data(), array.size());
+    result = PyBytes_FromStringAndSize(array.data(), array.size());
     break;
   }
 
@@ -43,7 +43,7 @@ PyObject* parameterToPython(const QVariant* p) {
     int size = qlist.size();
     result = PyList_New(size);
     for (int i=0; i<size; i++) {
-      PyList_SetItem(result, i, PyString_FromString(qlist[i].toUtf8().data()));
+      PyList_SetItem(result, i, PyBytes_FromString(qlist[i].toUtf8().data()));
     }
     break;
   }
@@ -54,7 +54,7 @@ PyObject* parameterToPython(const QVariant* p) {
     PyObject *pykey, *pyvalue;
 
     foreach (const QString& key, qmap.keys()) {
-      pykey = PyString_FromString(key.toUtf8().data());
+      pykey = PyBytes_FromString(key.toUtf8().data());
       const QVariant& value = qmap.value(key);
 
       pyvalue = parameterToPython(&value);
@@ -112,7 +112,7 @@ PyObject* pmapToPython(const ParameterMap* pm) {
   PyObject *pykey, *pyvalue;
 
   foreach (const QString& key, pm->keys()) {
-    pykey = PyString_FromString(key.toUtf8().data());
+    pykey = PyBytes_FromString(key.toUtf8().data());
     const QVariant& value = pm->value(key);
 
     pyvalue = parameterToPython(&value);

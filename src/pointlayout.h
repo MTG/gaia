@@ -324,6 +324,10 @@ class PointLayout {
 
 };
 
+QDataStream& operator<<(QDataStream& out, const PointLayout& layout);
+QDataStream& operator>>(QDataStream& in, PointLayout& layout);
+
+
 } // namespace gaia2
 
 #endif // GAIA_POINTLAYOUT_H

@@ -4,32 +4,14 @@
 // Copyright (C) 2009-2010 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2009-2010 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_RETURNBYVALUE_H
 #define EIGEN_RETURNBYVALUE_H
 
-/** \class ReturnByValue
-  * \ingroup Core_Module
-  *
-  */
+namespace Eigen {
 
 namespace internal {
 
@@ -51,17 +33,22 @@ struct traits<ReturnByValue<Derived> >
  * So internal::nested always gives the plain return matrix type.
  *
  * FIXME: I don't understand why we need this specialization: isn't this taken care of by the EvalBeforeNestingBit ??
+ * Answer: EvalBeforeNestingBit should be deprecated since we have the evaluators
  */
 template<typename Derived,int n,typename PlainObject>
-struct nested<ReturnByValue<Derived>, n, PlainObject>
+struct nested_eval<ReturnByValue<Derived>, n, PlainObject>
 {
   typedef typename traits<Derived>::ReturnType type;
 };
 
 } // end namespace internal
 
+/** \class ReturnByValue
+  * \ingroup Core_Module
+  *
+  */
 template<typename Derived> class ReturnByValue
-  : public internal::dense_xpr_base< ReturnByValue<Derived> >::type
+  : public internal::dense_xpr_base< ReturnByValue<Derived> >::type, internal::no_assignment_operator
 {
   public:
     typedef typename internal::traits<Derived>::ReturnType ReturnType;
@@ -70,10 +57,11 @@ template<typename Derived> class ReturnByValue
     EIGEN_DENSE_PUBLIC_INTERFACE(ReturnByValue)
 
     template<typename Dest>
+    EIGEN_DEVICE_FUNC
     inline void evalTo(Dest& dst) const
     { static_cast<const Derived*>(this)->evalTo(dst); }
-    inline Index rows() const { return static_cast<const Derived*>(this)->rows(); }
-    inline Index cols() const { return static_cast<const Derived*>(this)->cols(); }
+    EIGEN_DEVICE_FUNC inline Index rows() const { return static_cast<const Derived*>(this)->rows(); }
+    EIGEN_DEVICE_FUNC inline Index cols() const { return static_cast<const Derived*>(this)->cols(); }
 
 #ifndef EIGEN_PARSED_BY_DOXYGEN
 #define Unusable YOU_ARE_TRYING_TO_ACCESS_A_SINGLE_COEFFICIENT_IN_A_SPECIAL_EXPRESSION_WHERE_THAT_IS_NOT_ALLOWED_BECAUSE_THAT_WOULD_BE_INEFFICIENT
@@ -85,15 +73,45 @@ template<typename Derived> class ReturnByValue
     const Unusable& coeff(Index,Index) const { return *reinterpret_cast<const Unusable*>(this); }
     Unusable& coeffRef(Index) { return *reinterpret_cast<Unusable*>(this); }
     Unusable& coeffRef(Index,Index) { return *reinterpret_cast<Unusable*>(this); }
+#undef Unusable
 #endif
 };
 
 template<typename Derived>
 template<typename OtherDerived>
-Derived& DenseBase<Derived>::operator=(const ReturnByValue<OtherDerived>& other)
+EIGEN_DEVICE_FUNC Derived& DenseBase<Derived>::operator=(const ReturnByValue<OtherDerived>& other)
 {
   other.evalTo(derived());
   return derived();
 }
+
+namespace internal {
+
+// Expression is evaluated in a temporary; default implementation of Assignment is bypassed so that
+// when a ReturnByValue expression is assigned, the evaluator is not constructed.
+// TODO: Finalize port to new regime; ReturnByValue should not exist in the expression world
+  
+template<typename Derived>
+struct evaluator<ReturnByValue<Derived> >
+  : public evaluator<typename internal::traits<Derived>::ReturnType>
+{
+  typedef ReturnByValue<Derived> XprType;
+  typedef typename internal::traits<Derived>::ReturnType PlainObject;
+  typedef evaluator<PlainObject> Base;
+  
+  EIGEN_DEVICE_FUNC explicit evaluator(const XprType& xpr)
+    : m_result(xpr.rows(), xpr.cols())
+  {
+    ::new (static_cast<Base*>(this)) Base(m_result);
+    xpr.evalTo(m_result);
+  }
+
+protected:
+  PlainObject m_result;
+};
+
+} // end namespace internal
+
+} // end namespace Eigen
 
 #endif // EIGEN_RETURNBYVALUE_H

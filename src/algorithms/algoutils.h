@@ -20,7 +20,7 @@
 #ifndef GAIA_ALGOUTILS_H
 #define GAIA_ALGOUTILS_H
 
-#include "dataset.h"
+#include "../dataset.h"
 
 namespace gaia2 {
 

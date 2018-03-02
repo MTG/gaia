@@ -23,7 +23,7 @@
 #include "dataset.h"
 #include "point.h"
 #include "pointlayout.h"
-#include "Eigen/Core"
+#include "3rdparty/Eigen/Core"
 
 
 // This file contains some useful functions that were not generic enough to go
@@ -189,7 +189,12 @@ void checkValidDataStream(QDataStream& in);
 enum BinaryFileFormat {
   Gaia_2_0 = 100,
   Gaia_2_1 = 101,
+#ifdef GAIA_QT5
+  Gaia_2_3 = 102,
+  Gaia_2_4 = 103
+#else
   Gaia_2_3 = 102
+#endif
 };
 
 /**

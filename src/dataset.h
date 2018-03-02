@@ -22,6 +22,7 @@
 
 #include <QVector>
 #include <QReadWriteLock>
+#include <QDataStream>
 #include "point.h"
 #include "pointlayout.h"
 #include "transformation.h"
@@ -481,13 +482,14 @@ class DataSet : public PointArray, public QObject {
   // because it needs to call the setHistoryNoCheck() method.
   friend DataSet* mergeDataSets(const DataSet* ds1, const DataSet* ds2);
 
-
   // serialization methods
-  friend QDataStream& operator<<(QDataStream& out, const DataSet& dataset);
-  friend QDataStream& operator>>(QDataStream& in, DataSet& dataset);
+  friend QDataStream &operator << ( QDataStream &out, const DataSet &dataset );
+  friend QDataStream &operator >> ( QDataStream &in, DataSet &dataset);
 
 };
 
+QDataStream &operator << ( QDataStream &out, const DataSet &dataset );
+QDataStream &operator >> ( QDataStream &in, DataSet &dataset);
 
 } // namespace gaia2
 

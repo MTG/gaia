@@ -21,7 +21,7 @@
 #include <cmath>
 #include <QSet>
 #include "cleaner.h"
-#include "utils.h"
+#include "../utils.h"
 #include "algoutils.h"
 using namespace std;
 

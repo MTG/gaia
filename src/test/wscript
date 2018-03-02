@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from __future__ import print_function
+import sys
 
 def build_prog(bld, progname):
     bld.program(

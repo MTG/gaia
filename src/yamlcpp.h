@@ -103,7 +103,7 @@ class Node {
 
   /*
   template<typename T> const T as() const {
-    //return boost::lexical_cast<T>(asString().toAscii());
+    //return boost::lexical_cast<T>(asString().toLatin1());
     return T();
   }
   */

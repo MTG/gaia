@@ -21,8 +21,8 @@
 #define GAIA_DISTANCEFUNCTION_H
 
 #include "layoutawarefactory.h"
-#include "parameter.h"
-#include "point.h"
+#include "../parameter.h"
+#include "../point.h"
 
 namespace gaia2 {
 

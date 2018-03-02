@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+from __future__ import print_function
 import sys
 
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
-            print n, ':', env[n]
+            print (n, ':', env[n])
 
 
 def options(opt):
@@ -33,12 +33,40 @@ def configure(conf):
         if sys.platform == 'darwin':
             conf.env['pyext_SUFFIX'] = '.so'
 
-        conf.env['CPPPATH_BINDINGS'] = [ '../../src',
-                                         '../../src/bindings',
-                                         '../../src/metrics',
-                                         '../../src/3rdparty'
-                                         ]
-        conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+        print ('conf.env WITH_GAIA_QT5',conf.env['WITH_GAIA_QT5'] )
+
+        if sys.platform.startswith('linux') and conf.env['WITH_GAIA_QT5']:
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+        elif sys.platform.startswith('linux') :
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+
+        else:
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 
 def build(bld):

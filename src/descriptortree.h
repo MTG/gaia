@@ -313,6 +313,8 @@ class DescriptorTree {
   friend QDataStream& operator>>(QDataStream& in, DescriptorTree& tree);
 };
 
+QDataStream& operator<<(QDataStream& out, const DescriptorTree& tree);
+QDataStream& operator>>(QDataStream& in, DescriptorTree& tree);
 
 } // namespace gaia2
 

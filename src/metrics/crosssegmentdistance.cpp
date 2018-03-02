@@ -18,7 +18,7 @@
  */
 
 #include "crosssegmentdistance.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace gaia2;
 
 

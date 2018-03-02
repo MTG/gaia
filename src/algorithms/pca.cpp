@@ -18,10 +18,10 @@
  */
 
 #include "pca.h"
-#include "linalg.h"
-#include "timer.h"
-#include "utils.h"
-#include "Eigen/Eigenvalues"
+#include "../linalg.h"
+#include "../timer.h"
+#include "../utils.h"
+#include "../3rdparty/Eigen/Eigenvalues"
 using namespace std;
 using namespace Eigen;
 

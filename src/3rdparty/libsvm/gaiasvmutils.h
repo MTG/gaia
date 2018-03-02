@@ -1,7 +1,7 @@
 #ifndef GAIASVMUTILS_H
 #define GAIASVMUTILS_H
 
-#include "dataset.h"
+#include "../../dataset.h"
 #include "svm.h"
 
 namespace gaia2 {

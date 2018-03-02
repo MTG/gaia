@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+from __future__ import print_function
+import sys
+
+def print_env(env):
+    for n in env.m_table.keys():
+        if 'py' in n or 'PY' in n:
+            print (n), ':', env[n]
+
+
+def options(opt):
+    opt.add_option('--with-python-bindings', action='store_true',
+                   dest = 'with_python_bindings', default = False,
+                   help = 'whether or not to compile the python bindings')
+
+
+def configure(conf):
+    conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
+    if conf.env['WITH_PYTHON_BINDINGS']:
+        conf.load('swig python')
+
+        if type(conf.env.SWIG) == str:
+            conf.env.SWIG = [ conf.env.SWIG ]
+        if conf.check_swig_version() < (1,3,31):
+            conf.fatal('this swig version is too old')
+
+        conf.check_python_version((2,4))
+        conf.check_python_headers()
+
+        # do not use the default extension of .bundle on MacOS
+        # TODO: still necessary with waf 1.5.x?
+        print ('2', sys.platform, conf.options.gaia_qt5)
+        if sys.platform == 'darwin':
+            conf.env['pyext_SUFFIX'] = '.so'
+
+        if sys.platform.startswith('linux') and conf.options.gaia_qt5:
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+        elif sys.platform.startswith('linux') :
+            conf.env['CPPPATH_BINDINGS'] = [ '../../src',
+                '../../src/bindings',
+                '../../src/metrics',
+                '../../src/3rdparty',
+                '/usr/include/x86_64-linux-gnu/c++/7.2.0',
+                '/usr/include/c++/7.2.0',
+                '/usr/lib/gcc/x86_64-linux-gnu/7.2.0/include',	
+                '/opt/intel/mkl/include',
+                '/usr/include'
+                ]
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+
+def build(bld):
+    # fix for waf/python2.6 install paths
+    #major, minor, _, _, _ = sys.version_info
+    #if major >= 2 and minor >= 6:
+    #    bld.env['PYTHONDIR'] = bld.env['PYTHONDIR'].replace('site-packages', 'dist-packages')
+       
+    bld(features = 'cxx cshlib pyext',
+        source = 'gaia.swig',
+        target = '_gaia2',
+        # -w 451: ignore the warning "Setting a const char * variable may leak memory"
+        swig_flags = '-c++ -python -w451',
+        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        includes = bld.env['CPPPATH_BINDINGS'] + ['/usr/share/swig3.0/python'] + ['/usr/share/swig3.0'],
+        install_path = '${PYTHONDIR}'
+        )
+
+    bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
+    bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
+
+    subfolders = [ 'classification', 'linalg', 'mtgdb',
+                   'scripts', 'scripts/classification', 'scripts/collections' ]
+
+    for folder in subfolders:
+        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.py' % folder))
+        bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.yaml' % folder))
+
+    if bld.env['WITH_CYCLOPS']:
+        bld.install_as('${PYTHONDIR}/gaia2/cyclops/__init__.py', '../tools/cyclops_client/cyclops.py')
+

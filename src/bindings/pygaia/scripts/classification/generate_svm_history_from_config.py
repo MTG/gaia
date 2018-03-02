@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, yaml
 from os.path import *
 from gaia2 import DataSet, transform
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         outputHistoryFilename = sys.argv[3]
 
     except:
-        print 'usage: %s classification_project params_filename output_history [class_name]' % sys.argv[0]
+        print ('usage: %s classification_project params_filename output_history [class_name]' % sys.argv[0])
         sys.exit(1)
 
     className = None

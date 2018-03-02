@@ -1,13 +1,21 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-02-19T15:29:39
 # -------------------------------------------------
+#QT -= gui
+#TARGET = Gaia2lib
+#TEMPLATE = lib
+#CONFIG += c++03
+#CONFIG += staticlib
+QMAKE_CXX = g++
+CONFIG += c++11
 QT -= gui
+QT += concurrent core
 TARGET = Gaia2lib
 TEMPLATE = lib
-CONFIG += staticlib
 
 DEFINES += YAML_DECLARE_STATIC \
-           GAIA_VERSION=\\\"2.4.4\\\"
+           GAIA_VERSION=\\\"2.4.4\\\" \
+           GAIA_GIT_SHA=\\\"v2.4.4-43-g1d593b8-dirty\\\"
 
 win32:INCLUDEPATH = $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/include) \
                     $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/yaml-0.1.3/include) \
@@ -104,6 +112,7 @@ SOURCES += ../../../src/yamlcpp.cpp \
            ../../../src/3rdparty/alglib/ap.cpp \
            ../../../src/parser/filterwrapper.cpp \
            ../../../src/metrics/resistoraveragedistance.cpp
+
 HEADERS += ../../../src/yamlcpp.h \
            ../../../src/view.h \
            ../../../src/utils.h \
@@ -195,4 +204,10 @@ HEADERS += ../../../src/yamlcpp.h \
            ../../../src/3rdparty/alglib/gammaf.h \
            ../../../src/3rdparty/alglib/chisquaredistr.h \
            ../../../src/3rdparty/alglib/apvt.h \
-           ../../../src/3rdparty/alglib/ap.h
+           ../../../src/3rdparty/alglib/ap.h \
+    ../../../src/3rdparty/Eigen/Core \
+    ../../../src/3rdparty/Eigen/Dense \
+    ../../../src/3rdparty/Eigen/Eigen \
+    ../../../src/3rdparty/Eigen/Eigenvalues \
+    ../../../src/3rdparty/MersenneTwister.h
+

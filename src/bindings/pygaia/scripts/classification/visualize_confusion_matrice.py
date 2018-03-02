@@ -18,7 +18,7 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-
+from __future__ import print_function
 import sys
 from gaia2.classification import ConfusionMatrix
 
@@ -27,7 +27,7 @@ try:
     results = sys.argv[1]
     output_html = sys.argv[2]
 except:
-    print 'Usage: %s <results_file> <confusion_matrix_html_file>' % sys.argv[0]
+    print ('Usage: %s <results_file> <confusion_matrix_html_file>' % sys.argv[0])
     exit(1)
 
 cm = ConfusionMatrix()

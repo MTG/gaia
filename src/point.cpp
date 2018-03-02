@@ -39,6 +39,12 @@ QDataStream& gaia2::operator>>(QDataStream& in, Scope& scope) {
     G_DEBUG(GIO, "Loading scope, gaia 2.1 format");
     return in >> scope.name >> scope.start >> scope.end;
 
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading scope, gaia 2.1 format");
+    return in >> scope.name >> scope.start >> scope.end;
+#endif
+
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading scope, gaia 2.0 format");
     return in;
@@ -65,6 +71,13 @@ QDataStream& gaia2::operator>>(QDataStream& in, ScopedData& s) {
     return in >> s.scope
               >> s.data.vreal >> s.data.vlabel >> s.data.venumeration
               >> s.data.freal >> s.data.flabel >> s.data.fenumeration;
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading scoped data, gaia 2.1 format");
+    return in >> s.scope
+              >> s.data.vreal >> s.data.vlabel >> s.data.venumeration
+              >> s.data.freal >> s.data.flabel >> s.data.fenumeration;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading scoped data, gaia 2.0 format");

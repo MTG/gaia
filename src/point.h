@@ -313,6 +313,11 @@ class Point {
 // some useful defines that will be used in lots of places
 #define FORSEG(p) for (int nseg=0; nseg<(p).numberSegments(); nseg++)
 
+QDataStream& operator<<(QDataStream& out, const Point& point);
+QDataStream& operator>>(QDataStream& in, Point& point);
+QDataStream& operator<<(QDataStream& out, const Scope& scope);
+QDataStream& operator>>(QDataStream& in, Scope& scope);
+
 } // namespace gaia2
 
 #endif // GAIA_POINT_H

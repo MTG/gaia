@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import os
 
 ESSENTIA_VERSION = 'essentia_streaming_1.2_schizo'
@@ -47,7 +47,7 @@ ALL_DBS = { # GENRE DATABASES
             # separate metadata file
             #'perceptual_speed': ('rhythm', '')
 
-            'danceability':
+            'danceability': ('')
             }
 
 for name, (classType, location) in ALL_DBS.items():
@@ -65,6 +65,6 @@ for name, (classType, location) in ALL_DBS.items():
 
 
 # moods 
-for m in mood_acoustic mood_blue mood_electronic mood_furious mood_happy mood_party mood_relaxed; do mkdir -p $m; cd $m; python
+for m in range (mood_acoustic mood_blue mood_electronic mood_furious mood_happy mood_party mood_relaxed; do mkdir -p $m; cd $m; python
 
 for m in `ls`; do cd $m; python ../../../gaia/src/scripts/classification/run_tests.py $m.yaml; cd ..; done

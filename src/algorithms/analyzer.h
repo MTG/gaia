@@ -20,9 +20,9 @@
 #ifndef GAIA_ANALYZER_H
 #define GAIA_ANALYZER_H
 
-#include "dataset.h"
-#include "factory.h"
-#include "transformation.h"
+#include "../dataset.h"
+#include "../factory.h"
+#include "../transformation.h"
 
 namespace gaia2 {
 

@@ -21,8 +21,8 @@
 #define GAIA_EXTRACTAPPLIER_H
 
 #include "applier.h"
-#include "3rdparty/libsvm/svm.h"
-#include "utils.h"
+#include "../3rdparty/libsvm/svm.h"
+#include "../utils.h"
 
 namespace gaia2 {
 

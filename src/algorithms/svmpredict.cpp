@@ -18,7 +18,7 @@
  */
 
 #include "svmpredict.h"
-#include "utils.h"
+#include "../utils.h"
 #include <QTemporaryFile>
 using namespace gaia2;
 

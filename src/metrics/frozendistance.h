@@ -22,10 +22,10 @@
 
 #include <QVector>
 #include <QPointer>
-#include "Eigen/Dense"
+#include "../3rdparty/Eigen/Dense"
 #include "layoutawarefactory.h"
-#include "frozendataset.h"
-#include "utils.h"
+#include "../frozendataset.h"
+#include "../utils.h"
 
 namespace gaia2 {
 

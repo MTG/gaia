@@ -259,6 +259,8 @@ class Region {
 
 };
 
+QDataStream& operator<<(QDataStream& out, const Segment& segment);
+QDataStream& operator>>(QDataStream& in, Segment& segment);
 
 } // namespace gaia2
 

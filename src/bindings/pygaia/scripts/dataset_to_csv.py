@@ -17,7 +17,7 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-
+from __future__ import print_function
 
 import sys
 import gaia2
@@ -55,7 +55,7 @@ def dataset_to_csv(filename, csv_filename):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print 'USAGE: %s gaia_dataset.db output.csv' % sys.argv[0]
+        print ('USAGE: %s gaia_dataset.db output.csv' % sys.argv[0])
         sys.exit(1)
         
     ds_filename = sys.argv[1]

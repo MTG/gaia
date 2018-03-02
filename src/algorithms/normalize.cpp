@@ -20,8 +20,8 @@
 #include <QVector>
 #include <cmath>
 #include "normalize.h"
-#include "utils.h"
-#include "algoutils.h"
+#include "../utils.h"
+#include "../algorithms/algoutils.h"
 
 namespace gaia2 {
 
