@@ -162,7 +162,7 @@ def build_tools(bld):
         if bld.env['WITH_CYCLOPS']:
             # cyclops "normal" server
             bld(
-                features = 'qt4 cxx cxxprogram cyclops',
+                features = 'qt4 qtnetwork cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp

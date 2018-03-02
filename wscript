@@ -147,7 +147,11 @@ def configure(conf):
     # optional dependency: QtNetwork for Cyclops Server
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops
     if conf.env['WITH_CYCLOPS']:
-        conf.env['USELIB'] += [ 'QTNETWORK' ]
+        if sys.platform.startswith('linux') and gaia_qt5:
+            conf.env['USELIB'] += [ 'QT5NETWORK' ]
+        else:
+            conf.env['USELIB'] += [ 'QTNETWORK' ]
+            
 
     conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
@@ -280,6 +284,6 @@ def configure(conf):
 
 
 def build(bld):
-    print(bld.env.CXXFLAGS)
+    
     print('→ building from ' + bld.path.abspath())
     bld.recurse('src')
