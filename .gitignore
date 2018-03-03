@@ -5,8 +5,14 @@ build/
 .waf-1*
 *~
 .waf-2*
+# waf and waflib used in build
 waf
 waflib
+# copied version of wscripts
+wscript_*
+src/wscript_*
+src/bindings/wscript_*
+src/test/wscript_*
 # data files for the unittests
 test/unittest/data/tmp_*
 test/unittest/data/test.1

@@ -25,7 +25,7 @@
 
 inline QDebug clog() {
   return qDebug() << QString("%1:").arg(QDateTime::currentDateTime().toString())
-    .toAscii().constData(); // toAscii.constData to avoid the "..." around QStrings
+    .toLatin1().constData(); // toLatin1.constData to avoid the "..." around QStrings
 }
 
 #endif // GAIA_CYCLOPSLOGGING_H

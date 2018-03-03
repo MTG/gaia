@@ -20,9 +20,10 @@
 #ifndef GAIA_CYCLOPS_H
 #define GAIA_CYCLOPS_H
 
-#include "dataset.h"
-#include "distancefunction.h"
-#include "searchspace.h"
+//#include "../../cairo/dataset.h"
+#include "../../dataset.h"
+#include "../../metrics/distancefunction.h"
+#include "../../searchspace.h"
 
 typedef QList<QString> CyclopsResultsHeader;
 typedef QList<QList<QVariant> > CyclopsResultsValues;

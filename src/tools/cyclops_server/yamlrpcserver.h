@@ -22,8 +22,7 @@
 
 #include <QTcpServer>
 #include <QDateTime>
-#include "yamlcpp.h"
-
+#include "../../yamlcpp.h"
 
 GAIA_DEFINE_EXCEPTION(NotImplementedError);
 GAIA_DEFINE_EXCEPTION(InvalidParams);

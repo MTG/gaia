@@ -19,14 +19,18 @@
 
 #include <QTcpSocket>
 #include <QStringList>
+#ifndef GAIA_QT5
 #include <QHttpRequestHeader>
+#else
+#include <QNetworkRequest>
+#endif
 #include <QUrl>
 #include <QDateTime>
 #include "yamlrpcserver.h"
-#include "gaiaexception.h"
-#include "yamlcpp.h"
+#include "../../gaiaexception.h"
+#include "../../yamlcpp.h"
 #include "logging.h"
-#include "utils.h"
+#include "../../utils.h"
 using namespace gaia2;
 
 
@@ -231,4 +235,4 @@ void YamlRPCServer::discardClient() {
 }
 
 
-#include "yamlrpcserver.moc"
+//#include "yamlrpcserver.moc"

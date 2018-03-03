@@ -21,7 +21,7 @@
 #define GAIA_CYCLOPSPROXY_H
 
 #include "yamlrpcserver.h"
-#include "yamlcpp.h"
+#include "../../yamlcpp.h"
 #include "cyclops.h"
 
 

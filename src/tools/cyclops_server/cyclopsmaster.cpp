@@ -24,14 +24,18 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QTcpSocket>
+#ifndef GAIA_QT5
 #include <QHttp>
+#else
+#include <QNetworkAccessManager>
+#endif
 #include <QHostInfo>
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
-#include "view.h"
+#include "../../view.h"
 #include "logging.h"
-#include "utils.h"
+#include "../../utils.h"
 using namespace gaia2;
 
 
@@ -85,8 +89,11 @@ void CyclopsMaster::setupClients(const QString& configFilename) {
 }
 
 int CyclopsMaster::sendSlaveRequest(const QPair<QHostAddress, int>& slave, const yaml::Mapping& request) {
+#ifndef GAIA_QT5
   QHttp* slaveRequest = new QHttp(slave.first.toString(), slave.second, this);
-
+#else
+  QNetworkAccessManager* slaveRequest = new QNetworkAccessManager(slave.first.toString(), slave.second, this);
+#endif
   // connect the reply from this slave to the replyFromSlave method
   connect(slaveRequest, SIGNAL(requestFinished(int,bool)),
           this, SLOT(replyFromSlave(int,bool)));
@@ -221,11 +228,15 @@ void CyclopsMaster::replyFromSlave(int id, bool error) {
 
   // we can now clear all the connection setup for this (slave, request)
   delete slaveBuffer;
+#ifndef GAIA_QT5
   QHttp* slaveRequest = (QHttp*)sender();
+#else
+  QNetworkAccessManager* slaveRequest = (QNetworkAccessManager*)sender();
+#endif
   slaveRequest->deleteLater();
 
   if (error) {
-    // should get the error string from the QHttp pointer...
+    // should get the error string from the QHttp or QNetworkAccessManager pointer...
     clog() << "There seems to be problem with one of the slaves... Exiting...";
 
     emit quit();
@@ -245,7 +256,7 @@ DataSet* reducePointsToDataSet(const QList<yaml::Mapping>& replies) {
   for (int i=0; i<replies.size(); i++) {
     // all replies should contain a result, even if only an empty dataset
     DataSet ds;
-    ds.fromBase64(replies[i]["result"].scalar().toAscii());
+    ds.fromBase64(replies[i]["result"].scalar().toLatin1());
     resultds->appendDataSet(&ds);
   }
 
@@ -453,7 +464,7 @@ yaml::Mapping CyclopsMaster::split(const yaml::Mapping& query, int idx, int tota
       if (methodName.startsWith("nnSearchById")) {
         // TODO: we have unnecessary points copies here, maybe there's sth to optimize
         //Point q;
-        //q.fromBase64(args[0].scalar().toAscii());
+        //q.fromBase64(args[0].scalar().toLatin1());
         //qpoints.addPoint(q); // NB: this should be grouped in a single addPoints at the end
         pointIDs << args[0].scalar();
       }
@@ -536,7 +547,7 @@ yaml::Mapping reduceGetPoints(const QList<yaml::Mapping>& replies, const yaml::S
   for (int i=0; i<replies.size(); i++) {
     // all replies should contain a result, even if only an empty dataset
     DataSet ds;
-    ds.fromBase64(replies[i]["result"].scalar().toAscii());
+    ds.fromBase64(replies[i]["result"].scalar().toLatin1());
     resultds.appendDataSet(&ds);
   }
   */
@@ -587,7 +598,7 @@ yaml::Mapping CyclopsMaster::reduce(const PendingRequest& results) {
     for (int i=0; i<results.replies.size(); i++) {
       // all replies should contain result, even if only an empty dataset
       DataSet ds;
-      ds.fromBase64(results.replies[i]["result"].scalar().toAscii());
+      ds.fromBase64(results.replies[i]["result"].scalar().toLatin1());
       resultds.appendDataSet(&ds);
     }
     if (resultds.size() == results.request["params"][1].sequence().size()) {
@@ -718,4 +729,4 @@ void CyclopsMaster::setup(const QString& filename) {
 
 
 
-#include "cyclopsmaster.moc"
+//#include "cyclopsmaster.moc"

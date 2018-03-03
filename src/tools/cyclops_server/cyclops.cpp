@@ -19,7 +19,7 @@
 
 #include <QFile>
 #include "cyclops.h"
-#include "view.h"
+#include "../../view.h"
 #include "logging.h"
 #include "yamlrpcserver.h" // for InvalidParams exception
 using namespace gaia2;
@@ -316,7 +316,7 @@ ResultSet Cyclops::nnSearch(const QString& methodName, const yaml::Sequence& arg
 
   QString point64 = args[0];
   Point query;
-  query.fromBase64(point64.toAscii());
+  query.fromBase64(point64.toLatin1());
 
   if (methodName == "nnSearchByExample") {
     checkArgs(args, 3, methodName);
@@ -475,4 +475,4 @@ void Cyclops::setupFromYaml(const yaml::Mapping& config) {
   }
 }
 
-#include "cyclops.moc"
+//#include "cyclops.moc"

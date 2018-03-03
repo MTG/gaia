@@ -410,7 +410,7 @@ yaml::Node CyclopsProxy::process(const yaml::Mapping& query) {
 
     try {
       point64 = params[0];
-      query.fromBase64(point64.toAscii());
+      query.fromBase64(point64.toLatin1());
 
       datasetName = params[1];
       distanceName = params[2];
@@ -443,7 +443,7 @@ yaml::Node CyclopsProxy::process(const yaml::Mapping& query) {
 
     try {
       point64 = params[0];
-      query.fromBase64(point64.toAscii());
+      query.fromBase64(point64.toLatin1());
 
       datasetName = params[1];
       distanceName = params[2];
