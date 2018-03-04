@@ -20,7 +20,7 @@
 #ifndef GAIA_CYCLOPS_H
 #define GAIA_CYCLOPS_H
 
-//#include "../../cairo/dataset.h"
+//#include "cairo/dataset.h"
 #include "../../dataset.h"
 #include "../../metrics/distancefunction.h"
 #include "../../searchspace.h"

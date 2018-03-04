@@ -22,7 +22,7 @@
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
 #include "cyclops.h"
-#include "yamlcpp.h"
+#include "../../yamlcpp.h"
 
 
 int main(int argc, char* argv[]) {

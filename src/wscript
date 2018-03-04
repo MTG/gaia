@@ -130,7 +130,7 @@ def build_tools(bld):
         if bld.env['WITH_CYCLOPS']:
             # cyclops "normal" server
             bld(
-                features = 'qt5 qt5network cxx cxxprogram cyclops',
+                features = 'qt5 cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -141,9 +141,9 @@ def build_tools(bld):
                 includes = [ '.', 'metrics', '3rdparty' ],
                 use = ['gaia2'] + bld.env['USELIB'])
 
-        # cyclops "master" server
+            # cyclops "master" server
             bld(
-                features = 'qt5 qt5network cxx cxxprogram cyclops',
+                features = 'qt5 cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsmasterserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -154,15 +154,15 @@ def build_tools(bld):
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
                 use = ['gaia2'] + bld.env['USELIB'])
-        # cyclops init scripts
-        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
+            # cyclops init scripts
+            bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
+            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
         
     else:
         if bld.env['WITH_CYCLOPS']:
             # cyclops "normal" server
             bld(
-                features = 'qt4 qtnetwork cxx cxxprogram cyclops',
+                features = 'qt4 cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -173,7 +173,7 @@ def build_tools(bld):
                 includes = [ '.', 'metrics', '3rdparty' ],
                 use = ['gaia2'] + bld.env['USELIB'])
 
-        # cyclops "master" server
+            # cyclops "master" server
             bld(
                 features = 'qt4 cxx cxxprogram cyclops',
                 source = '''
@@ -186,38 +186,10 @@ def build_tools(bld):
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
                 use = ['gaia2'] + bld.env['USELIB'])
-        # cyclops init scripts
-    if bld.env['WITH_CYCLOPS']:
-        # cyclops "normal" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclops',
-            includes = [ '.', 'metrics', '3rdparty' ],
-            use = ['gaia2'] + bld.env['USELIB'])
-
-        # cyclops "master" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsmasterserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclopsmaster.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclopsmaster',
-            includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            use = ['gaia2'] + bld.env['USELIB'])
-
-        # cyclops init scripts
-        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
+  
+            # cyclops init scripts
+            bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
+            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
     
 def build(bld):
     build_library(bld)

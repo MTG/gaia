@@ -72,12 +72,12 @@ def debian_version():
 
 
 def check_tbb(conf):
-    tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
-                         mandatory = 1,
-                         errmsg = 'Intel TBB is recommended in order to compile Gaia')
+    #tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
+    #                     mandatory = 1,
+    #                     errmsg = 'Intel TBB is recommended in order to compile Gaia')
 
-    if not tbb:
-        return
+    #if not tbb:
+    #    return
 
     conf.env['CXXDEFINES_TBB'] = 'HAVE_TBB'
     conf.env['LIB_TBB'] = 'tbb'
