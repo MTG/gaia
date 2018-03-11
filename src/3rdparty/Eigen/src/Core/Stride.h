@@ -3,14 +3,27 @@
 //
 // Copyright (C) 2010 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_STRIDE_H
 #define EIGEN_STRIDE_H
-
-namespace Eigen { 
 
 /** \class Stride
   * \ingroup Core_Module
@@ -31,8 +44,8 @@ namespace Eigen {
   * arguments to the constructor.
   *
   * Indeed, this class takes two template parameters:
-  *  \tparam _OuterStrideAtCompileTime the outer stride, or Dynamic if you want to specify it at runtime.
-  *  \tparam _InnerStrideAtCompileTime the inner stride, or Dynamic if you want to specify it at runtime.
+  *  \param _OuterStrideAtCompileTime the outer stride, or Dynamic if you want to specify it at runtime.
+  *  \param _InnerStrideAtCompileTime the inner stride, or Dynamic if you want to specify it at runtime.
   *
   * Here is an example:
   * \include Map_general_stride.cpp
@@ -44,14 +57,13 @@ template<int _OuterStrideAtCompileTime, int _InnerStrideAtCompileTime>
 class Stride
 {
   public:
-    typedef Eigen::Index Index; ///< \deprecated since Eigen 3.3
+    typedef DenseIndex Index;
     enum {
       InnerStrideAtCompileTime = _InnerStrideAtCompileTime,
       OuterStrideAtCompileTime = _OuterStrideAtCompileTime
     };
 
     /** Default constructor, for use when strides are fixed at compile time */
-    EIGEN_DEVICE_FUNC
     Stride()
       : m_outer(OuterStrideAtCompileTime), m_inner(InnerStrideAtCompileTime)
     {
@@ -59,7 +71,6 @@ class Stride
     }
 
     /** Constructor allowing to pass the strides at runtime */
-    EIGEN_DEVICE_FUNC
     Stride(Index outerStride, Index innerStride)
       : m_outer(outerStride), m_inner(innerStride)
     {
@@ -67,16 +78,13 @@ class Stride
     }
 
     /** Copy constructor */
-    EIGEN_DEVICE_FUNC
     Stride(const Stride& other)
       : m_outer(other.outer()), m_inner(other.inner())
     {}
 
     /** \returns the outer stride */
-    EIGEN_DEVICE_FUNC
     inline Index outer() const { return m_outer.value(); }
     /** \returns the inner stride */
-    EIGEN_DEVICE_FUNC
     inline Index inner() const { return m_inner.value(); }
 
   protected:
@@ -86,26 +94,26 @@ class Stride
 
 /** \brief Convenience specialization of Stride to specify only an inner stride
   * See class Map for some examples */
-template<int Value>
+template<int Value = Dynamic>
 class InnerStride : public Stride<0, Value>
 {
     typedef Stride<0, Value> Base;
   public:
-    EIGEN_DEVICE_FUNC InnerStride() : Base() {}
-    EIGEN_DEVICE_FUNC InnerStride(Index v) : Base(0, v) {} // FIXME making this explicit could break valid code
+    typedef DenseIndex Index;
+    InnerStride() : Base() {}
+    InnerStride(Index v) : Base(0, v) {}
 };
 
 /** \brief Convenience specialization of Stride to specify only an outer stride
   * See class Map for some examples */
-template<int Value>
+template<int Value = Dynamic>
 class OuterStride : public Stride<Value, 0>
 {
     typedef Stride<Value, 0> Base;
   public:
-    EIGEN_DEVICE_FUNC OuterStride() : Base() {}
-    EIGEN_DEVICE_FUNC OuterStride(Index v) : Base(v,0) {} // FIXME making this explicit could break valid code
+    typedef DenseIndex Index;
+    OuterStride() : Base() {}
+    OuterStride(Index v) : Base(v,0) {}
 };
-
-} // end namespace Eigen
 
 #endif // EIGEN_STRIDE_H

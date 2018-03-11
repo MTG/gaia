@@ -29,7 +29,8 @@ gaia2::yaml::Node toYaml(const CyclopsResults& results);
 
 
 class CyclopsProxy : public YamlProxy {
- public:
+
+public:
 
   /**
    * Create a CyclopsProxy instance that can translate a Yaml-RPC call to an actual
@@ -47,6 +48,5 @@ class CyclopsProxy : public YamlProxy {
  protected:
   Cyclops* _cyclops;
 };
-
 
 #endif // GAIA_CYCLOPSPROXY_H

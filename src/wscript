@@ -25,6 +25,7 @@ def configure(conf):
     conf.recurse('bindings')
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['pyext_PATTERN'] = "%s.so"
+        print ('PYTHON_VERSION', conf.env['PYTHON_VERSION'])
         conf.env['PYTHONDIR'] = "python"+conf.env['PYTHON_VERSION']+"/dist-packages"
 
 def install_tree(bld, dst, src):
@@ -56,8 +57,8 @@ def build_library(bld):
         includes = [ '.', 'metrics', '3rdparty' ]
     )
     
-    def write_pcfile(task):
-        open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
+def write_pcfile(task):
+    open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
 
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
     bld.add_group()
@@ -91,11 +92,14 @@ def is_dev_version(bld):
 
 
 def build_tools(bld):
+    global gaia_qt5
+    gaia_qt5 = bld.env['GAIA_QT5']
     # merge utility
     bld.program(
         source = 'tools/gaiamerge.cpp',
         target = 'tools/gaiamerge',
         includes = [ '.', 'metrics', '3rdparty' ],
+        uselib = 'QT5CORE',
         use = ['gaia2'] + bld.env['USELIB'])
 
     # info utility
@@ -103,6 +107,7 @@ def build_tools(bld):
         source = 'tools/gaiainfo.cpp',
         target = 'tools/gaiainfo',
         includes = [ '.', 'metrics', '3rdparty' ],
+        uselib = 'QT5CORE',
         use = ['gaia2'] + bld.env['USELIB'])
     
     # GaiaFusion
@@ -113,6 +118,7 @@ def build_tools(bld):
         source = 'tools/gaiafreeze.cpp',
         target = 'tools/gaiafreeze',
         includes = [ '.', 'metrics', '3rdparty' ],
+        uselib = 'QT5CORE',
         use = ['gaia2'] + bld.env['USELIB'])
         
     if is_dev_version(bld):
@@ -123,11 +129,14 @@ def build_tools(bld):
             source = 'tools/gaiabench.cpp tools/frozensearch.cpp',
             target = 'tools/gaiabench',
             includes = [ '.', 'metrics', '3rdparty' ],
+            uselib = 'QT5CORE',
             use = ['gaia2'] + bld.env['USELIB'])
 
     # Cyclops server
     if sys.platform.startswith('linux') and gaia_qt5:
+        print ('gaia_qt5 = ', gaia_qt5)
         if bld.env['WITH_CYCLOPS']:
+            print ('Building Cyclops1')
             # cyclops "normal" server
             bld(
                 features = 'qt5 cxx cxxprogram cyclops',
@@ -137,8 +146,15 @@ def build_tools(bld):
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
+                moc = '''
+                tools/cyclops_server/cyclops.h
+                tools/cyclops_server/cyclopsmaster.h
+                tools/cyclops_server/yamlrpcserver.h
+                ''',
                 target = 'tools/cyclops',
                 includes = [ '.', 'metrics', '3rdparty' ],
+                defines = ['GAIA_QT5'], 
+                uselib = 'QT5CORE QT5NETWORK', 
                 use = ['gaia2'] + bld.env['USELIB'])
 
             # cyclops "master" server
@@ -151,8 +167,15 @@ def build_tools(bld):
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
+                moc = '''
+                tools/cyclops_server/cyclops.h
+                tools/cyclops_server/cyclopsmaster.h
+                tools/cyclops_server/yamlrpcserver.h
+                ''',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                defines = ['GAIA_QT5'], 
+                uselib = 'QT5CORE QT5NETWORK', 
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
@@ -160,22 +183,28 @@ def build_tools(bld):
         
     else:
         if bld.env['WITH_CYCLOPS']:
-            # cyclops "normal" server
+            # cyclops "normal" server can use cflags = '-DGAIA_QT5'
             bld(
-                features = 'qt4 cxx cxxprogram cyclops',
+                features = 'qt4 cxx cxxprogram',
                 source = '''
                 tools/cyclops_server/cyclopsserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
+                moc = '''
+                tools/cyclops_server/cyclops.h
+                tools/cyclops_server/cyclopsmaster.h
+                tools/cyclops_server/yamlrpcserver.h
+                ''',
                 target = 'tools/cyclops',
-                includes = [ '.', 'metrics', '3rdparty' ],
-                use = ['gaia2'] + bld.env['USELIB'])
+                includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                uselib = 'QTCORE QTNETWORK', 
+                use = ['gaia2'] )
 
             # cyclops "master" server
             bld(
-                features = 'qt4 cxx cxxprogram cyclops',
+                features = 'qt4 cxx cxxprogram',
                 source = '''
                 tools/cyclops_server/cyclopsmasterserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -183,10 +212,16 @@ def build_tools(bld):
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
+                moc = '''
+                tools/cyclops_server/cyclops.h
+                tools/cyclops_server/cyclopsmaster.h
+                tools/cyclops_server/yamlrpcserver.h
+                ''',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-                use = ['gaia2'] + bld.env['USELIB'])
-  
+                uselib = 'QTCORE QTNETWORK', 
+                use = ['gaia2']) 
+            
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
             bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
@@ -201,13 +236,17 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.recurse('bindings')
 
+## to have qt5 include files loaded automatically
+
 # use the following to add the include paths for generated *.moc files automatically
 from waflib.TaskGen import feature, before, after
-@feature('cyclops')
+@feature('cxx cyclops')
 @after('process_source')
 @before('apply_incpaths')
 def add_includes_paths(self):
     incs = set(self.to_list(getattr(self, 'includes', '')))
     for x in self.compiled_tasks:
         incs.add(x.inputs[0].parent.path_from(self.path))
-    self.includes = list(incs)
+    self.includes = sorted(incs)
+
+

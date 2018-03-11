@@ -23,6 +23,7 @@
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
 
+//#ifndef CYCLOPS_NORMAL
 FILE* logFile;
 
 void logToFile(QtMsgType type, const char *msg) {
@@ -55,3 +56,4 @@ int main(int argc, char* argv[]) {
 
   return app.exec();
 }
+//#endif

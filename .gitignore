@@ -2,12 +2,37 @@ build/
 *.pyc
 
 .lock-wscript
+.swn
+.swo
+.swp
+
+# waf files
 .waf-1*
 *~
 .waf-2*
+.waf3*
+waflib-*
+.lock-waf*
+
+# temporary files
+cyclops.txt
+cyclops*.txt
+gaia*.tar.bz2
+new_*
+org_*
+wscript_*
+waflib-*
+test.txt
+gaia.txt
+
+
+# Qt Creator prorject files for Cyclops
+
+
 # waf and waflib used in build
 waf
 waflib
+
 # copied version of wscripts
 wscript_*
 src/wscript_*

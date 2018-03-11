@@ -4,14 +4,27 @@
 // Copyright (C) 2006-2008 Benoit Jacob <jacob.benoit.1@gmail.com>
 // Copyright (C) 2008 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_IO_H
 #define EIGEN_IO_H
-
-namespace Eigen { 
 
 enum { DontAlignCols = 1 };
 enum { StreamPrecision = -1,
@@ -49,18 +62,15 @@ std::ostream & print_matrix(std::ostream & s, const Derived& _m, const IOFormat&
   */
 struct IOFormat
 {
-  /** Default constructor, see class IOFormat for the meaning of the parameters */
+  /** Default contructor, see class IOFormat for the meaning of the parameters */
   IOFormat(int _precision = StreamPrecision, int _flags = 0,
     const std::string& _coeffSeparator = " ",
     const std::string& _rowSeparator = "\n", const std::string& _rowPrefix="", const std::string& _rowSuffix="",
     const std::string& _matPrefix="", const std::string& _matSuffix="")
   : matPrefix(_matPrefix), matSuffix(_matSuffix), rowPrefix(_rowPrefix), rowSuffix(_rowSuffix), rowSeparator(_rowSeparator),
-    rowSpacer(""), coeffSeparator(_coeffSeparator), precision(_precision), flags(_flags)
+    coeffSeparator(_coeffSeparator), precision(_precision), flags(_flags)
   {
-    // TODO check if rowPrefix, rowSuffix or rowSeparator contains a newline
-    // don't add rowSpacer if columns are not to be aligned
-    if((flags & DontAlignCols))
-      return;
+    rowSpacer = "";
     int i = int(matSuffix.length())-1;
     while (i>=0 && matSuffix[i]!='\n')
     {
@@ -80,7 +90,7 @@ struct IOFormat
   *
   * \brief Pseudo expression providing matrix output with given format
   *
-  * \tparam ExpressionType the type of the object on which IO stream operations are performed
+  * \param ExpressionType the type of the object on which IO stream operations are performed
   *
   * This class represents an expression with stream operators controlled by a given IOFormat.
   * It is the return type of DenseBase::format()
@@ -105,23 +115,49 @@ class WithFormat
     }
 
   protected:
-    typename ExpressionType::Nested m_matrix;
+    const typename ExpressionType::Nested m_matrix;
     IOFormat m_format;
 };
 
+/** \returns a WithFormat proxy object allowing to print a matrix the with given
+  * format \a fmt.
+  *
+  * See class IOFormat for some examples.
+  *
+  * \sa class IOFormat, class WithFormat
+  */
+template<typename Derived>
+inline const WithFormat<Derived>
+DenseBase<Derived>::format(const IOFormat& fmt) const
+{
+  return WithFormat<Derived>(derived(), fmt);
+}
+
 namespace internal {
 
-// NOTE: This helper is kept for backward compatibility with previous code specializing
-//       this internal::significant_decimals_impl structure. In the future we should directly
-//       call digits10() which has been introduced in July 2016 in 3.3.
+template<typename Scalar, bool IsInteger>
+struct significant_decimals_default_impl
+{
+  typedef typename NumTraits<Scalar>::Real RealScalar;
+  static inline int run()
+  {
+    return cast<RealScalar,int>(std::ceil(-log(NumTraits<RealScalar>::epsilon())/log(RealScalar(10))));
+  }
+};
+
 template<typename Scalar>
-struct significant_decimals_impl
+struct significant_decimals_default_impl<Scalar, true>
 {
   static inline int run()
   {
-    return NumTraits<Scalar>::digits10();
+    return 0;
   }
 };
+
+template<typename Scalar>
+struct significant_decimals_impl
+  : significant_decimals_default_impl<Scalar, NumTraits<Scalar>::IsInteger>
+{};
 
 /** \internal
   * print the matrix \a _m to the output stream \a s using the output format \a fmt */
@@ -134,8 +170,9 @@ std::ostream & print_matrix(std::ostream & s, const Derived& _m, const IOFormat&
     return s;
   }
   
-  typename Derived::Nested m = _m;
+  const typename Derived::Nested m = _m;
   typedef typename Derived::Scalar Scalar;
+  typedef typename Derived::Index Index;
 
   Index width = 0;
 
@@ -160,22 +197,21 @@ std::ostream & print_matrix(std::ostream & s, const Derived& _m, const IOFormat&
     explicit_precision = fmt.precision;
   }
 
-  std::streamsize old_precision = 0;
-  if(explicit_precision) old_precision = s.precision(explicit_precision);
-
   bool align_cols = !(fmt.flags & DontAlignCols);
   if(align_cols)
   {
     // compute the largest width
-    for(Index j = 0; j < m.cols(); ++j)
+    for(Index j = 1; j < m.cols(); ++j)
       for(Index i = 0; i < m.rows(); ++i)
       {
         std::stringstream sstr;
-        sstr.copyfmt(s);
+        if(explicit_precision) sstr.precision(explicit_precision);
         sstr << m.coeff(i,j);
         width = std::max<Index>(width, Index(sstr.str().length()));
       }
   }
+  std::streamsize old_precision = 0;
+  if(explicit_precision) old_precision = s.precision(explicit_precision);
   s << fmt.matPrefix;
   for(Index i = 0; i < m.rows(); ++i)
   {
@@ -219,7 +255,5 @@ std::ostream & operator <<
 {
   return internal::print_matrix(s, m.eval(), EIGEN_DEFAULT_IO_FORMAT);
 }
-
-} // end namespace Eigen
 
 #endif // EIGEN_IO_H

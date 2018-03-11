@@ -4,14 +4,36 @@
 // Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2009 Hauke Heibel <hauke.heibel@googlemail.com>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_STDDEQUE_H
 #define EIGEN_STDDEQUE_H
 
-#include "details.h"
+#include "Eigen/src/StlSupport/details.h"
+
+// Define the explicit instantiation (e.g. necessary for the Intel compiler)
+#if defined(__INTEL_COMPILER) || defined(__GNUC__)
+  #define EIGEN_EXPLICIT_STL_DEQUE_INSTANTIATION(...) template class std::deque<__VA_ARGS__, EIGEN_ALIGNED_ALLOCATOR<__VA_ARGS__> >;
+#else
+  #define EIGEN_EXPLICIT_STL_DEQUE_INSTANTIATION(...)
+#endif
 
 /**
  * This section contains a convenience MACRO which allows an easy specialization of
@@ -19,18 +41,19 @@
  * is used automatically.
  */
 #define EIGEN_DEFINE_STL_DEQUE_SPECIALIZATION(...) \
+EIGEN_EXPLICIT_STL_DEQUE_INSTANTIATION(__VA_ARGS__) \
 namespace std \
 { \
-  template<> \
-  class deque<__VA_ARGS__, std::allocator<__VA_ARGS__> >           \
+  template<typename _Ay> \
+  class deque<__VA_ARGS__, _Ay>  \
     : public deque<__VA_ARGS__, EIGEN_ALIGNED_ALLOCATOR<__VA_ARGS__> > \
   { \
     typedef deque<__VA_ARGS__, EIGEN_ALIGNED_ALLOCATOR<__VA_ARGS__> > deque_base; \
   public: \
     typedef __VA_ARGS__ value_type; \
-    typedef deque_base::allocator_type allocator_type; \
-    typedef deque_base::size_type size_type;  \
-    typedef deque_base::iterator iterator;  \
+    typedef typename deque_base::allocator_type allocator_type; \
+    typedef typename deque_base::size_type size_type;  \
+    typedef typename deque_base::iterator iterator;  \
     explicit deque(const allocator_type& a = allocator_type()) : deque_base(a) {}  \
     template<typename InputIterator> \
     deque(InputIterator first, InputIterator last, const allocator_type& a = allocator_type()) : deque_base(first, last, a) {} \
@@ -45,7 +68,7 @@ namespace std \
 }
 
 // check whether we really need the std::deque specialization
-#if !EIGEN_HAS_CXX11_CONTAINERS && !(defined(_GLIBCXX_DEQUE) && (!EIGEN_GNUC_AT_LEAST(4,1))) /* Note that before gcc-4.1 we already have: std::deque::resize(size_type,const T&). */
+#if !(defined(_GLIBCXX_DEQUE) && (!EIGEN_GNUC_AT_LEAST(4,1))) /* Note that before gcc-4.1 we already have: std::deque::resize(size_type,const T&). */
 
 namespace std {
 

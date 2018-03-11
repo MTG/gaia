@@ -528,7 +528,7 @@ char *yytext;
 #line 2 "lexer.l"
 #include "grammar.h"
 #include "token.h"
-#include "../gaiaexception.h"
+#include "gaiaexception.h"
 
 Token yylval;
 

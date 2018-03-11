@@ -1,0 +1,16 @@
+port: 5153
+
+datasets:
+    ds:
+        filename: /tmp/datasets/cm_tracks_23.db
+        ref: dsref
+        #start: 0
+        #end: 15000
+    dsref:
+        filename: /tmp/datasets/cm_tracks_filters_23.db
+
+distances:
+    euc:
+        dataset: ds
+        name: euclidean
+

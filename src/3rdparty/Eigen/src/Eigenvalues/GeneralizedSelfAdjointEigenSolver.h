@@ -4,16 +4,30 @@
 // Copyright (C) 2008-2010 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2010 Jitse Niesen <jitse@maths.leeds.ac.uk>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_GENERALIZEDSELFADJOINTEIGENSOLVER_H
 #define EIGEN_GENERALIZEDSELFADJOINTEIGENSOLVER_H
 
+#include "./EigenvaluesCommon.h"
 #include "./Tridiagonalization.h"
-
-namespace Eigen { 
 
 /** \eigenvalues_module \ingroup Eigenvalues_Module
   *
@@ -50,6 +64,7 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
     typedef SelfAdjointEigenSolver<_MatrixType> Base;
   public:
 
+    typedef typename Base::Index Index;
     typedef _MatrixType MatrixType;
 
     /** \brief Default constructor for fixed-size matrices.
@@ -73,7 +88,7 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       *
       * \sa compute() for an example
       */
-    explicit GeneralizedSelfAdjointEigenSolver(Index size)
+    GeneralizedSelfAdjointEigenSolver(Index size)
         : Base(size)
     {}
 
@@ -83,8 +98,8 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       *                   Only the lower triangular part of the matrix is referenced.
       * \param[in]  matB  Positive-definite matrix in matrix pencil.
       *                   Only the lower triangular part of the matrix is referenced.
-      * \param[in]  options A or-ed set of flags {#ComputeEigenvectors,#EigenvaluesOnly} | {#Ax_lBx,#ABx_lx,#BAx_lx}.
-      *                     Default is #ComputeEigenvectors|#Ax_lBx.
+      * \param[in]  options A or-ed set of flags {ComputeEigenvectors,EigenvaluesOnly} | {Ax_lBx,ABx_lx,BAx_lx}.
+      *                     Default is ComputeEigenvectors|Ax_lBx.
       *
       * This constructor calls compute(const MatrixType&, const MatrixType&, int)
       * to compute the eigenvalues and (if requested) the eigenvectors of the
@@ -116,8 +131,8 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       *                   Only the lower triangular part of the matrix is referenced.
       * \param[in]  matB  Positive-definite matrix in matrix pencil.
       *                   Only the lower triangular part of the matrix is referenced.
-      * \param[in]  options A or-ed set of flags {#ComputeEigenvectors,#EigenvaluesOnly} | {#Ax_lBx,#ABx_lx,#BAx_lx}.
-      *                     Default is #ComputeEigenvectors|#Ax_lBx.
+      * \param[in]  options A or-ed set of flags {ComputeEigenvectors,EigenvaluesOnly} | {Ax_lBx,ABx_lx,BAx_lx}.
+      *                     Default is ComputeEigenvectors|Ax_lBx.
       *
       * \returns    Reference to \c *this
       *
@@ -220,7 +235,5 @@ compute(const MatrixType& matA, const MatrixType& matB, int options)
 
   return *this;
 }
-
-} // end namespace Eigen
 
 #endif // EIGEN_GENERALIZEDSELFADJOINTEIGENSOLVER_H

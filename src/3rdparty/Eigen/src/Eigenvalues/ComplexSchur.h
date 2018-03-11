@@ -3,18 +3,32 @@
 //
 // Copyright (C) 2009 Claire Maurice
 // Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
-// Copyright (C) 2010,2012 Jitse Niesen <jitse@maths.leeds.ac.uk>
+// Copyright (C) 2010 Jitse Niesen <jitse@maths.leeds.ac.uk>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_COMPLEX_SCHUR_H
 #define EIGEN_COMPLEX_SCHUR_H
 
+#include "./EigenvaluesCommon.h"
 #include "./HessenbergDecomposition.h"
-
-namespace Eigen { 
 
 namespace internal {
 template<typename MatrixType, bool IsComplex> struct complex_schur_reduce_to_hessenberg;
@@ -63,7 +77,7 @@ template<typename _MatrixType> class ComplexSchur
     /** \brief Scalar type for matrices of type \p _MatrixType. */
     typedef typename MatrixType::Scalar Scalar;
     typedef typename NumTraits<Scalar>::Real RealScalar;
-    typedef Eigen::Index Index; ///< \deprecated since Eigen 3.3
+    typedef typename MatrixType::Index Index;
 
     /** \brief Complex scalar type for \p _MatrixType. 
       *
@@ -91,13 +105,12 @@ template<typename _MatrixType> class ComplexSchur
       *
       * \sa compute() for an example.
       */
-    explicit ComplexSchur(Index size = RowsAtCompileTime==Dynamic ? 1 : RowsAtCompileTime)
+    ComplexSchur(Index size = RowsAtCompileTime==Dynamic ? 1 : RowsAtCompileTime)
       : m_matT(size,size),
         m_matU(size,size),
         m_hess(size),
         m_isInitialized(false),
-        m_matUisUptodate(false),
-        m_maxIters(-1)
+        m_matUisUptodate(false)
     {}
 
     /** \brief Constructor; computes Schur decomposition of given matrix. 
@@ -109,16 +122,14 @@ template<typename _MatrixType> class ComplexSchur
       *
       * \sa matrixT() and matrixU() for examples.
       */
-    template<typename InputType>
-    explicit ComplexSchur(const EigenBase<InputType>& matrix, bool computeU = true)
-      : m_matT(matrix.rows(),matrix.cols()),
-        m_matU(matrix.rows(),matrix.cols()),
-        m_hess(matrix.rows()),
-        m_isInitialized(false),
-        m_matUisUptodate(false),
-        m_maxIters(-1)
+    ComplexSchur(const MatrixType& matrix, bool computeU = true)
+            : m_matT(matrix.rows(),matrix.cols()),
+              m_matU(matrix.rows(),matrix.cols()),
+              m_hess(matrix.rows()),
+              m_isInitialized(false),
+              m_matUisUptodate(false)
     {
-      compute(matrix.derived(), computeU);
+      compute(matrix, computeU);
     }
 
     /** \brief Returns the unitary matrix in the Schur decomposition. 
@@ -169,7 +180,6 @@ template<typename _MatrixType> class ComplexSchur
       * 
       * \param[in]  matrix  Square matrix whose Schur decomposition is to be computed.
       * \param[in]  computeU  If true, both T and U are computed; if false, only T is computed.
-
       * \returns    Reference to \c *this
       *
       * The Schur decomposition is computed by first reducing the
@@ -184,31 +194,8 @@ template<typename _MatrixType> class ComplexSchur
       *
       * Example: \include ComplexSchur_compute.cpp
       * Output: \verbinclude ComplexSchur_compute.out
-      *
-      * \sa compute(const MatrixType&, bool, Index)
       */
-    template<typename InputType>
-    ComplexSchur& compute(const EigenBase<InputType>& matrix, bool computeU = true);
-    
-    /** \brief Compute Schur decomposition from a given Hessenberg matrix
-     *  \param[in] matrixH Matrix in Hessenberg form H
-     *  \param[in] matrixQ orthogonal matrix Q that transform a matrix A to H : A = Q H Q^T
-     *  \param computeU Computes the matriX U of the Schur vectors
-     * \return Reference to \c *this
-     * 
-     *  This routine assumes that the matrix is already reduced in Hessenberg form matrixH
-     *  using either the class HessenbergDecomposition or another mean. 
-     *  It computes the upper quasi-triangular matrix T of the Schur decomposition of H
-     *  When computeU is true, this routine computes the matrix U such that 
-     *  A = U T U^T =  (QZ) T (QZ)^T = Q H Q^T where A is the initial matrix
-     * 
-     * NOTE Q is referenced if computeU is true; so, if the initial orthogonal matrix
-     * is not available, the user should give an identity matrix (Q.setIdentity())
-     * 
-     * \sa compute(const MatrixType&, bool)
-     */
-    template<typename HessMatrixType, typename OrthMatrixType>
-    ComplexSchur& computeFromHessenberg(const HessMatrixType& matrixH, const OrthMatrixType& matrixQ,  bool computeU=true);
+    ComplexSchur& compute(const MatrixType& matrix, bool computeU = true);
 
     /** \brief Reports whether previous computation was successful.
       *
@@ -216,33 +203,15 @@ template<typename _MatrixType> class ComplexSchur
       */
     ComputationInfo info() const
     {
-      eigen_assert(m_isInitialized && "ComplexSchur is not initialized.");
+      eigen_assert(m_isInitialized && "RealSchur is not initialized.");
       return m_info;
     }
 
-    /** \brief Sets the maximum number of iterations allowed. 
+    /** \brief Maximum number of iterations.
       *
-      * If not specified by the user, the maximum number of iterations is m_maxIterationsPerRow times the size
-      * of the matrix.
+      * Maximum number of iterations allowed for an eigenvalue to converge. 
       */
-    ComplexSchur& setMaxIterations(Index maxIters)
-    {
-      m_maxIters = maxIters;
-      return *this;
-    }
-
-    /** \brief Returns the maximum number of iterations. */
-    Index getMaxIterations()
-    {
-      return m_maxIters;
-    }
-
-    /** \brief Maximum number of iterations per row.
-      *
-      * If not otherwise specified, the maximum number of iterations is this number times the size of the
-      * matrix. It is currently set to 30.
-      */
-    static const int m_maxIterationsPerRow = 30;
+    static const int m_maxIterations = 30;
 
   protected:
     ComplexMatrixType m_matT, m_matU;
@@ -250,7 +219,6 @@ template<typename _MatrixType> class ComplexSchur
     ComputationInfo m_info;
     bool m_isInitialized;
     bool m_matUisUptodate;
-    Index m_maxIters;
 
   private:  
     bool subdiagonalEntryIsNeglegible(Index i);
@@ -259,14 +227,54 @@ template<typename _MatrixType> class ComplexSchur
     friend struct internal::complex_schur_reduce_to_hessenberg<MatrixType, NumTraits<Scalar>::IsComplex>;
 };
 
+namespace internal {
+
+/** Computes the principal value of the square root of the complex \a z. */
+template<typename RealScalar>
+std::complex<RealScalar> sqrt(const std::complex<RealScalar> &z)
+{
+  RealScalar t, tre, tim;
+
+  t = abs(z);
+
+  if (abs(real(z)) <= abs(imag(z)))
+  {
+    // No cancellation in these formulas
+    tre = sqrt(RealScalar(0.5)*(t + real(z)));
+    tim = sqrt(RealScalar(0.5)*(t - real(z)));
+  }
+  else
+  {
+    // Stable computation of the above formulas
+    if (z.real() > RealScalar(0))
+    {
+      tre = t + z.real();
+      tim = abs(imag(z))*sqrt(RealScalar(0.5)/tre);
+      tre = sqrt(RealScalar(0.5)*tre);
+    }
+    else
+    {
+      tim = t - z.real();
+      tre = abs(imag(z))*sqrt(RealScalar(0.5)/tim);
+      tim = sqrt(RealScalar(0.5)*tim);
+    }
+  }
+  if(z.imag() < RealScalar(0))
+    tim = -tim;
+
+  return (std::complex<RealScalar>(tre,tim));
+}
+} // end namespace internal
+
+
 /** If m_matT(i+1,i) is neglegible in floating point arithmetic
   * compared to m_matT(i,i) and m_matT(j,j), then set it to zero and
   * return true, else return false. */
 template<typename MatrixType>
 inline bool ComplexSchur<MatrixType>::subdiagonalEntryIsNeglegible(Index i)
 {
-  RealScalar d = numext::norm1(m_matT.coeff(i,i)) + numext::norm1(m_matT.coeff(i+1,i+1));
-  RealScalar sd = numext::norm1(m_matT.coeff(i+1,i));
+  RealScalar d = internal::norm1(m_matT.coeff(i,i)) + internal::norm1(m_matT.coeff(i+1,i+1));
+  RealScalar sd = internal::norm1(m_matT.coeff(i+1,i));
   if (internal::isMuchSmallerThan(sd, d, NumTraits<RealScalar>::epsilon()))
   {
     m_matT.coeffRef(i+1,i) = ComplexScalar(0);
@@ -280,11 +288,10 @@ inline bool ComplexSchur<MatrixType>::subdiagonalEntryIsNeglegible(Index i)
 template<typename MatrixType>
 typename ComplexSchur<MatrixType>::ComplexScalar ComplexSchur<MatrixType>::computeShift(Index iu, Index iter)
 {
-  using std::abs;
   if (iter == 10 || iter == 20) 
   {
     // exceptional shift, taken from http://www.netlib.org/eispack/comqr.f
-    return abs(numext::real(m_matT.coeff(iu,iu-1))) + abs(numext::real(m_matT.coeff(iu-1,iu-2)));
+    return internal::abs(internal::real(m_matT.coeff(iu,iu-1))) + internal::abs(internal::real(m_matT.coeff(iu-1,iu-2)));
   }
 
   // compute the shift as one of the eigenvalues of t, the 2x2
@@ -295,19 +302,19 @@ typename ComplexSchur<MatrixType>::ComplexScalar ComplexSchur<MatrixType>::compu
 
   ComplexScalar b = t.coeff(0,1) * t.coeff(1,0);
   ComplexScalar c = t.coeff(0,0) - t.coeff(1,1);
-  ComplexScalar disc = sqrt(c*c + RealScalar(4)*b);
+  ComplexScalar disc = internal::sqrt(c*c + RealScalar(4)*b);
   ComplexScalar det = t.coeff(0,0) * t.coeff(1,1) - b;
   ComplexScalar trace = t.coeff(0,0) + t.coeff(1,1);
   ComplexScalar eival1 = (trace + disc) / RealScalar(2);
   ComplexScalar eival2 = (trace - disc) / RealScalar(2);
 
-  if(numext::norm1(eival1) > numext::norm1(eival2))
+  if(internal::norm1(eival1) > internal::norm1(eival2))
     eival2 = det / eival1;
   else
     eival1 = det / eival2;
 
   // choose the eigenvalue closest to the bottom entry of the diagonal
-  if(numext::norm1(eival1-t.coeff(1,1)) < numext::norm1(eival2-t.coeff(1,1)))
+  if(internal::norm1(eival1-t.coeff(1,1)) < internal::norm1(eival2-t.coeff(1,1)))
     return normt * eival1;
   else
     return normt * eival2;
@@ -315,15 +322,14 @@ typename ComplexSchur<MatrixType>::ComplexScalar ComplexSchur<MatrixType>::compu
 
 
 template<typename MatrixType>
-template<typename InputType>
-ComplexSchur<MatrixType>& ComplexSchur<MatrixType>::compute(const EigenBase<InputType>& matrix, bool computeU)
+ComplexSchur<MatrixType>& ComplexSchur<MatrixType>::compute(const MatrixType& matrix, bool computeU)
 {
   m_matUisUptodate = false;
   eigen_assert(matrix.cols() == matrix.rows());
 
   if(matrix.cols() == 1)
   {
-    m_matT = matrix.derived().template cast<ComplexScalar>();
+    m_matT = matrix.template cast<ComplexScalar>();
     if(computeU)  m_matU = ComplexMatrixType::Identity(1,1);
     m_info = Success;
     m_isInitialized = true;
@@ -331,21 +337,11 @@ ComplexSchur<MatrixType>& ComplexSchur<MatrixType>::compute(const EigenBase<Inpu
     return *this;
   }
 
-  internal::complex_schur_reduce_to_hessenberg<MatrixType, NumTraits<Scalar>::IsComplex>::run(*this, matrix.derived(), computeU);
-  computeFromHessenberg(m_matT, m_matU, computeU);
-  return *this;
-}
-
-template<typename MatrixType>
-template<typename HessMatrixType, typename OrthMatrixType>
-ComplexSchur<MatrixType>& ComplexSchur<MatrixType>::computeFromHessenberg(const HessMatrixType& matrixH, const OrthMatrixType& matrixQ, bool computeU)
-{
-  m_matT = matrixH;
-  if(computeU)
-    m_matU = matrixQ;
+  internal::complex_schur_reduce_to_hessenberg<MatrixType, NumTraits<Scalar>::IsComplex>::run(*this, matrix, computeU);
   reduceToTriangularForm(computeU);
   return *this;
 }
+
 namespace internal {
 
 /* Reduce given matrix to Hessenberg form */
@@ -367,6 +363,7 @@ struct complex_schur_reduce_to_hessenberg<MatrixType, false>
   static void run(ComplexSchur<MatrixType>& _this, const MatrixType& matrix, bool computeU)
   {
     typedef typename ComplexSchur<MatrixType>::ComplexScalar ComplexScalar;
+    typedef typename ComplexSchur<MatrixType>::ComplexMatrixType ComplexMatrixType;
 
     // Note: m_hess is over RealScalar; m_matT and m_matU is over ComplexScalar
     _this.m_hess.compute(matrix);
@@ -386,10 +383,6 @@ struct complex_schur_reduce_to_hessenberg<MatrixType, false>
 template<typename MatrixType>
 void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
 {  
-  Index maxIters = m_maxIters;
-  if (maxIters == -1)
-    maxIters = m_maxIterationsPerRow * m_matT.rows();
-
   // The matrix m_matT is divided in three parts. 
   // Rows 0,...,il-1 are decoupled from the rest because m_matT(il,il-1) is zero. 
   // Rows il,...,iu is the part we are working on (the active submatrix).
@@ -397,7 +390,6 @@ void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
   Index iu = m_matT.cols() - 1;
   Index il;
   Index iter = 0; // number of iterations we are working on the (iu,iu) element
-  Index totalIter = 0; // number of iterations for whole matrix
 
   while(true)
   {
@@ -412,10 +404,9 @@ void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
     // if iu is zero then we are done; the whole matrix is triangularized
     if(iu==0) break;
 
-    // if we spent too many iterations, we give up
+    // if we spent too many iterations on the current element, we give up
     iter++;
-    totalIter++;
-    if(totalIter > maxIters) break;
+    if(iter > m_maxIterations) break;
 
     // find il, the top row of the active submatrix
     il = iu-1;
@@ -432,7 +423,7 @@ void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
     JacobiRotation<ComplexScalar> rot;
     rot.makeGivens(m_matT.coeff(il,il) - shift, m_matT.coeff(il+1,il));
     m_matT.rightCols(m_matT.cols()-il).applyOnTheLeft(il, il+1, rot.adjoint());
-    m_matT.topRows((std::min)(il+2,iu)+1).applyOnTheRight(il, il+1, rot);
+    m_matT.topRows(std::min(il+2,iu)+1).applyOnTheRight(il, il+1, rot);
     if(computeU) m_matU.applyOnTheRight(il, il+1, rot);
 
     for(Index i=il+1 ; i<iu ; i++)
@@ -440,12 +431,12 @@ void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
       rot.makeGivens(m_matT.coeffRef(i,i-1), m_matT.coeffRef(i+1,i-1), &m_matT.coeffRef(i,i-1));
       m_matT.coeffRef(i+1,i-1) = ComplexScalar(0);
       m_matT.rightCols(m_matT.cols()-i).applyOnTheLeft(i, i+1, rot.adjoint());
-      m_matT.topRows((std::min)(i+2,iu)+1).applyOnTheRight(i, i+1, rot);
+      m_matT.topRows(std::min(i+2,iu)+1).applyOnTheRight(i, i+1, rot);
       if(computeU) m_matU.applyOnTheRight(i, i+1, rot);
     }
   }
 
-  if(totalIter <= maxIters)
+  if(iter <= m_maxIterations) 
     m_info = Success;
   else
     m_info = NoConvergence;
@@ -453,7 +444,5 @@ void ComplexSchur<MatrixType>::reduceToTriangularForm(bool computeU)
   m_isInitialized = true;
   m_matUisUptodate = computeU;
 }
-
-} // end namespace Eigen
 
 #endif // EIGEN_COMPLEX_SCHUR_H

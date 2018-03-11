@@ -24,7 +24,6 @@
 #include "cyclops.h"
 #include "../../yamlcpp.h"
 
-
 int main(int argc, char* argv[]) {
   QCoreApplication app(argc, argv);
   gaia2::init();

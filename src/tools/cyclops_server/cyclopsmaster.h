@@ -17,12 +17,15 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+//#ifndef CYCLOPS_NORMAL
 #ifndef GAIA_CYCLOPSMASTER_H
 #define GAIA_CYCLOPSMASTER_H
 
+#include <QObject>
 #include <QNetworkReply>
 #include <QHostAddress>
 #include <QBuffer>
+#include "yamlrpcserver.h"
 #include "cyclops.h"
 
 class PendingRequest {
@@ -100,5 +103,5 @@ Q_OBJECT
 
 };
 
-
 #endif // GAIA_CYCLOPSMASTER_H
+//#endif

@@ -91,12 +91,30 @@ void CyclopsMaster::setupClients(const QString& configFilename) {
 int CyclopsMaster::sendSlaveRequest(const QPair<QHostAddress, int>& slave, const yaml::Mapping& request) {
 #ifndef GAIA_QT5
   QHttp* slaveRequest = new QHttp(slave.first.toString(), slave.second, this);
-#else
-  QNetworkAccessManager* slaveRequest = new QNetworkAccessManager(slave.first.toString(), slave.second, this);
-#endif
   // connect the reply from this slave to the replyFromSlave method
   connect(slaveRequest, SIGNAL(requestFinished(int,bool)),
           this, SLOT(replyFromSlave(int,bool)));
+#else
+  QNetworkAccessManager *slaveRequest = new QNetworkAccessManager(this);
+
+  connect(slaveRequest, SIGNAL(requestFinished(QNetworkReply*)),
+              this, SLOT(replyFromSlave(QNetworkReply*)));
+
+  slaveRequest->get(QNetworkRequest(slave.first.toString(), slave.second)));
+  QNetworkRequest networkRequest(serviceUrl);
+  /*
+   * // Call the webservice
+QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
+connect(networkManager, SIGNAL(finished(QNetworkReply*)),
+        SLOT(onPostAnswer(QNetworkReply*)));
+
+QNetworkRequest networkRequest(serviceUrl);
+networkRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+
+networkManager->post(networkRequest,postData);
+   */
+
+#endif
 
   QBuffer* replyData = new QBuffer();
   int connid = slaveRequest->post("/", QByteArray("q=") + yaml::dump(request), replyData);
@@ -729,4 +747,4 @@ void CyclopsMaster::setup(const QString& filename) {
 
 
 
-//#include "cyclopsmaster.moc"
+#include <cyclopsmaster.moc>

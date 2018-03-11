@@ -2,18 +2,32 @@
 // for linear algebra.
 //
 // Copyright (C) 2008 Gael Guennebaud <gael.guennebaud@inria.fr>
-// Copyright (C) 2010,2012 Jitse Niesen <jitse@maths.leeds.ac.uk>
+// Copyright (C) 2010 Jitse Niesen <jitse@maths.leeds.ac.uk>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_REAL_SCHUR_H
 #define EIGEN_REAL_SCHUR_H
 
+#include "./EigenvaluesCommon.h"
 #include "./HessenbergDecomposition.h"
-
-namespace Eigen { 
 
 /** \eigenvalues_module \ingroup Eigenvalues_Module
   *
@@ -64,7 +78,7 @@ template<typename _MatrixType> class RealSchur
     };
     typedef typename MatrixType::Scalar Scalar;
     typedef std::complex<typename NumTraits<Scalar>::Real> ComplexScalar;
-    typedef Eigen::Index Index; ///< \deprecated since Eigen 3.3
+    typedef typename MatrixType::Index Index;
 
     typedef Matrix<ComplexScalar, ColsAtCompileTime, 1, Options & ~RowMajor, MaxColsAtCompileTime, 1> EigenvalueType;
     typedef Matrix<Scalar, ColsAtCompileTime, 1, Options & ~RowMajor, MaxColsAtCompileTime, 1> ColumnVectorType;
@@ -80,14 +94,13 @@ template<typename _MatrixType> class RealSchur
       *
       * \sa compute() for an example.
       */
-    explicit RealSchur(Index size = RowsAtCompileTime==Dynamic ? 1 : RowsAtCompileTime)
+    RealSchur(Index size = RowsAtCompileTime==Dynamic ? 1 : RowsAtCompileTime)
             : m_matT(size, size),
               m_matU(size, size),
               m_workspaceVector(size),
               m_hess(size),
               m_isInitialized(false),
-              m_matUisUptodate(false),
-              m_maxIters(-1)
+              m_matUisUptodate(false)
     { }
 
     /** \brief Constructor; computes real Schur decomposition of given matrix. 
@@ -100,17 +113,15 @@ template<typename _MatrixType> class RealSchur
       * Example: \include RealSchur_RealSchur_MatrixType.cpp
       * Output: \verbinclude RealSchur_RealSchur_MatrixType.out
       */
-    template<typename InputType>
-    explicit RealSchur(const EigenBase<InputType>& matrix, bool computeU = true)
+    RealSchur(const MatrixType& matrix, bool computeU = true)
             : m_matT(matrix.rows(),matrix.cols()),
               m_matU(matrix.rows(),matrix.cols()),
               m_workspaceVector(matrix.rows()),
               m_hess(matrix.rows()),
               m_isInitialized(false),
-              m_matUisUptodate(false),
-              m_maxIters(-1)
+              m_matUisUptodate(false)
     {
-      compute(matrix.derived(), computeU);
+      compute(matrix, computeU);
     }
 
     /** \brief Returns the orthogonal matrix in the Schur decomposition. 
@@ -163,31 +174,9 @@ template<typename _MatrixType> class RealSchur
       *
       * Example: \include RealSchur_compute.cpp
       * Output: \verbinclude RealSchur_compute.out
-      *
-      * \sa compute(const MatrixType&, bool, Index)
       */
-    template<typename InputType>
-    RealSchur& compute(const EigenBase<InputType>& matrix, bool computeU = true);
+    RealSchur& compute(const MatrixType& matrix, bool computeU = true);
 
-    /** \brief Computes Schur decomposition of a Hessenberg matrix H = Z T Z^T
-     *  \param[in] matrixH Matrix in Hessenberg form H
-     *  \param[in] matrixQ orthogonal matrix Q that transform a matrix A to H : A = Q H Q^T
-     *  \param computeU Computes the matriX U of the Schur vectors
-     * \return Reference to \c *this
-     * 
-     *  This routine assumes that the matrix is already reduced in Hessenberg form matrixH
-     *  using either the class HessenbergDecomposition or another mean. 
-     *  It computes the upper quasi-triangular matrix T of the Schur decomposition of H
-     *  When computeU is true, this routine computes the matrix U such that 
-     *  A = U T U^T =  (QZ) T (QZ)^T = Q H Q^T where A is the initial matrix
-     * 
-     * NOTE Q is referenced if computeU is true; so, if the initial orthogonal matrix
-     * is not available, the user should give an identity matrix (Q.setIdentity())
-     * 
-     * \sa compute(const MatrixType&, bool)
-     */
-    template<typename HessMatrixType, typename OrthMatrixType>
-    RealSchur& computeFromHessenberg(const HessMatrixType& matrixH, const OrthMatrixType& matrixQ,  bool computeU);
     /** \brief Reports whether previous computation was successful.
       *
       * \returns \c Success if computation was succesful, \c NoConvergence otherwise.
@@ -198,29 +187,11 @@ template<typename _MatrixType> class RealSchur
       return m_info;
     }
 
-    /** \brief Sets the maximum number of iterations allowed. 
+    /** \brief Maximum number of iterations.
       *
-      * If not specified by the user, the maximum number of iterations is m_maxIterationsPerRow times the size
-      * of the matrix.
+      * Maximum number of iterations allowed for an eigenvalue to converge. 
       */
-    RealSchur& setMaxIterations(Index maxIters)
-    {
-      m_maxIters = maxIters;
-      return *this;
-    }
-
-    /** \brief Returns the maximum number of iterations. */
-    Index getMaxIterations()
-    {
-      return m_maxIters;
-    }
-
-    /** \brief Maximum number of iterations per row.
-      *
-      * If not otherwise specified, the maximum number of iterations is this number times the size of the
-      * matrix. It is currently set to 40.
-      */
-    static const int m_maxIterationsPerRow = 40;
+    static const int m_maxIterations = 40;
 
   private:
     
@@ -231,13 +202,12 @@ template<typename _MatrixType> class RealSchur
     ComputationInfo m_info;
     bool m_isInitialized;
     bool m_matUisUptodate;
-    Index m_maxIters;
 
     typedef Matrix<Scalar,3,1> Vector3s;
 
     Scalar computeNormOfT();
-    Index findSmallSubdiagEntry(Index iu);
-    void splitOffTwoRows(Index iu, bool computeU, const Scalar& exshift);
+    Index findSmallSubdiagEntry(Index iu, Scalar norm);
+    void splitOffTwoRows(Index iu, bool computeU, Scalar exshift);
     void computeShift(Index iu, Index iter, Scalar& exshift, Vector3s& shiftInfo);
     void initFrancisQRStep(Index il, Index iu, const Vector3s& shiftInfo, Index& im, Vector3s& firstHouseholderVector);
     void performFrancisQRStep(Index il, Index im, Index iu, bool computeU, const Vector3s& firstHouseholderVector, Scalar* workspace);
@@ -245,51 +215,17 @@ template<typename _MatrixType> class RealSchur
 
 
 template<typename MatrixType>
-template<typename InputType>
-RealSchur<MatrixType>& RealSchur<MatrixType>::compute(const EigenBase<InputType>& matrix, bool computeU)
+RealSchur<MatrixType>& RealSchur<MatrixType>::compute(const MatrixType& matrix, bool computeU)
 {
-  const Scalar considerAsZero = (std::numeric_limits<Scalar>::min)();
-
-  eigen_assert(matrix.cols() == matrix.rows());
-  Index maxIters = m_maxIters;
-  if (maxIters == -1)
-    maxIters = m_maxIterationsPerRow * matrix.rows();
-
-  Scalar scale = matrix.derived().cwiseAbs().maxCoeff();
-  if(scale<considerAsZero)
-  {
-    m_matT.setZero(matrix.rows(),matrix.cols());
-    if(computeU)
-      m_matU.setIdentity(matrix.rows(),matrix.cols());
-    m_info = Success;
-    m_isInitialized = true;
-    m_matUisUptodate = computeU;
-    return *this;
-  }
+  assert(matrix.cols() == matrix.rows());
 
   // Step 1. Reduce to Hessenberg form
-  m_hess.compute(matrix.derived()/scale);
+  m_hess.compute(matrix);
+  m_matT = m_hess.matrixH();
+  if (computeU)
+    m_matU = m_hess.matrixQ();
 
   // Step 2. Reduce to real Schur form  
-  computeFromHessenberg(m_hess.matrixH(), m_hess.matrixQ(), computeU);
-
-  m_matT *= scale;
-  
-  return *this;
-}
-template<typename MatrixType>
-template<typename HessMatrixType, typename OrthMatrixType>
-RealSchur<MatrixType>& RealSchur<MatrixType>::computeFromHessenberg(const HessMatrixType& matrixH, const OrthMatrixType& matrixQ,  bool computeU)
-{
-  using std::abs;
-
-  m_matT = matrixH;
-  if(computeU)
-    m_matU = matrixQ;
-  
-  Index maxIters = m_maxIters;
-  if (maxIters == -1)
-    maxIters = m_maxIterationsPerRow * matrixH.rows();
   m_workspaceVector.resize(m_matT.cols());
   Scalar* workspace = &m_workspaceVector.coeffRef(0);
 
@@ -298,47 +234,43 @@ RealSchur<MatrixType>& RealSchur<MatrixType>::computeFromHessenberg(const HessMa
   // Rows il,...,iu is the part we are working on (the active window).
   // Rows iu+1,...,end are already brought in triangular form.
   Index iu = m_matT.cols() - 1;
-  Index iter = 0;      // iteration count for current eigenvalue
-  Index totalIter = 0; // iteration count for whole matrix
-  Scalar exshift(0);   // sum of exceptional shifts
+  Index iter = 0; // iteration count
+  Scalar exshift = 0.0; // sum of exceptional shifts
   Scalar norm = computeNormOfT();
 
-  if(norm!=0)
+  while (iu >= 0)
   {
-    while (iu >= 0)
-    {
-      Index il = findSmallSubdiagEntry(iu);
+    Index il = findSmallSubdiagEntry(iu, norm);
 
-      // Check for convergence
-      if (il == iu) // One root found
-      {
-        m_matT.coeffRef(iu,iu) = m_matT.coeff(iu,iu) + exshift;
-        if (iu > 0)
-          m_matT.coeffRef(iu, iu-1) = Scalar(0);
-        iu--;
-        iter = 0;
-      }
-      else if (il == iu-1) // Two roots found
-      {
-        splitOffTwoRows(iu, computeU, exshift);
-        iu -= 2;
-        iter = 0;
-      }
-      else // No convergence yet
-      {
-        // The firstHouseholderVector vector has to be initialized to something to get rid of a silly GCC warning (-O1 -Wall -DNDEBUG )
-        Vector3s firstHouseholderVector(0,0,0), shiftInfo;
-        computeShift(iu, iter, exshift, shiftInfo);
-        iter = iter + 1;
-        totalIter = totalIter + 1;
-        if (totalIter > maxIters) break;
-        Index im;
-        initFrancisQRStep(il, iu, shiftInfo, im, firstHouseholderVector);
-        performFrancisQRStep(il, im, iu, computeU, firstHouseholderVector, workspace);
-      }
+    // Check for convergence
+    if (il == iu) // One root found
+    {
+      m_matT.coeffRef(iu,iu) = m_matT.coeff(iu,iu) + exshift;
+      if (iu > 0) 
+        m_matT.coeffRef(iu, iu-1) = Scalar(0);
+      iu--;
+      iter = 0;
     }
-  }
-  if(totalIter <= maxIters)
+    else if (il == iu-1) // Two roots found
+    {
+      splitOffTwoRows(iu, computeU, exshift);
+      iu -= 2;
+      iter = 0;
+    }
+    else // No convergence yet
+    {
+      // The firstHouseholderVector vector has to be initialized to something to get rid of a silly GCC warning (-O1 -Wall -DNDEBUG )
+      Vector3s firstHouseholderVector(0,0,0), shiftInfo;
+      computeShift(iu, iter, exshift, shiftInfo);
+      iter = iter + 1; 
+      if (iter > m_maxIterations) break;
+      Index im;
+      initFrancisQRStep(il, iu, shiftInfo, im, firstHouseholderVector);
+      performFrancisQRStep(il, im, iu, computeU, firstHouseholderVector, workspace);
+    }
+  } 
+
+  if(iter <= m_maxIterations) 
     m_info = Success;
   else
     m_info = NoConvergence;
@@ -356,22 +288,23 @@ inline typename MatrixType::Scalar RealSchur<MatrixType>::computeNormOfT()
   // FIXME to be efficient the following would requires a triangular reduxion code
   // Scalar norm = m_matT.upper().cwiseAbs().sum() 
   //               + m_matT.bottomLeftCorner(size-1,size-1).diagonal().cwiseAbs().sum();
-  Scalar norm(0);
+  Scalar norm = 0.0;
   for (Index j = 0; j < size; ++j)
-    norm += m_matT.col(j).segment(0, (std::min)(size,j+2)).cwiseAbs().sum();
+    norm += m_matT.row(j).segment(std::max(j-1,Index(0)), size-std::max(j-1,Index(0))).cwiseAbs().sum();
   return norm;
 }
 
 /** \internal Look for single small sub-diagonal element and returns its index */
 template<typename MatrixType>
-inline Index RealSchur<MatrixType>::findSmallSubdiagEntry(Index iu)
+inline typename MatrixType::Index RealSchur<MatrixType>::findSmallSubdiagEntry(Index iu, Scalar norm)
 {
-  using std::abs;
   Index res = iu;
   while (res > 0)
   {
-    Scalar s = abs(m_matT.coeff(res-1,res-1)) + abs(m_matT.coeff(res,res));
-    if (abs(m_matT.coeff(res,res-1)) <= NumTraits<Scalar>::epsilon() * s)
+    Scalar s = internal::abs(m_matT.coeff(res-1,res-1)) + internal::abs(m_matT.coeff(res,res));
+    if (s == 0.0)
+      s = norm;
+    if (internal::abs(m_matT.coeff(res,res-1)) < NumTraits<Scalar>::epsilon() * s)
       break;
     res--;
   }
@@ -380,10 +313,8 @@ inline Index RealSchur<MatrixType>::findSmallSubdiagEntry(Index iu)
 
 /** \internal Update T given that rows iu-1 and iu decouple from the rest. */
 template<typename MatrixType>
-inline void RealSchur<MatrixType>::splitOffTwoRows(Index iu, bool computeU, const Scalar& exshift)
+inline void RealSchur<MatrixType>::splitOffTwoRows(Index iu, bool computeU, Scalar exshift)
 {
-  using std::sqrt;
-  using std::abs;
   const Index size = m_matT.cols();
 
   // The eigenvalues of the 2x2 matrix [a b; c d] are 
@@ -393,11 +324,11 @@ inline void RealSchur<MatrixType>::splitOffTwoRows(Index iu, bool computeU, cons
   m_matT.coeffRef(iu,iu) += exshift;
   m_matT.coeffRef(iu-1,iu-1) += exshift;
 
-  if (q >= Scalar(0)) // Two real eigenvalues
+  if (q >= 0) // Two real eigenvalues
   {
-    Scalar z = sqrt(abs(q));
+    Scalar z = internal::sqrt(internal::abs(q));
     JacobiRotation<Scalar> rot;
-    if (p >= Scalar(0))
+    if (p >= 0)
       rot.makeGivens(p + z, m_matT.coeff(iu, iu-1));
     else
       rot.makeGivens(p - z, m_matT.coeff(iu, iu-1));
@@ -417,8 +348,6 @@ inline void RealSchur<MatrixType>::splitOffTwoRows(Index iu, bool computeU, cons
 template<typename MatrixType>
 inline void RealSchur<MatrixType>::computeShift(Index iu, Index iter, Scalar& exshift, Vector3s& shiftInfo)
 {
-  using std::sqrt;
-  using std::abs;
   shiftInfo.coeffRef(0) = m_matT.coeff(iu,iu);
   shiftInfo.coeffRef(1) = m_matT.coeff(iu-1,iu-1);
   shiftInfo.coeffRef(2) = m_matT.coeff(iu,iu-1) * m_matT.coeff(iu-1,iu);
@@ -429,7 +358,7 @@ inline void RealSchur<MatrixType>::computeShift(Index iu, Index iter, Scalar& ex
     exshift += shiftInfo.coeff(0);
     for (Index i = 0; i <= iu; ++i)
       m_matT.coeffRef(i,i) -= shiftInfo.coeff(0);
-    Scalar s = abs(m_matT.coeff(iu,iu-1)) + abs(m_matT.coeff(iu-1,iu-2));
+    Scalar s = internal::abs(m_matT.coeff(iu,iu-1)) + internal::abs(m_matT.coeff(iu-1,iu-2));
     shiftInfo.coeffRef(0) = Scalar(0.75) * s;
     shiftInfo.coeffRef(1) = Scalar(0.75) * s;
     shiftInfo.coeffRef(2) = Scalar(-0.4375) * s * s;
@@ -440,9 +369,9 @@ inline void RealSchur<MatrixType>::computeShift(Index iu, Index iter, Scalar& ex
   {
     Scalar s = (shiftInfo.coeff(1) - shiftInfo.coeff(0)) / Scalar(2.0);
     s = s * s + shiftInfo.coeff(2);
-    if (s > Scalar(0))
+    if (s > 0)
     {
-      s = sqrt(s);
+      s = internal::sqrt(s);
       if (shiftInfo.coeff(1) < shiftInfo.coeff(0))
         s = -s;
       s = s + (shiftInfo.coeff(1) - shiftInfo.coeff(0)) / Scalar(2.0);
@@ -459,7 +388,6 @@ inline void RealSchur<MatrixType>::computeShift(Index iu, Index iter, Scalar& ex
 template<typename MatrixType>
 inline void RealSchur<MatrixType>::initFrancisQRStep(Index il, Index iu, const Vector3s& shiftInfo, Index& im, Vector3s& firstHouseholderVector)
 {
-  using std::abs;
   Vector3s& v = firstHouseholderVector; // alias to save typing
 
   for (im = iu-2; im >= il; --im)
@@ -473,10 +401,12 @@ inline void RealSchur<MatrixType>::initFrancisQRStep(Index il, Index iu, const V
     if (im == il) {
       break;
     }
-    const Scalar lhs = m_matT.coeff(im,im-1) * (abs(v.coeff(1)) + abs(v.coeff(2)));
-    const Scalar rhs = v.coeff(0) * (abs(m_matT.coeff(im-1,im-1)) + abs(Tmm) + abs(m_matT.coeff(im+1,im+1)));
-    if (abs(lhs) < NumTraits<Scalar>::epsilon() * rhs)
+    const Scalar lhs = m_matT.coeff(im,im-1) * (internal::abs(v.coeff(1)) + internal::abs(v.coeff(2)));
+    const Scalar rhs = v.coeff(0) * (internal::abs(m_matT.coeff(im-1,im-1)) + internal::abs(Tmm) + internal::abs(m_matT.coeff(im+1,im+1)));
+    if (internal::abs(lhs) < NumTraits<Scalar>::epsilon() * rhs)
+    {
       break;
+    }
   }
 }
 
@@ -484,8 +414,8 @@ inline void RealSchur<MatrixType>::initFrancisQRStep(Index il, Index iu, const V
 template<typename MatrixType>
 inline void RealSchur<MatrixType>::performFrancisQRStep(Index il, Index im, Index iu, bool computeU, const Vector3s& firstHouseholderVector, Scalar* workspace)
 {
-  eigen_assert(im >= il);
-  eigen_assert(im <= iu-2);
+  assert(im >= il);
+  assert(im <= iu-2);
 
   const Index size = m_matT.cols();
 
@@ -512,7 +442,7 @@ inline void RealSchur<MatrixType>::performFrancisQRStep(Index il, Index im, Inde
 
       // These Householder transformations form the O(n^3) part of the algorithm
       m_matT.block(k, k, 3, size-k).applyHouseholderOnTheLeft(ess, tau, workspace);
-      m_matT.block(0, k, (std::min)(iu,k+3) + 1, 3).applyHouseholderOnTheRight(ess, tau, workspace);
+      m_matT.block(0, k, std::min(iu,k+3) + 1, 3).applyHouseholderOnTheRight(ess, tau, workspace);
       if (computeU)
         m_matU.block(0, k, size, 3).applyHouseholderOnTheRight(ess, tau, workspace);
     }
@@ -540,7 +470,5 @@ inline void RealSchur<MatrixType>::performFrancisQRStep(Index il, Index im, Inde
       m_matT.coeffRef(i,i-3) = Scalar(0);
   }
 }
-
-} // end namespace Eigen
 
 #endif // EIGEN_REAL_SCHUR_H

@@ -4,19 +4,30 @@
 // Copyright (C) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
 // Copyright (C) 2009 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// This Source Code Form is subject to the terms of the Mozilla
-// Public License v. 2.0. If a copy of the MPL was not distributed
-// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// Eigen is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 3 of the License, or (at your option) any later version.
+//
+// Alternatively, you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of
+// the License, or (at your option) any later version.
+//
+// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and a copy of the GNU General Public License along with
+// Eigen. If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef EIGEN_EIGENBASE_H
 #define EIGEN_EIGENBASE_H
 
-namespace Eigen {
 
-/** \class EigenBase
-  * \ingroup Core_Module
-  * 
-  * Common base class for all classes T such that MatrixBase has an operator=(T) and a constructor MatrixBase(T).
+/** Common base class for all classes T such that MatrixBase has an operator=(T) and a constructor MatrixBase(T).
   *
   * In other words, an EigenBase object is an object that can be copied into a MatrixBase.
   *
@@ -24,57 +35,39 @@ namespace Eigen {
   *
   * Notice that this class is trivial, it is only used to disambiguate overloaded functions.
   *
-  * \sa \blank \ref TopicClassHierarchy
+  * \sa \ref TopicClassHierarchy
   */
 template<typename Derived> struct EigenBase
 {
 //   typedef typename internal::plain_matrix_type<Derived>::type PlainObject;
-  
-  /** \brief The interface type of indices
-    * \details To change this, \c \#define the preprocessor symbol \c EIGEN_DEFAULT_DENSE_INDEX_TYPE.
-    * \deprecated Since Eigen 3.3, its usage is deprecated. Use Eigen::Index instead.
-    * \sa StorageIndex, \ref TopicPreprocessorDirectives.
-    */
-  typedef Eigen::Index Index;
 
-  // FIXME is it needed?
   typedef typename internal::traits<Derived>::StorageKind StorageKind;
+  typedef typename internal::traits<Derived>::Index Index;
 
   /** \returns a reference to the derived object */
-  EIGEN_DEVICE_FUNC
   Derived& derived() { return *static_cast<Derived*>(this); }
   /** \returns a const reference to the derived object */
-  EIGEN_DEVICE_FUNC
   const Derived& derived() const { return *static_cast<const Derived*>(this); }
 
-  EIGEN_DEVICE_FUNC
   inline Derived& const_cast_derived() const
   { return *static_cast<Derived*>(const_cast<EigenBase*>(this)); }
-  EIGEN_DEVICE_FUNC
   inline const Derived& const_derived() const
   { return *static_cast<const Derived*>(this); }
 
   /** \returns the number of rows. \sa cols(), RowsAtCompileTime */
-  EIGEN_DEVICE_FUNC
   inline Index rows() const { return derived().rows(); }
   /** \returns the number of columns. \sa rows(), ColsAtCompileTime*/
-  EIGEN_DEVICE_FUNC
   inline Index cols() const { return derived().cols(); }
   /** \returns the number of coefficients, which is rows()*cols().
     * \sa rows(), cols(), SizeAtCompileTime. */
-  EIGEN_DEVICE_FUNC
   inline Index size() const { return rows() * cols(); }
 
   /** \internal Don't use it, but do the equivalent: \code dst = *this; \endcode */
-  template<typename Dest>
-  EIGEN_DEVICE_FUNC
-  inline void evalTo(Dest& dst) const
+  template<typename Dest> inline void evalTo(Dest& dst) const
   { derived().evalTo(dst); }
 
   /** \internal Don't use it, but do the equivalent: \code dst += *this; \endcode */
-  template<typename Dest>
-  EIGEN_DEVICE_FUNC
-  inline void addTo(Dest& dst) const
+  template<typename Dest> inline void addTo(Dest& dst) const
   {
     // This is the default implementation,
     // derived class can reimplement it in a more optimized way.
@@ -84,9 +77,7 @@ template<typename Derived> struct EigenBase
   }
 
   /** \internal Don't use it, but do the equivalent: \code dst -= *this; \endcode */
-  template<typename Dest>
-  EIGEN_DEVICE_FUNC
-  inline void subTo(Dest& dst) const
+  template<typename Dest> inline void subTo(Dest& dst) const
   {
     // This is the default implementation,
     // derived class can reimplement it in a more optimized way.
@@ -96,8 +87,7 @@ template<typename Derived> struct EigenBase
   }
 
   /** \internal Don't use it, but do the equivalent: \code dst.applyOnTheRight(*this); \endcode */
-  template<typename Dest>
-  EIGEN_DEVICE_FUNC inline void applyThisOnTheRight(Dest& dst) const
+  template<typename Dest> inline void applyThisOnTheRight(Dest& dst) const
   {
     // This is the default implementation,
     // derived class can reimplement it in a more optimized way.
@@ -105,8 +95,7 @@ template<typename Derived> struct EigenBase
   }
 
   /** \internal Don't use it, but do the equivalent: \code dst.applyOnTheLeft(*this); \endcode */
-  template<typename Dest>
-  EIGEN_DEVICE_FUNC inline void applyThisOnTheLeft(Dest& dst) const
+  template<typename Dest> inline void applyThisOnTheLeft(Dest& dst) const
   {
     // This is the default implementation,
     // derived class can reimplement it in a more optimized way.
@@ -129,31 +118,55 @@ template<typename Derived> struct EigenBase
   */
 template<typename Derived>
 template<typename OtherDerived>
-EIGEN_DEVICE_FUNC
 Derived& DenseBase<Derived>::operator=(const EigenBase<OtherDerived> &other)
 {
-  call_assignment(derived(), other.derived());
+  other.derived().evalTo(derived());
   return derived();
 }
 
 template<typename Derived>
 template<typename OtherDerived>
-EIGEN_DEVICE_FUNC
 Derived& DenseBase<Derived>::operator+=(const EigenBase<OtherDerived> &other)
 {
-  call_assignment(derived(), other.derived(), internal::add_assign_op<Scalar,typename OtherDerived::Scalar>());
+  other.derived().addTo(derived());
   return derived();
 }
 
 template<typename Derived>
 template<typename OtherDerived>
-EIGEN_DEVICE_FUNC
 Derived& DenseBase<Derived>::operator-=(const EigenBase<OtherDerived> &other)
 {
-  call_assignment(derived(), other.derived(), internal::sub_assign_op<Scalar,typename OtherDerived::Scalar>());
+  other.derived().subTo(derived());
   return derived();
 }
 
-} // end namespace Eigen
+/** replaces \c *this by \c *this * \a other.
+  *
+  * \returns a reference to \c *this
+  */
+template<typename Derived>
+template<typename OtherDerived>
+inline Derived&
+MatrixBase<Derived>::operator*=(const EigenBase<OtherDerived> &other)
+{
+  other.derived().applyThisOnTheRight(derived());
+  return derived();
+}
+
+/** replaces \c *this by \c *this * \a other. It is equivalent to MatrixBase::operator*=() */
+template<typename Derived>
+template<typename OtherDerived>
+inline void MatrixBase<Derived>::applyOnTheRight(const EigenBase<OtherDerived> &other)
+{
+  other.derived().applyThisOnTheRight(derived());
+}
+
+/** replaces \c *this by \c *this * \a other. */
+template<typename Derived>
+template<typename OtherDerived>
+inline void MatrixBase<Derived>::applyOnTheLeft(const EigenBase<OtherDerived> &other)
+{
+  other.derived().applyThisOnTheLeft(derived());
+}
 
 #endif // EIGEN_EIGENBASE_H

@@ -20,6 +20,7 @@
 #ifndef GAIA_CYCLOPS_H
 #define GAIA_CYCLOPS_H
 
+#include <QObject>
 //#include "cairo/dataset.h"
 #include "../../dataset.h"
 #include "../../metrics/distancefunction.h"
@@ -50,7 +51,7 @@ Q_OBJECT
  public:
 
   Cyclops();
-  ~Cyclops();
+  virtual ~Cyclops();
 
   /**
    * Load a dataset into memory and use the given name as identifier.

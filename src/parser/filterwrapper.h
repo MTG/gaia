@@ -21,7 +21,7 @@
 #define GAIA_PARSER_FILTERWRAPPER_H
 
 #include "filter.h"
-#include "../convert.h"
+#include "convert.h"
 
 namespace gaia2 {
 namespace filter {

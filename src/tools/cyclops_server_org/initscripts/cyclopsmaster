@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# Copyright (C) 2010 MTG, Universitat Pompeu Fabra
+#
+
+### BEGIN INIT INFO
+# Provides:          cyclopsmaster
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: RPC query server for Gaia queries
+# Description:       This is the master component when setting up Gaia Cyclops in
+#                    a master/slave setup. You should have the slaves running prior
+#                    to launching the master node.
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+DAEMON=/usr/bin/cyclopsmaster
+#DAEMON=/usr/local/bin/cyclopsmaster
+CONFIG_FILE=/etc/cyclops/master.yaml
+NAME=cyclopsmaster
+DESC="Gaia Cyclops master server"
+LOGDIR=/var/log/cyclops
+
+PIDFILE=/var/run/cyclopsmaster.pid
+
+# Test if binary exists
+test -x $DAEMON || exit 0
+
+# Define LSB log_* functions.
+. /lib/lsb/init-functions
+
+DAEMON_OPTS=$CONFIG_FILE
+LOGFILE=$LOGDIR/master.log
+#DATADIR=/var/cache/quassel
+#DAEMONUSER=quasselcore
+USER=cyclops
+
+# defaulting LOGLEVEL and PORT, just in case /etc/default/$name gets deleted
+#LOGLEVEL="Info"
+#PORT="4242"
+CRONOLOG='/usr/bin/cronolog /var/log/cyclops/%Y/master.%m%d.log'
+
+# source default
+#if [ -f /etc/default/$NAME ] ; then
+#    . /etc/default/$NAME
+#fi
+
+start_server() {
+    /etc/init.d/cyclopsslaves start
+    start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --chuid $USER \
+        --exec $DAEMON -- $DAEMON_OPTS 2>&1 | $CRONOLOG &
+}
+
+stop_server() {
+    /etc/init.d/cyclopsslaves stop
+    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE \
+        --exec $DAEMON
+}
+
+case "$1" in
+  start)
+	log_daemon_msg "Starting $DESC" "$NAME"
+	start_server
+	case "$?" in
+		0) log_end_msg 0 ;;
+		1) log_progress_msg "already started"
+		   log_end_msg 0 ;;
+		*) log_end_msg $? ;;
+	esac
+
+	;;
+  stop)
+	log_daemon_msg "Stopping $DESC" "$NAME"
+	stop_server
+	case "$?" in
+		0) log_end_msg 0 ;;
+		1) log_progress_msg "already stopped"
+		   log_end_msg 0 ;;
+		*) log_end_msg $? ;;
+	esac
+
+	;;
+  reload)
+        log_warning_msg "Reloading $NAME daemon: not implemented, as the daemon"
+        log_warning_msg "cannot re-read the config file (use restart)."
+        ;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	;;
+  status)
+	status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+	;;
+  *)
+	echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload|force-reload|status}" >&2
+	exit 3
+	;;
+esac
+
+exit 0

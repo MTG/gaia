@@ -475,4 +475,4 @@ void Cyclops::setupFromYaml(const yaml::Mapping& config) {
   }
 }
 
-//#include "cyclops.moc"
+#include <cyclops.moc>

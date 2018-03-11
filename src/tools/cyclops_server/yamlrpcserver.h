@@ -20,6 +20,7 @@
 #ifndef GAIA_YAMLRPCSERVER_H
 #define GAIA_YAMLRPCSERVER_H
 
+#include <QObject>
 #include <QTcpServer>
 #include <QDateTime>
 #include "../../yamlcpp.h"
@@ -27,10 +28,11 @@
 GAIA_DEFINE_EXCEPTION(NotImplementedError);
 GAIA_DEFINE_EXCEPTION(InvalidParams);
 
-class YamlProxy {
+class YamlProxy : public QObject {
+Q_OBJECT
  public:
   virtual gaia2::yaml::Node process(const gaia2::yaml::Mapping& query) = 0;
-  virtual ~YamlProxy() {}
+  virtual ~YamlProxy() {};
 };
 
 /**

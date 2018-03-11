@@ -22,7 +22,7 @@
 #ifndef GAIA_QT5
 #include <QHttpRequestHeader>
 #else
-#include <QNetworkRequest>
+#include <QNetworkAccessManager>
 #endif
 #include <QUrl>
 #include <QDateTime>
@@ -33,6 +33,27 @@
 #include "../../utils.h"
 using namespace gaia2;
 
+/*
+ * QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+connect(manager, SIGNAL(finished(QNetworkReply*)),
+        this, SLOT(replyFinished(QNetworkReply*)));
+
+manager->get(QNetworkRequest(QUrl("http://qt-project.org")));
+**********************************************
+**********************************************
+**********************************************
+QNetworkRequest request;
+request.setUrl(QUrl("http://qt-project.org"));
+request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
+
+QNetworkReply *reply = manager->get(request);
+connect(reply, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
+        this, SLOT(slotError(QNetworkReply::NetworkError)));
+connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
+        this, SLOT(slotSslErrors(QList<QSslError>)));
+
+ */
 
 inline QByteArray sid(const QTcpSocket* socket) {
   return QString("%1:%2 :").arg(socket->peerAddress().toString()).arg(int(socket->peerPort())).toUtf8();
@@ -235,4 +256,4 @@ void YamlRPCServer::discardClient() {
 }
 
 
-//#include "yamlrpcserver.moc"
+#include <yamlrpcserver.moc>
