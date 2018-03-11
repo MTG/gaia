@@ -12,11 +12,13 @@ Documentation: http://essentia.upf.edu/documentation/gaia
 
 
 Dependencies:
-  
+
   * Qt >= 4.5
   * libYAML >= 0.1.1
   * Python >= 2.4
   * SWIG >= 3.0.10
+  * waf >= 2.0.6
+  * Eigen 3.3.4 patched version (included in source)
 
 
 INSTALL
@@ -27,7 +29,7 @@ INSTALL
 - Install dependencies (Ubuntu/Debian)
    ```
    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
-   ``` 
+   ```
 or
    ```
    $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
@@ -42,15 +44,16 @@ or
    ```
    $ ./waf --help
    ```
-   $ ./waf configure --tools=swig,qt5,qt4 build
+   $ ./waf-light configure --tools=swig,qt5,qt4 build
    $ ./waf
    $ sudo ./waf install
+   $ export WAFDIR=~/waf
    ```
-   
+
 - Configure `gaia` with the desired options, if python3 wanted use
     ```
-    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] [--with-cyclops]
-    ```    
+    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] [--with-cyclops] [--with-gaia-qt5]
+    ```
     NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
 
 - Compile libgaia.a:
@@ -132,7 +135,7 @@ or
     ```
     $ cp /path_to_gaia_source/src/bindings/gaia_wrap.cxx /path_to_gaia_source/packaging/darwin/Gaia2Python/
     ```
-        
+    
 - use QtCreator to open the project file 'Gaia2Python.pro' in packaging/darwin/Gaia2Python/ and compile
 
 - run ./make_release_tarball in packaging/darwin:

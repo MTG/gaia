@@ -5,24 +5,9 @@
 // Copyright (C) 2010 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The SSE code for the 4x4 float and double matrix inverse in this file
 // comes from the following Intel's library:
@@ -42,20 +27,24 @@
 #ifndef EIGEN_INVERSE_SSE_H
 #define EIGEN_INVERSE_SSE_H
 
+namespace Eigen { 
+
 namespace internal {
 
 template<typename MatrixType, typename ResultType>
 struct compute_inverse_size4<Architecture::SSE, float, MatrixType, ResultType>
 {
   enum {
-    MatrixAlignment     = bool(MatrixType::Flags&AlignedBit),
-    ResultAlignment     = bool(ResultType::Flags&AlignedBit),
+    MatrixAlignment     = traits<MatrixType>::Alignment,
+    ResultAlignment     = traits<ResultType>::Alignment,
     StorageOrdersMatch  = (MatrixType::Flags&RowMajorBit) == (ResultType::Flags&RowMajorBit)
   };
+  typedef typename conditional<(MatrixType::Flags&LinearAccessBit),MatrixType const &,typename MatrixType::PlainObject>::type ActualMatrixType;
   
-  static void run(const MatrixType& matrix, ResultType& result)
+  static void run(const MatrixType& mat, ResultType& result)
   {
-    EIGEN_ALIGN16 const  int _Sign_PNNP[4] = { 0x00000000, 0x80000000, 0x80000000, 0x00000000 };
+    ActualMatrixType matrix(mat);
+    EIGEN_ALIGN16 const unsigned int _Sign_PNNP[4] = { 0x00000000, 0x80000000, 0x80000000, 0x00000000 };
 
     // Load the full matrix into registers
     __m128 _L1 = matrix.template packet<MatrixAlignment>( 0);
@@ -164,10 +153,12 @@ struct compute_inverse_size4<Architecture::SSE, float, MatrixType, ResultType>
     iC = _mm_mul_ps(rd,iC);
     iD = _mm_mul_ps(rd,iD);
 
-    result.template writePacket<ResultAlignment>( 0, _mm_shuffle_ps(iA,iB,0x77));
-    result.template writePacket<ResultAlignment>( 4, _mm_shuffle_ps(iA,iB,0x22));
-    result.template writePacket<ResultAlignment>( 8, _mm_shuffle_ps(iC,iD,0x77));
-    result.template writePacket<ResultAlignment>(12, _mm_shuffle_ps(iC,iD,0x22));
+    Index res_stride = result.outerStride();
+    float* res = result.data();
+    pstoret<float, Packet4f, ResultAlignment>(res+0,            _mm_shuffle_ps(iA,iB,0x77));
+    pstoret<float, Packet4f, ResultAlignment>(res+res_stride,   _mm_shuffle_ps(iA,iB,0x22));
+    pstoret<float, Packet4f, ResultAlignment>(res+2*res_stride, _mm_shuffle_ps(iC,iD,0x77));
+    pstoret<float, Packet4f, ResultAlignment>(res+3*res_stride, _mm_shuffle_ps(iC,iD,0x22));
   }
 
 };
@@ -176,18 +167,21 @@ template<typename MatrixType, typename ResultType>
 struct compute_inverse_size4<Architecture::SSE, double, MatrixType, ResultType>
 {
   enum {
-    MatrixAlignment = bool(MatrixType::Flags&AlignedBit),
-    ResultAlignment = bool(ResultType::Flags&AlignedBit),
+    MatrixAlignment     = traits<MatrixType>::Alignment,
+    ResultAlignment     = traits<ResultType>::Alignment,
     StorageOrdersMatch  = (MatrixType::Flags&RowMajorBit) == (ResultType::Flags&RowMajorBit)
   };
-  static void run(const MatrixType& matrix, ResultType& result)
+  typedef typename conditional<(MatrixType::Flags&LinearAccessBit),MatrixType const &,typename MatrixType::PlainObject>::type ActualMatrixType;
+  
+  static void run(const MatrixType& mat, ResultType& result)
   {
-    const EIGEN_ALIGN16 long long int _Sign_NP[2] = { 0x8000000000000000ll, 0x0000000000000000ll };
-    const EIGEN_ALIGN16 long long int _Sign_PN[2] = { 0x0000000000000000ll, 0x8000000000000000ll };
+    ActualMatrixType matrix(mat);
+    const __m128d _Sign_NP = _mm_castsi128_pd(_mm_set_epi32(0x0,0x0,0x80000000,0x0));
+    const __m128d _Sign_PN = _mm_castsi128_pd(_mm_set_epi32(0x80000000,0x0,0x0,0x0));
 
     // The inverse is calculated using "Divide and Conquer" technique. The
     // original matrix is divide into four 2x2 sub-matrices. Since each
-    // register of the matrix holds two element, the smaller matrices are
+    // register of the matrix holds two elements, the smaller matrices are
     // consisted of two registers. Hence we get a better locality of the
     // calculations.
 
@@ -316,25 +310,29 @@ struct compute_inverse_size4<Architecture::SSE, double, MatrixType, ResultType>
     iB1 = _mm_sub_pd(_mm_mul_pd(C1, dB), iB1);
     iB2 = _mm_sub_pd(_mm_mul_pd(C2, dB), iB2);
 
-    d1 = _mm_xor_pd(rd, _mm_load_pd((double*)_Sign_PN));
-    d2 = _mm_xor_pd(rd, _mm_load_pd((double*)_Sign_NP));
+    d1 = _mm_xor_pd(rd, _Sign_PN);
+    d2 = _mm_xor_pd(rd, _Sign_NP);
 
     //  iC = B*|C| - A*C#*D;
     dC = _mm_shuffle_pd(dC,dC,0);
     iC1 = _mm_sub_pd(_mm_mul_pd(B1, dC), iC1);
     iC2 = _mm_sub_pd(_mm_mul_pd(B2, dC), iC2);
 
-    result.template writePacket<ResultAlignment>( 0, _mm_mul_pd(_mm_shuffle_pd(iA2, iA1, 3), d1));     // iA# / det
-    result.template writePacket<ResultAlignment>( 4, _mm_mul_pd(_mm_shuffle_pd(iA2, iA1, 0), d2));
-    result.template writePacket<ResultAlignment>( 2, _mm_mul_pd(_mm_shuffle_pd(iB2, iB1, 3), d1));     // iB# / det
-    result.template writePacket<ResultAlignment>( 6, _mm_mul_pd(_mm_shuffle_pd(iB2, iB1, 0), d2));
-    result.template writePacket<ResultAlignment>( 8, _mm_mul_pd(_mm_shuffle_pd(iC2, iC1, 3), d1));     // iC# / det
-    result.template writePacket<ResultAlignment>(12, _mm_mul_pd(_mm_shuffle_pd(iC2, iC1, 0), d2));
-    result.template writePacket<ResultAlignment>(10, _mm_mul_pd(_mm_shuffle_pd(iD2, iD1, 3), d1));     // iD# / det
-    result.template writePacket<ResultAlignment>(14, _mm_mul_pd(_mm_shuffle_pd(iD2, iD1, 0), d2));
+    Index res_stride = result.outerStride();
+    double* res = result.data();
+    pstoret<double, Packet2d, ResultAlignment>(res+0,             _mm_mul_pd(_mm_shuffle_pd(iA2, iA1, 3), d1));
+    pstoret<double, Packet2d, ResultAlignment>(res+res_stride,    _mm_mul_pd(_mm_shuffle_pd(iA2, iA1, 0), d2));
+    pstoret<double, Packet2d, ResultAlignment>(res+2,             _mm_mul_pd(_mm_shuffle_pd(iB2, iB1, 3), d1));
+    pstoret<double, Packet2d, ResultAlignment>(res+res_stride+2,  _mm_mul_pd(_mm_shuffle_pd(iB2, iB1, 0), d2));
+    pstoret<double, Packet2d, ResultAlignment>(res+2*res_stride,  _mm_mul_pd(_mm_shuffle_pd(iC2, iC1, 3), d1));
+    pstoret<double, Packet2d, ResultAlignment>(res+3*res_stride,  _mm_mul_pd(_mm_shuffle_pd(iC2, iC1, 0), d2));
+    pstoret<double, Packet2d, ResultAlignment>(res+2*res_stride+2,_mm_mul_pd(_mm_shuffle_pd(iD2, iD1, 3), d1));
+    pstoret<double, Packet2d, ResultAlignment>(res+3*res_stride+2,_mm_mul_pd(_mm_shuffle_pd(iD2, iD1, 0), d2));
   }
 };
 
-}
+} // end namespace internal
+
+} // end namespace Eigen
 
 #endif // EIGEN_INVERSE_SSE_H

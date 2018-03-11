@@ -5,6 +5,7 @@ build/
 .swn
 .swo
 .swp
+.README*
 
 # waf files
 .waf-1*
