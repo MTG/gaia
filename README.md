@@ -30,7 +30,7 @@ INSTALL
    ```
    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
    ```
-or
+​     or
    ```
    $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
@@ -38,25 +38,24 @@ or
    Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
 
 
-- Online help for WAF (build system in home directory)
+- Online help for WAF (or from build system in home directory)
    ```
+   $ git clone https://github.com/waf-project/waf.git
    $ cd waf
-   ```
-   $ ./waf --help
-   ```
+   $ ./waf-light --help
    $ ./waf-light configure --tools=swig,qt5,qt4 build
    $ ./waf
    $ sudo ./waf install
    $ export WAFDIR=~/waf
    ```
 
-- Configure `gaia` with the desired options, if python3 wanted use
+- Configure `gaia` with the desired options, if `python3` wanted use
     ```
     $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] [--with-cyclops] [--with-gaia-qt5]
     ```
-    NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
+    NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option
 
-- Compile libgaia.a:
+- Compile `libgaia.a`or `_gaia2.so`:
     ```
     $ python3 ./waf
     ```
@@ -66,9 +65,9 @@ or
     $ python3 ./waf install [--destdir=/where/ever/]
     ```
     
-- Build documentation (optional), it will be located at build/doc/ folder
+- Build documentation (optional or online), it will be located at build/doc/ folder - currently doesn't work
     ```
-    $ ./python src/doc/regenerate_docstring.py
+    $ python3 src/doc/regenerate_docstring.py
     ```
 
 ## MacOS X
