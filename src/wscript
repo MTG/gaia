@@ -57,11 +57,12 @@ def build_library(bld):
         includes = [ '.', 'metrics', '3rdparty' ]
     )
     
-def write_pcfile(task):
-    open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
-
-    bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
-    bld.add_group()
+#def write_pcfile(task):
+#   open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
+#
+#   bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
+#   bld.add_group()
+def build_install(bld):
 
     if bld.env['WITH_STLFACADE']: 
         bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('stlfacade/*.h'))
@@ -78,12 +79,12 @@ def write_pcfile(task):
                                                               'parser/parsertypes.h',
                                                               'parser/grammar.h' ])
     
-        # also install all Eigen headers
-        import os
-        os.chdir('src')
-        install_tree(bld, '${PREFIX}/include/gaia2/Eigen', '3rdparty/Eigen')
+    # also install all Eigen headers
+    import os
+    os.chdir('src')
+    install_tree(bld, '${PREFIX}/include/gaia2/3rdparty/Eigen', '3rdparty/Eigen')
 
-    bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
+    #bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')
 
 
@@ -236,6 +237,7 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.recurse('bindings')
 
+    build_install(bld)
 ## to have qt5 include files loaded automatically
 
 # use the following to add the include paths for generated *.moc files automatically
