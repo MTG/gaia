@@ -41,7 +41,7 @@ def configure(conf):
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['pyext_PATTERN'] = "%s.so"
         python_dir = str(conf.env['PYTHONDIR'])
-        python_dir = python_dir.replace ('3/', str(conf.env['PYTHON_VERSION']+'/'), 1)
+        python_dir = python_dir.replace ('3/', str(conf.env['PYTHON_VERSION'])+'/', 1)
         conf.env['PYTHONDIR'] = python_dir
 
 def install_tree(bld, dst, src):
