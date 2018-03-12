@@ -30,15 +30,22 @@ INSTALL
    ```
    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
    ```
-​     or
+   ​     or for `Qt5`
    ```
    $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
 
-   Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
+   Note that `Gaia` build will fail if you are using `swig 3.0.8`. Install either a previous or later version. You will encounter this problem if you are using `swig` package distributed with Ubuntu 16.04. In this case install the newest `swig` version from source `(https://github.com/swig/swig)`.
+
+   ​
 
 
-- Online help for WAF (or from build system in home directory)
+- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for certainty.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.
+
+   ​
+
+- Online help is available for WAF or in build system home folder.
+
    ```
    $ git clone https://github.com/waf-project/waf.git
    $ cd waf
@@ -51,7 +58,8 @@ INSTALL
 
 - Configure `gaia` with the desired options, if `python3` wanted use
     ```
-    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] [--with-cyclops] [--with-gaia-qt5]
+    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] 
+    [--with-cyclops] [--with-gaia-qt5]
     ```
     NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option
 
@@ -149,6 +157,7 @@ INSTALL
 ## Windows
 
 - use the QtCreator projects inside the packaging/win32 directory (not tested).
+- using `msys64`and `mingw64_shell.bat`partially works but is currently not available and untested.
 
 
 
