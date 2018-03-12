@@ -86,17 +86,17 @@ def debian_version():
 
 
 def check_tbb(conf):
-# tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
-#                   mandatory = 1,
-#                   errmsg = 'Intel TBB is recommended in order to compile Gaia')
+    if sys.platform.startswith('linux') != True:
+        tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
+        mandatory = 1,
+        errmsg = 'Intel TBB is recommended in order to compile Gaia')
 
-# if not tbb:
-#    return
+        if not tbb:
+            return
 
     conf.env['CXXDEFINES_TBB'] = 'HAVE_TBB'
     conf.env['LIB_TBB'] = 'tbb'
     conf.env['USELIB'] += [ 'TBB' ]
-
 
 def configure(conf):
     global gaia_qt5
@@ -147,7 +147,6 @@ def configure(conf):
     # optional dependency: gaia_qt5, if asked for on linux platform
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['WITH_GAIA_QT5'] = gaia_qt5
-        #print ('gaia_qt5', gaia_qt5, 'conf.env WITH_GAIA_QT5',conf.env['WITH_GAIA_QT5'] )
         conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
     else :
         conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]

@@ -1,5 +1,21 @@
 #!/usr/bin/env python
 # encoding: utf-8
+
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
 from __future__ import print_function
 import sys,  os, os.path
 gaia_qt5 = False
@@ -19,17 +35,13 @@ def options(opt):
 def configure(conf):
     global gaia_qt5
     gaia_qt5 = conf.options.gaia_qt5
-    print ('gaia_qt5 =', gaia_qt5)
-    #gaia_qt5 = conf.env['WITH_GAIA_QT5']
     conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
     conf.env['WITH_TESTS'] = conf.options.with_tests
     conf.recurse('bindings')
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['pyext_PATTERN'] = "%s.so"
         python_dir = str(conf.env['PYTHONDIR'])
-        print (conf.env['PYTHON_VERSION'])
-        python_dir = python_dir.replace ('3', str(conf.env['PYTHON_VERSION']), 1)
-        print ('PYTHONDIR', python_dir)
+        python_dir = python_dir.replace ('3/', str(conf.env['PYTHON_VERSION']+'/'), 1)
         conf.env['PYTHONDIR'] = python_dir
 
 def install_tree(bld, dst, src):

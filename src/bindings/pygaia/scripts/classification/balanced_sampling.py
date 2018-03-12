@@ -1,3 +1,21 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
 # This script creates a balanced ground truth given an unbalanced on by applying 
 # random sampling. The size of the resulting classes equals to the minimum size 
 # among original classes.
