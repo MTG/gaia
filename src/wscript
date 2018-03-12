@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from __future__ import print_function
-import sys
-import os, os.path
+import sys,  os, os.path
 gaia_qt5 = False
 
 def options(opt):
@@ -19,15 +18,19 @@ def options(opt):
 
 def configure(conf):
     global gaia_qt5
-    #gaia_qt5 = conf.options.gaia_qt5
-    gaia_qt5 = conf.env['WITH_GAIA_QT5']
+    gaia_qt5 = conf.options.gaia_qt5
+    print ('gaia_qt5 =', gaia_qt5)
+    #gaia_qt5 = conf.env['WITH_GAIA_QT5']
     conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
     conf.env['WITH_TESTS'] = conf.options.with_tests
     conf.recurse('bindings')
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['pyext_PATTERN'] = "%s.so"
-        print ('PYTHON_VERSION', conf.env['PYTHON_VERSION'])
-        conf.env['PYTHONDIR'] = "/usr/local/lib/python"+conf.env['PYTHON_VERSION']+"/dist-packages"
+        python_dir = str(conf.env['PYTHONDIR'])
+        print (conf.env['PYTHON_VERSION'])
+        python_dir = python_dir.replace ('3', str(conf.env['PYTHON_VERSION']), 1)
+        print ('PYTHONDIR', python_dir)
+        conf.env['PYTHONDIR'] = python_dir
 
 def install_tree(bld, dst, src):
     src = os.path.normpath(src)

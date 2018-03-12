@@ -16,9 +16,14 @@ def options(opt):
 
 
 def configure(conf):
+    global gaia_qt5
+    gaia_qt5 = conf.options.gaia_qt5
     conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
     if conf.env['WITH_PYTHON_BINDINGS']:
-        conf.load('swig qt5 python')
+        if gaia_qt5:
+            conf.load('swig qt5 python')
+        else:
+            conf.load('swig qt4 python')
 
         if type(conf.env.SWIG) == str:
             conf.env.SWIG = [ conf.env.SWIG ]
