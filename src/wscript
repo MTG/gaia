@@ -38,7 +38,7 @@ def configure(conf):
     conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
     conf.env['WITH_TESTS'] = conf.options.with_tests
     conf.recurse('bindings')
-    if sys.platform.startswith('linux') and gaia_qt5:
+    if sys.platform.startswith('linux'):
         conf.env['pyext_PATTERN'] = "%s.so"
         python_dir = str(conf.env['PYTHONDIR'])
         python_dir = python_dir.replace ('3/', str(conf.env['PYTHON_VERSION'])+'/', 1)
@@ -128,7 +128,7 @@ def build_tools(bld):
         use = ['gaia2'] + bld.env['USELIB'])
     
     # GaiaFusion
-    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod='0755')
+    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=755)
 
     # gaiafreeze utility
     bld.program(
@@ -196,7 +196,7 @@ def build_tools(bld):
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
+            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=755)
         
     else:
         if bld.env['WITH_CYCLOPS']:
@@ -241,7 +241,7 @@ def build_tools(bld):
             
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod='0755')
+            bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=755)
     
 def build(bld):
     build_library(bld)

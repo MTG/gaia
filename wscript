@@ -42,7 +42,7 @@ gaia_qt5 = False
 
 def options(opt):
     global gaia_qt5
-    opt.load('compiler_cxx compiler_c qt4 qt5')
+    opt.load('compiler_cxx compiler_c qt5 qt4')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
