@@ -17,9 +17,24 @@
 #
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
+#
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
-
+from __future__ import print_function
+from future.utils import raise_
 import httplib, urllib, time
 import gaia2.fastyaml as yaml
 
@@ -46,7 +61,7 @@ class YamlRPCMethod(object):
 
         if VERBOSE:
             responseTime = time.time() - serializeStart
-            print 'serialized request in %f seconds' % responseTime
+            print ('serialized request in %f seconds' % responseTime)
 
 
         # we don't want the '+'-quoting
@@ -62,14 +77,14 @@ class YamlRPCMethod(object):
 
         try:
             conn.request('POST', '/', params, headers)
-        except Exception, e:
+        except Exception as e:
             raise RuntimeError('request failed', self.endPoint, self.methodName, args, e)
 
         response = conn.getresponse()
 
         if VERBOSE:
             responseTime = time.time() - startTime
-            print 'received answer in %f seconds' % responseTime
+            print ('received answer in %f seconds' % responseTime)
             #print response.status, response.reason
 
             startParseTime = time.time()
@@ -78,10 +93,10 @@ class YamlRPCMethod(object):
 
         if VERBOSE:
             responseTime = time.time() - startParseTime
-            print 'parsed answer in %f seconds' % responseTime
+            print ('parsed answer in %f seconds' % responseTime)
 
             responseTime = time.time() - serializeStart
-            print 'total time: %f seconds' % responseTime
+            print ('total time: %f seconds' % responseTime)
 
         if 'error' in result:
             raise RuntimeError(result['error']['message'])
@@ -184,6 +199,6 @@ class Cyclops(object):
     def __getattr__(self, methodName):
         # a little tip so that ipython doesn't get lost when autocompleting
         if methodName in [ '__methods__', 'trait_names', '_getAttributeNames', '__members__' ]:
-            raise AttributeError, methodName
+            raise_(AttributeError, methodName)
 
         return CyclopsRPCMethod(self.endPoint, methodName)
