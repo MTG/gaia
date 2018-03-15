@@ -34,8 +34,19 @@
 # </copyright>
 
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
+from builtins import object
+from future.standard_library import install_aliases
+install_aliases()
 from future.utils import raise_
-import httplib, urllib, time
+from urllib.parse import urlparse, urlencode
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
+
+import time
 import gaia2.fastyaml as yaml
 
 VERBOSE = False
@@ -65,7 +76,7 @@ class YamlRPCMethod(object):
 
 
         # we don't want the '+'-quoting
-        params = urllib.urlencode({ 'q': q }).replace('+', ' ')
+        params = urllib.parse.urlencode({ 'q': q }).replace('+', ' ')
 
         headers = { 'Content-type': 'application/x-www-form-urlencoded',
                     'Accept': 'text/plain'
@@ -73,7 +84,7 @@ class YamlRPCMethod(object):
 
         if VERBOSE: startTime = time.time()
 
-        conn = httplib.HTTPConnection(self.endPoint)
+        conn = http_client.HTTPConnection(self.endPoint)
 
         try:
             conn.request('POST', '/', params, headers)
@@ -134,7 +145,7 @@ class ResultSet(YamlRPCMethod):
                 yield (str(pid), dist, {})
         else:
             for ((pid, dist), v) in zip(results['results'], results['values']):
-                yield (str(pid), dist, dict(zip(header, v)))
+                yield (str(pid), dist, dict(list(zip(header, v))))
 
     def limit(self, n):
         raise NotImplementedError('ResultSet does not allow calling limit() on it yet...')

@@ -33,6 +33,8 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import str
+from builtins import range
 from gaia2 import *
 from gaia2.cyclops import Cyclops
 import gaia2.fastyaml as yaml
