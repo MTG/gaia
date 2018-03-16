@@ -19,6 +19,8 @@
 
 
 
+from builtins import zip
+from builtins import range
 from gaia2 import *
 import unittest
 import testdata
@@ -255,7 +257,7 @@ class TestDataSet(unittest.TestCase):
         ds.appendDataSet(ds2)
 
         # assert all values in enum values are ok
-        for (pname, desc), value in enumValues.items():
+        for (pname, desc), value in list(enumValues.items()):
             self.assertEqual(value, ds.point(pname)[desc])
 
         ds3 = DataSet()
@@ -268,7 +270,7 @@ class TestDataSet(unittest.TestCase):
         ds.appendDataSet(ds3)
 
         # check all values are all still the same
-        for (pname, desc), value in enumValues.items():
+        for (pname, desc), value in list(enumValues.items()):
             self.assertEqual(value, ds.point(pname)[desc])
 
         (tmpFile, tmpName) = tempfile.mkstemp()
@@ -276,7 +278,7 @@ class TestDataSet(unittest.TestCase):
         ds.save(tmpName)
         ds.load(tmpName)
 
-        for (pname, desc), value in enumValues.items():
+        for (pname, desc), value in list(enumValues.items()):
             self.assertEqual(value, ds.point(pname)[desc])
 
         os.remove(tmpName)

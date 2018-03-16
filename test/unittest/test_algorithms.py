@@ -19,6 +19,9 @@
 
 
 
+from __future__ import print_function
+from builtins import zip
+from builtins import range
 from gaia2 import *
 import unittest
 import testdata
@@ -193,7 +196,7 @@ class TestAlgorithms(unittest.TestCase):
         # that it'll have a different enum map
         p = Point()
         p.load('data/dataset_small/Vocal and Acapella/04 Blue Skies.mp3.sig')
-        print p.name()
+        print(p.name())
 
         #also create a transfo that forwards enums after we did the enumerate transfo
         dbes = transform(dbe, 'select', { 'descriptorNames': '*key*' })

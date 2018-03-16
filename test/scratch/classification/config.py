@@ -22,6 +22,8 @@
 
 
 ##### General options ##############################################################
+from __future__ import print_function
+from past.builtins import execfile
 PYTHONPATH = '/tmp/gaiatemp/usr/local/lib/python2.5/site-packages/'
 import sys
 sys.path = [ PYTHONPATH ] + sys.path
@@ -57,8 +59,8 @@ try:
     MTGDB_AUDIO = G_ENV[userid]['mtgdb_audio']
     BASE_DIR = G_ENV[userid]['base_dir']
 except:
-    print 'Error: could not detect on which computer this program is running. Exiting...'
-    print 'Please edit the config.py file to add your data to it to be able to run it.'
+    print('Error: could not detect on which computer this program is running. Exiting...')
+    print('Please edit the config.py file to add your data to it to be able to run it.')
     sys.exit(1)
 
 
@@ -67,11 +69,11 @@ try:
     projectFile = sys.argv[1]
     execfile(projectFile)
 except:
-    print 'Error while trying to load the project file:\n'
+    print('Error while trying to load the project file:\n')
     raise
 
-commonConfig = dict(d.items()[0] for d in orderedCommonConfig)
+commonConfig = dict(list(d.items())[0] for d in orderedCommonConfig)
 
 evalConfig = {}
-for key, value in orderedEvalConfig.items():
-    evalConfig[key] = dict(d.items()[0] for d in value)
+for key, value in list(orderedEvalConfig.items()):
+    evalConfig[key] = dict(list(d.items())[0] for d in value)

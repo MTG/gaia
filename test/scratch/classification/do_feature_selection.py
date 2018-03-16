@@ -20,6 +20,7 @@
 
 
 
+from __future__ import print_function
 from config import *
 from gaia2 import *
 import os
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         datasetName = datasetdir + className + '_%s.db' % eqloud
 
         if not(os.path.exists(datasetName)):
-            print 'Dataset %s does not exist. Exiting.' % datasetName
+            print('Dataset %s does not exist. Exiting.' % datasetName)
             sys.exit(1)
 
         ds_orig = DataSet()
@@ -89,7 +90,7 @@ if __name__ == '__main__':
         # transform and save all datasets
         for i in commonConfig['featset']:
             if os.path.exists(dsname(i)):
-                print 'Dataset already exists: %s' % dsname(i)
+                print('Dataset already exists: %s' % dsname(i))
             else:
                 exec('ds = transform%d(ds_orig)' % i)
                 ds.save(dsname(i))

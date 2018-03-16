@@ -20,6 +20,8 @@
 
 # encoding: utf-8
 
+from __future__ import print_function
+from builtins import str
 from collections import defaultdict
 from confusionmatrix import ConfusionMatrix
 
@@ -58,16 +60,16 @@ def evaluate(dataset, classifier, groundTruth):
 
     confusion = ConfusionMatrix()
 
-    for (pointId, expected) in groundTruth.items():
+    for (pointId, expected) in list(groundTruth.items()):
         try:
             found = classifier(dataset.point(pointId))
             confusion.add(expected, found, pointId)
             
-        except Exception, e:
-            print 'WARNING: Could not classify point', pointId, 'because', str(e)
+        except Exception as e:
+            print('WARNING: Could not classify point', pointId, 'because', str(e))
 
         done += 1
-        print '\r[%d%%]' % int(done*100 / total),
+        print('\r[%d%%]' % int(done*100 / total), end=' ')
 
 
     return confusion

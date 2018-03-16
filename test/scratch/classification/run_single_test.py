@@ -20,6 +20,12 @@
 
 
 
+from __future__ import division
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 from config import *
 import sys
 from gaia2 import *
@@ -31,7 +37,7 @@ import os
 from os.path import join, split
 import threading, time
 
-import cPickle
+import pickle
 
 
 
@@ -60,14 +66,14 @@ def addRCA(ds, dim):
 
 
 def writeResult(filename, confusion):
-    result = float(confusion.correct()) / confusion.total()
+    result = old_div(float(confusion.correct()), confusion.total())
     open(filename + '.result', 'w').write(str(result))
     open(filename + '.cmatrix.html', 'w').write(confusion.toHtml())
 
 def loadData(datasetName, featureSet):
     ds = DataSet()
     ds.load(datasetName[:-3] + '.feat%d.db' % featureSet)
-    groundTruth = utils.GroundTruth(className, cPickle.load(open(datasetName + '.groundtruth')))
+    groundTruth = utils.GroundTruth(className, pickle.load(open(datasetName + '.groundtruth')))
 
     return ds, groundTruth
 
@@ -85,7 +91,7 @@ if __name__ == '__main__':
         filename = resultsdir + basename + '_simca_%d_%d_%.1f' % (featureSet, coveredVar, alpha)
 
         if os.path.exists(filename + '.result'):
-            print 'File exists. Skipping Test.'
+            print('File exists. Skipping Test.')
         else:
             ds, groundTruth = loadData(datasetName, featureSet)
 
@@ -94,7 +100,7 @@ if __name__ == '__main__':
                                       descriptorNames = '*', exclude = [],
                                       alpha = alpha, coveredVariance = coveredVar,
                                       useBoundaryDistance = True)
-            print confusion.results()
+            print(confusion.results())
 
             writeResult(filename, confusion)
 
@@ -107,7 +113,7 @@ if __name__ == '__main__':
         filename = resultsdir + basename + '_svm_%d_%s_%s_%.1f_%.1f' % (featureSet, svmtype, kernel, cexp, gammaexp)
 
         if os.path.exists(filename + '.result'):
-            print 'File exists. Skipping Test.'
+            print('File exists. Skipping Test.')
         else:
             ds, groundTruth = loadData(datasetName, featureSet)
 
@@ -115,7 +121,7 @@ if __name__ == '__main__':
             confusion = evaluateNfold(10, ds, groundTruth, train_SVM,
                                       descriptorNames = [ '*.mean', '*.var' ], exclude = ['*.spectral_contrast.mean'],
                                       svmtype = svmtype, kernel = kernel, c = 2**cexp, gamma = 2**gammaexp)
-            print confusion.results()
+            print(confusion.results())
 
             writeResult(filename, confusion)
 
@@ -125,17 +131,17 @@ if __name__ == '__main__':
         ds_rca = addRCA(ds, rcadim)
 
         alpha = float(sys.argv[6])
-        print '\nUsing α =', alpha
+        print('\nUsing α =', alpha)
 
         filename = resultsdir + basename + '_mixed_%d_%d_%.2f' % (featureSet, rcadim, alpha)
 
         if os.path.exists(filename + '.result'):
-            print 'File exists. Skipping Test.'
+            print('File exists. Skipping Test.')
         else:
             from classifier_1NN import train_1NN, train_1NN_mixed
             confusion = evaluateNfold(10, ds_rca, groundTruth, train_1NN_mixed,
                                       alpha, dropBestResult = False)
-            print confusion.results()
+            print(confusion.results())
 
             writeResult(filename, confusion)
 
@@ -152,13 +158,13 @@ if __name__ == '__main__':
         filename = resultsdir + basename + '_mixed_%d_%d_%s_%s_%.1f_%.1f' % (featureSet, rcadim, svmtype, kernel, cexp, gammaexp)
 
         if os.path.exists(filename + '.result'):
-            print 'File exists. Skipping Test.'
+            print('File exists. Skipping Test.')
         else:
             from classifier_SVM import train_SVM
             confusion = evaluateNfold(10, ds_rca, groundTruth, train_SVM,
                                       descriptorNames = [ '*.mean', '*.var', '*.value' ], exclude = ['*.spectral_contrast.mean'],
                                       svmtype = svmtype, kernel = kernel, c = 2**cexp, gamma = 2**gammaexp)
-            print confusion.results()
+            print(confusion.results())
 
             writeResult(filename, confusion)
             
@@ -170,21 +176,21 @@ if __name__ == '__main__':
         alpha = float(sys.argv[6])
         func1 = sys.argv[7]
         func2 = sys.argv[8]
-        print '\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2
+        print('\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2)
 
         filename = resultsdir + basename + '_mixed_%d_%d_%.2f_%s_%s' % (featureSet, rcadim, alpha, func1, func2)
 
         if os.path.exists(filename + '.result'):
-            print 'File exists. Skipping Test.'
+            print('File exists. Skipping Test.')
         else:
             from classifier_1NN import train_1NN_segments
             confusion = evaluateNfold(10, ds_rca, groundTruth, train_1NN_segments,
                                       alpha, func1, func2, dropBestResult = False)
-            print confusion.results()
+            print(confusion.results())
 
             writeResult(filename, confusion)
 
     else:
-        print 'ERROR: classifier needs to be one of: simca, svm, mixed'
+        print('ERROR: classifier needs to be one of: simca, svm, mixed')
         sys.exit(1)
 

@@ -20,11 +20,13 @@
 #trains SVMs based on binary training sets
 #and applies them to songs to predict emotions
 
+from builtins import str
+from builtins import object
 from gaia2 import *
 from songlib import *
 from classifier_SVM import *
 
-class emotionSVM:
+class emotionSVM(object):
     def __init__(self):
         self.happyTraining = DataSet()
         self.happyTraining.load('Happy.db')

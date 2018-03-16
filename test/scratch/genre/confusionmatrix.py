@@ -20,10 +20,12 @@
 
 # encoding: utf-8
 
+from builtins import str
+from builtins import object
 from collections import defaultdict
 
 
-class ConfusionMatrix:
+class ConfusionMatrix(object):
     
     def __init__(self):
         self.matrix = defaultdict(lambda: defaultdict(list))
@@ -104,7 +106,7 @@ class ConfusionMatrix:
             html += '<th>' + actual + '</th>'
             
             classInstances = 0
-            for predicted in self.matrix[actual].values():
+            for predicted in list(self.matrix[actual].values()):
                 classInstances += len(predicted)
                 
             proportion = 100.0 * classInstances / self.total()

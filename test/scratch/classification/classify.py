@@ -20,6 +20,8 @@
 
 
 
+from __future__ import print_function
+from builtins import str
 from gaia2 import *
 addImportPath('..')
 import testutils as utils
@@ -56,10 +58,10 @@ def loadDataSet():
     ds = DataSet()
     try:
         ds.load(join(datadir, 'dataset_small.db'))
-    except Exception, e:
-        print 'Error:', str(e)
-        print 'You should first run the unittests to generate the dataset_small.db file before'
-        print 'trying to run this example.'
+    except Exception as e:
+        print('Error:', str(e))
+        print('You should first run the unittests to generate the dataset_small.db file before')
+        print('trying to run this example.')
         sys.exit(1)
 
     genreMap = utils.getClassMapFromDirectory(join(datadir, 'dataset_small'))
@@ -83,8 +85,8 @@ def loadDortmundDataSet():
     try:
         MTGDB = os.environ['MTGDB_AUDIO']
     except KeyError:
-        print 'ERROR: the environment variable MTGDB_AUDIO is not defined...'
-        print '       You should set it to point to the mount point of the MTGDB audio share.'
+        print('ERROR: the environment variable MTGDB_AUDIO is not defined...')
+        print('       You should set it to point to the mount point of the MTGDB audio share.')
         sys.exit(1)
 
     ds = DataSet()
@@ -143,14 +145,14 @@ if __name__ == '__main__':
         ds = utils.addVarFromCov(ds, 'lowlevel.mfcc')
 
     else:
-        print 'Unknown dataset:', config['dataset']
+        print('Unknown dataset:', config['dataset'])
 
     groundTruth = utils.getGroundTruthFromLabel(ds, 'genre')
 
     # NN-classifier: euclidean distance on MFCC mean/var
     if 'baseline' in config['classifiers']:
-        print hbar
-        print 'Evaluating 1-NN genre classification using euclidean distance on MFCC.mean and MFCC.var:'
+        print(hbar)
+        print('Evaluating 1-NN genre classification using euclidean distance on MFCC.mean and MFCC.var:')
 
         '''
         classifier = train_1NN(ds, groundTruth,
@@ -166,38 +168,38 @@ if __name__ == '__main__':
                                    distance = 'euclidean',
                                    params = { 'descriptorNames': [ 'mfcc.mean', 'mfcc.var' ] },
                                    dropBestResult = False) # because we use training dataset != test dataset
-        print confusion.results()
+        print(confusion.results())
         open('/tmp/confusion_1NN_mfcc_meanvar.html', 'w').write(confusion.toHtml())
 
 
     # NN-classifier: KullbackLeibler distance on MFCC
     if 'KL-MFCC' in config['classifiers']:
-        print hbar
-        print 'Evaluating 1-NN genre classification using Kullback-Leibler distance on MFCC:'
+        print(hbar)
+        print('Evaluating 1-NN genre classification using Kullback-Leibler distance on MFCC:')
 
         confusion = evaluate_nfold(10, ds, groundTruth, train_1NN,
                                    distance = 'KullbackLeibler',
                                    params = { 'descriptorName': 'mfcc' },
                                    dropBestResult = False) # because we use training dataset != test dataset
 
-        print confusion.results()
+        print(confusion.results())
         open('/tmp/confusion_1NN_KL_mfcc.html', 'w').write(confusion.toHtml())
 
     # NN-classifier: mixture of KL-MFCC & Gauss-RCA
     if 'mixed' in config['classifiers']:
-        print hbar
-        print '''Evaluating 1-NN genre classification using a mixture of:
+        print(hbar)
+        print('''Evaluating 1-NN genre classification using a mixture of:
    α  * Kullback-Leibler distance on MFCC
-  1-α * euclidean distance on a gaussianized-RCA-ized dataset from %s''' % descnames(config, 'RCA')
+  1-α * euclidean distance on a gaussianized-RCA-ized dataset from %s''' % descnames(config, 'RCA'))
 
         ds_rca = addRCA(ds, 10, config)
 
         alpha = 0.0
         while alpha <= 1.0:
-            print '\nUsing α =', alpha
+            print('\nUsing α =', alpha)
             confusion = evaluate_nfold(10, ds_rca, groundTruth, train_1NN_mixed,
                                        alpha, dropBestResult = False)
-            print confusion.results()
+            print(confusion.results())
             open('/tmp/confusion_1NN_mixed_alpha%.01f.html' % alpha, 'w').write(confusion.toHtml())
 
             alpha += 0.1
@@ -205,22 +207,22 @@ if __name__ == '__main__':
 
     # SVM classifier
     if 'SVM' in config['classifiers']:
-        print hbar
-        print 'Evaluating SVM classifier on %s:' % descnames(config, 'SVM')
+        print(hbar)
+        print('Evaluating SVM classifier on %s:' % descnames(config, 'SVM'))
         confusion = evaluate_nfold(10, ds, groundTruth, train_SVM,
                                    config['SVM descriptors'], config['SVM descriptors except'])
-        print confusion.results()
+        print(confusion.results())
         open('/tmp/confusion_SVM.html', 'w').write(confusion.toHtml())
 
 
     # SIMCA classifier
     if 'SIMCA' in config['classifiers']:
-        print hbar
-        print 'Evaluating SIMCA classifier on %s:' % descnames(config, 'SIMCA')
+        print(hbar)
+        print('Evaluating SIMCA classifier on %s:' % descnames(config, 'SIMCA'))
         confusion = evaluate_nfold(10, ds, groundTruth, train_SIMCA,
                                    config['SIMCA descriptors'], config['SIMCA descriptors except'],
                                    useBoundaryDistance = True)
 
-        print confusion.results()
+        print(confusion.results())
 
         open('/tmp/confusion_SIMCA.html', 'w').write(confusion.toHtml())

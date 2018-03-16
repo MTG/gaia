@@ -19,6 +19,8 @@
 
 
 
+from __future__ import print_function
+from builtins import str
 from gaia2 import *
 cvar.verbose = True
 try:
@@ -27,11 +29,11 @@ try:
 except:
     searchSpaceBranch = False
 
-print 'Loading PCA dataset...'
+print('Loading PCA dataset...')
 ds = DataSet()
 ds.load('/var/data/data_nico/itunes/data_merged/itunes_ess0.5.norm.pca1M.db')
 
-print 'Loading reference dataset...'
+print('Loading reference dataset...')
 dsref = DataSet()
 dsref.load('/var/data/data_nico/itunes/data_merged/itunes_ess0.5.bpm_key.db')
 
@@ -76,10 +78,10 @@ queries = [ (p, 10, ''),
 
 
 for pid, nn, filt in queries:
-    print '*'* 100
-    print 'Performing query for %d NN with filter = \'%s\' (point.id = %s)' % (nn, filt, pid)
+    print('*'* 100)
+    print('Performing query for %d NN with filter = \'%s\' (point.id = %s)' % (nn, filt, pid))
     s = v.nnSearch(pid, nn, filt)
     for r in s:
         p = dsref.point(r[0])
-        print r, 'bpm=', p['tempotap_bpm'], ' - key =', p['tonal_key_key'], p['tonal_key_mode']
+        print(r, 'bpm=', p['tempotap_bpm'], ' - key =', p['tonal_key_key'], p['tonal_key_mode'])
 

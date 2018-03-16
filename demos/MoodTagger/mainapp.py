@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
 #
 # This file is part of Gaia
@@ -17,9 +18,15 @@
 
 # File: mainapp.py
 #Runs the main application
-from Tkinter import *
+from future import standard_library
+standard_library.install_aliases()
+from builtins import filter
+from builtins import str
+from builtins import range
+from builtins import object
+from tkinter import *
 from tkentrycomplete import *
-import tkFileDialog
+import tkinter.filedialog
 import win32com.client
 from nowplayingfeatures import *
 from winampnew import *
@@ -30,7 +37,7 @@ from emotionSVM import *
 
 
 
-class App:
+class App(object):
 
     def __init__(self, master):
         self.songLibrary = SongLibrary() #user's song library (should be 'songlibrary.db' by default
@@ -55,9 +62,9 @@ class App:
             self.tags=currtags.split(',') #retrieve the listed emotions(if any)
             #then predict which emotions are there
             self.predictTags = self.emo.predictEmotions(self.songLibrary.library.point((self.player.getCurrentTitle().encode('ascii', 'ignore'))))
-        print "Place: __init__:"
-        print "Current Tags: ", self.tags
-        print "Predicted Tags: ", self.predictTags
+        print("Place: __init__:")
+        print("Current Tags: ", self.tags)
+        print("Predicted Tags: ", self.predictTags)
         self.happyVar = StringVar() #variable for the "Happy" check box
         if("Happy" in self.tags): #if the user has already tagged the song as Peaceful
             self.happyVar.set("Happy")
@@ -127,7 +134,7 @@ class App:
 
         self.button = Button(master, text="Submit", command=self.submit).grid(row=6, sticky=W)
         self.quit = Button(master, text="Quit", command=root.destroy).grid(row=6, sticky=E)
-        directory = tkFileDialog.askdirectory()
+        directory = tkinter.filedialog.askdirectory()
         self.songLibrary.analyzeLib(directory)
 
         self.refresher=Label(master)
@@ -142,7 +149,7 @@ class App:
 
 
     def submit(self):
-        redTags = filter(self.isTag, self.tags) #the tags taken from the GUI (filtered by whether there is a "not" in the tag)
+        redTags = list(filter(self.isTag, self.tags)) #the tags taken from the GUI (filtered by whether there is a "not" in the tag)
         tagsToSend = redTags[0].get() #gets the first tag (this is done so that the correct number of commas are submitted in the next loop
         for i in range(1, len(redTags)):
             tagsToSend=tagsToSend+","+redTags[i].get() #go through the rest of the tags and add them on the the string
@@ -157,22 +164,22 @@ class App:
              #   if not self.userTags.contains(p):
               #      self.userTags.addPoint(p)
                #     self.userTags.save("usertags.db")
-        print "Tags to send: ", tagsToSend       
+        print("Tags to send: ", tagsToSend)       
         point = self.songLibrary.library.point(self.player.getCurrentTitle().encode('ascii', 'ignore'))
         self.songLibrary.setEmotions(point, tagsToSend)
-        print "Place: Submit"
-        print self.songLibrary.getEmotions(point)
+        print("Place: Submit")
+        print(self.songLibrary.getEmotions(point))
         for tag in redTags:
             rtag = str(tag.get())
             #tag the user checks that the system misses
             if(not rtag in self.predictTags):
-                print "Retraining: ", rtag
+                print("Retraining: ", rtag)
                 self.emo.retrainSVM(point, tag.get())
         for pTag in self.predictTags:
             #tag the system selects that the user removes
             if(not pTag in tagsToSend):
                 newTag = "not "+pTag
-                print "Retraining: ", newTag
+                print("Retraining: ", newTag)
                 self.emo.retrainSVM(point, newTag)
                 
 
@@ -183,12 +190,12 @@ class App:
         title = self.player.getCurrentTitle().encode('ascii', 'ignore')
         if(self.songLibrary.library.contains(title)):
             currtags = str(self.songLibrary.getEmotions(self.songLibrary.library.point(title)))
-            print currtags
+            print(currtags)
             tags=currtags.split(',')
             self.predictTags = self.emo.predictEmotions(self.songLibrary.library.point(title))
-            print "Place: refreshMenu"
-            print "Current Tags: ", tags
-            print "Predicted Tags: ", self.predictTags
+            print("Place: refreshMenu")
+            print("Current Tags: ", tags)
+            print("Predicted Tags: ", self.predictTags)
             if("Happy" in tags):
                 self.happyVar.set("Happy")
                 self.happycolor='grey'
@@ -234,8 +241,8 @@ class App:
             try:
                 self.songLibrary.addSong(file)
                 self.predictTags = self.emo.predictEmotions(self.songLibrary.library.point(title))
-                print "Place: refreshMenu (song not in library)"
-                print "PredictedTags: ", self.predictTags
+                print("Place: refreshMenu (song not in library)")
+                print("PredictedTags: ", self.predictTags)
                 if("Happy" in self.predictTags):
                     self.happyVar.set("Happy")
                     self.happycolor = 'red'
@@ -284,9 +291,9 @@ class App:
                 tags=currtags.split(',')
                 #predict emotions
                 self.predictTags = self.emo.predictEmotions(self.songLibrary.library.point((self.player.getCurrentTitle().encode('ascii', 'ignore'))))
-                print "Place: refreshWindow"
-                print "Current Tags: ", tags
-                print "Predicted Tags: ", self.predictTags
+                print("Place: refreshWindow")
+                print("Current Tags: ", tags)
+                print("Predicted Tags: ", self.predictTags)
                 #change display to reflect the current and predicted tags
                 if("Happy" in tags):
                     self.happyVar.set("Happy")

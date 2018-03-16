@@ -20,6 +20,8 @@
 
 # encoding: utf-8
 
+from builtins import str
+from builtins import range
 from gaia2 import RealDescriptor, transform, utils
 import glob
 from os.path import join, split, exists
@@ -83,7 +85,7 @@ def getGroundTruthFromLabel(ds, labelName):
     groundTruth = GroundTruth(labelName)
 
     for p in ds.points():
-        groundTruth[p.name()] = unicode(p.label(labelName))
+        groundTruth[p.name()] = str(p.label(labelName))
 
     return groundTruth
 

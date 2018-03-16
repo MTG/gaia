@@ -20,9 +20,10 @@
 
 
 
+from builtins import object
 import os.path
 
-class MtgdbPath:
+class MtgdbPath(object):
     def __init__(self, collection, essentiaVersion, audioFormat = '', mtgdbRoot = '/raid/audio'):
         self._mtgdbRoot = mtgdbRoot
         self._collection = collection

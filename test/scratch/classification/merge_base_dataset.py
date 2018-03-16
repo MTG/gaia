@@ -20,6 +20,10 @@
 
 
 
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from config import *
 import glob
 import os.path
@@ -134,7 +138,7 @@ def mergeDataSet(eqloud):
     datasetName = datasetdir + className + '_%s.db' % eqloud
 
     if os.path.exists(datasetName):
-        print 'Dataset already exists:', datasetName
+        print('Dataset already exists:', datasetName)
         return
 
     if className == 'genre_itms':
@@ -166,8 +170,8 @@ def mergeDataSet(eqloud):
     ds.save(datasetName)
 
     # write groundTruth as pickled file
-    import cPickle
-    cPickle.dump(groundTruth, open(datasetName + '.groundtruth', 'w'))
+    import pickle
+    pickle.dump(groundTruth, open(datasetName + '.groundtruth', 'w'))
 
 
 

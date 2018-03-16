@@ -19,6 +19,7 @@
 
 
 
+from __future__ import print_function
 from gaia2 import *
 import unittest
 import testdata
@@ -32,7 +33,7 @@ class TestMerge(unittest.TestCase):
         collection = yaml.load(open(testdata.TEST_DATABASE_FILES, 'r').read())
 
         # prepend 'data/' to the filenames
-        for pid, filename in collection.items():
+        for pid, filename in list(collection.items()):
             collection[pid] = 'data/' + filename
 
         cvar.verbose = False
@@ -67,10 +68,10 @@ class TestMerge(unittest.TestCase):
             os.remove(f)
 
         if fusion.returncode != 0:
-            print 'STDOUT' + '*'*100
-            print stdout
-            print 'STDERR' + '*'*100
-            print stderr
+            print('STDOUT' + '*'*100)
+            print(stdout)
+            print('STDERR' + '*'*100)
+            print(stderr)
 
         self.assertEqual(fusion.returncode, 0)
 

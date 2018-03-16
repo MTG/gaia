@@ -23,6 +23,8 @@
 # this file is only valid for the dataset_small.db file that is inside the
 # unittest/ directory. It can probably be easily adapted to any dataset, though.
 
+from __future__ import print_function
+from builtins import str
 from gaia2 import *
 addImportPath('..')
 import testutils as utils
@@ -46,10 +48,10 @@ def loadDataSet():
     ds = DataSet()
     try:
         ds.load(join(basedir, 'dataset_small.db'))
-    except Exception, e:
-        print 'Error:', str(e)
-        print 'You should first run the unittests to generate the dataset_small.db file before'
-        print 'trying to run this example.'
+    except Exception as e:
+        print('Error:', str(e))
+        print('You should first run the unittests to generate the dataset_small.db file before')
+        print('trying to run this example.')
         sys.exit(1)
 
     genreMap = utils.getClassMapFromDirectory(join(basedir, 'dataset_small'))
@@ -57,7 +59,7 @@ def loadDataSet():
     # transform the dataset to add the genre information
     ds = transform(ds, 'addfield', { 'string': 'genre' })
 
-    for pid, genre in genreMap.items():
+    for pid, genre in list(genreMap.items()):
         ds.point(pid).setLabel('genre', genre)
 
     # we're in a testing environment, prepare the dataset by cleaning it a bit more
@@ -83,27 +85,27 @@ def testMFCC():
     groundTruth = utils.getGroundTruthFromLabel(ds, 'genre')
 
 
-    print 'Evaluating 1-NN genre classification using euclidean distance on mfcc.mean and mfcc.var:'
+    print('Evaluating 1-NN genre classification using euclidean distance on mfcc.mean and mfcc.var:')
     confusion = nnclassifier.evaluate_1NN(ds, groundTruth,
                                           'euclidean',
                                           { 'descriptorNames': [ 'mfcc.mean', 'mfcc.var' ] })
-    print confusion.results()
+    print(confusion.results())
 
     cmfile = join(tempdir, 'confusion_meanvar.html')
     open(cmfile, 'w').write(confusion.toHtml())
-    print '(wrote confusion matrix to %s)' % cmfile
-    print
+    print('(wrote confusion matrix to %s)' % cmfile)
+    print()
 
 
-    print 'Evaluating 1-NN genre classification using Kullback-Leibler distance on mfcc:'
+    print('Evaluating 1-NN genre classification using Kullback-Leibler distance on mfcc:')
     confusion = nnclassifier.evaluate_1NN(ds, groundTruth,
                                           'kullbackleibler',
                                           { 'descriptorName': 'mfcc' })
-    print confusion.results()
+    print(confusion.results())
     cmfile = join(tempdir, 'confusion_singlegaussian.html')
     open(cmfile, 'w').write(confusion.toHtml())
-    print '(wrote confusion matrix to %s)' % cmfile
-    print
+    print('(wrote confusion matrix to %s)' % cmfile)
+    print()
 
 
 def testClassify():
@@ -131,7 +133,7 @@ def testClassify():
     results = []
     alpha = 0.0
     while alpha <= 1.0:
-        print 'alpha =', alpha
+        print('alpha =', alpha)
         confusion = evaluate_1NN(ds, groundTruth, 'linearcombination',
                                  { 'mfcc_kl': { 'name': 'kullbackleibler',
                                                 'weight': alpha,
@@ -143,7 +145,7 @@ def testClassify():
                                    })
         good = confusion.correct()
         total = confusion.total()
-        print 'correctly classified:', good, 'out of', total, '(%d%%)' % int(100*good/total)
+        print('correctly classified:', good, 'out of', total, '(%d%%)' % int(100*good/total))
         results.append(confusion.correct())
         alpha += 0.1
 
@@ -158,23 +160,23 @@ def testClassify():
 
 
 def example1():
-    print '-'*100
-    print '    Example 1'
-    print
-    print 'Comparing results of genre classification using:'
-    print ' - MFCC, mean & var, euclidean distance'
-    print ' - MFCC single gaussian, symmetric Kullback-Leibler divergence distance'
-    print
+    print('-'*100)
+    print('    Example 1')
+    print()
+    print('Comparing results of genre classification using:')
+    print(' - MFCC, mean & var, euclidean distance')
+    print(' - MFCC single gaussian, symmetric Kullback-Leibler divergence distance')
+    print()
 
     testMFCC()
 
 
 def example2():
-    print '-'*100
-    print '    Example 2'
-    print
-    print 'Comparing results of genre classification using KL distance, gaussianize + RCA + euclidean distance,'
-    print 'and mixtures of both using a parameter alpha: alpha*KL + (1-alpha)*RCA:'
+    print('-'*100)
+    print('    Example 2')
+    print()
+    print('Comparing results of genre classification using KL distance, gaussianize + RCA + euclidean distance,')
+    print('and mixtures of both using a parameter alpha: alpha*KL + (1-alpha)*RCA:')
     testClassify()
 
 

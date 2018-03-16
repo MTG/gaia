@@ -20,6 +20,7 @@
 
 
 
+from __future__ import print_function
 from config import *
 from common import *
 import os.path
@@ -80,9 +81,9 @@ def readResults():
             results[c] = float(open(filename).read())
         except:
             pass
-            print 'Could not find result file for', c
+            print('Could not find result file for', c)
 
-    print 'results read'
+    print('results read')
     return results
 
 
@@ -94,4 +95,4 @@ def missing():
         if not os.path.exists(f):
             missing += 1
 
-    print 'Missing: %d out of %d' % (missing, len(filenames))
+    print('Missing: %d out of %d' % (missing, len(filenames)))

@@ -27,6 +27,7 @@ for 3 different setups:
  - Euclidean distance on MFCC.mean
  - Euclidean distance on MFCC.mean and MFCC.var
 '''
+from __future__ import print_function
 
 from gaia2 import *
 from numpy import *
@@ -52,7 +53,7 @@ def plot_matrix(dist_matrix):
     for row in dist_matrix:
         most_similar = array(row[:i]+row[i+1:]).argmin()
         if most_similar >= i: most_similar += 1
-        print i, 'is most similar to', most_similar
+        print(i, 'is most similar to', most_similar)
         i += 1
     
     imshow(dist_matrix, interpolation='nearest')
@@ -94,7 +95,7 @@ gray()
 
 
 # Plot for Kullback-Leibler distance
-print '\ncomputing distance matrix with Kullback-Leibler distance'
+print('\ncomputing distance matrix with Kullback-Leibler distance')
 
 kl_dist = MetricFactory.create('kullbackleibler', dataset.layout(),
                                { 'descriptorName': 'mfcc' })
@@ -106,7 +107,7 @@ plot_matrix(dist_matrix)
 
 
 # Plot for Euclidean distance on MFCC.mean
-print '\ncomputing distance matrix with euclidean distance on mfcc.mean'
+print('\ncomputing distance matrix with euclidean distance on mfcc.mean')
 
 euc_dist = MetricFactory.create('euclidean', dataset.layout(),
                                 { 'descriptorNames': [ 'mfcc.mean' ] })
@@ -118,7 +119,7 @@ plot_matrix(dist_matrix)
 
 
 # Plot for Euclidean distance on MFCC.mean and MFCC.var
-print '\ncomputing distance matrix with euclidean distance on mfcc.mean and mfcc.var'
+print('\ncomputing distance matrix with euclidean distance on mfcc.mean and mfcc.var')
 
 euc_dist = MetricFactory.create('euclidean', dataset.layout(),
                                 { 'descriptorNames': [ 'mfcc.mean', 'mfcc.var' ] })

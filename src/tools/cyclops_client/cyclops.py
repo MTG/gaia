@@ -45,7 +45,7 @@ from future.utils import raise_
 from urllib.parse import urlparse, urlencode
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
-
+from six.move import http_client
 import time
 import gaia2.fastyaml as yaml
 
@@ -76,7 +76,7 @@ class YamlRPCMethod(object):
 
 
         # we don't want the '+'-quoting
-        params = urllib.parse.urlencode({ 'q': q }).replace('+', ' ')
+        params = urlencode({ 'q': q }).replace('+', ' ')
 
         headers = { 'Content-type': 'application/x-www-form-urlencoded',
                     'Accept': 'text/plain'

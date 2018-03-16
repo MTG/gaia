@@ -25,6 +25,7 @@ wscript_*
 waflib-*
 test.txt
 gaia.txt
+*.py.bak
 
 
 # Qt Creator prorject files for Cyclops
