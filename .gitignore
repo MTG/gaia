@@ -28,6 +28,16 @@ gaia.txt
 *.py.bak
 src/tools/Build-Cyclops*
 src/tools/cyclops_server_*
+*.ipynb
+*.o
+*.pro
+*.pro.*
+Build-*
+moc_*
+*.pro.user
+Cyclops-*
+Makefile
+build-*
 
 
 # Qt Creator prorject files for Cyclops

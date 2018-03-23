@@ -15,9 +15,9 @@
 # PARTICULAR PURPOSE.
 #
 # </copyright>
-
 from __future__ import print_function
 import sys,  os, os.path
+
 gaia_qt5 = False
 
 def options(opt):
@@ -73,11 +73,12 @@ def build_library(bld):
         includes = [ '.', 'metrics', '3rdparty' ]
     )
     
-#def write_pcfile(task):
-#   open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
-#
-#   bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
-#   bld.add_group()
+    def write_pcfile(task):
+        open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
+
+    bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
+    bld.add_group()
+    
 def build_install(bld):
 
     if bld.env['WITH_STLFACADE']: 
@@ -156,43 +157,46 @@ def build_tools(bld):
             print ('Building Cyclops1')
             # cyclops "normal" server
             bld(
-                features = 'qt5 cxx cxxprogram cyclops',
-                source = '''
-                tools/cyclops_server/cyclopsserver.cpp
-                tools/cyclops_server/cyclopsproxy.cpp
-                tools/cyclops_server/cyclops.cpp
-                tools/cyclops_server/yamlrpcserver.cpp
-                ''',
-                moc = '''
-                tools/cyclops_server/cyclops.h
-                tools/cyclops_server/cyclopsmaster.h
-                tools/cyclops_server/yamlrpcserver.h
-                ''',
+                features = 'qt5 cxx cxxprogram',
+                source = \
+                'tools/cyclops_server/cyclopsserver.cpp '+ \
+                'tools/cyclops_server/cyclopsproxy.cpp ' + \
+                'tools/cyclops_server/cyclops.cpp ' + \
+                'tools/cyclops_server/http_headers.cpp ' + \
+                'tools/cyclops_server/qhttp.cpp ' + \
+                'tools/cyclops_server/qhttpauthenticator.cpp ' + \
+                'tools/cyclops_server/yamlrpcserver.cpp', 
+                moc = \
+                'tools/cyclops_server/cyclops.h '+ \
+                'tools/cyclops_server/qhttp.h '+\
+                'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclops',
                 includes = [ '.', 'metrics', '3rdparty' ],
-                defines = ['GAIA_QT5'], 
-                uselib = 'QT5CORE QT5NETWORK', 
+                defines = 'GAIA_QT5 WAF', 
+                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS', 
                 use = ['gaia2'] + bld.env['USELIB'])
 
             # cyclops "master" server
             bld(
-                features = 'qt5 cxx cxxprogram cyclops',
-                source = '''
-                tools/cyclops_server/cyclopsmasterserver.cpp
-                tools/cyclops_server/cyclopsproxy.cpp
-                tools/cyclops_server/cyclopsmaster.cpp
-                tools/cyclops_server/cyclops.cpp
-                tools/cyclops_server/yamlrpcserver.cpp
-                ''',
-                moc = '''
-                tools/cyclops_server/cyclops.h
-                tools/cyclops_server/cyclopsmaster.h
-                tools/cyclops_server/yamlrpcserver.h
-                ''',
+                features = 'qt5 cxx cxxprogram',
+                source =  \
+                'tools/cyclops_server/cyclopsmasterserver.cpp '+ \
+                'tools/cyclops_server/cyclopsproxy.cpp ' + \
+                'tools/cyclops_server/cyclopsmaster.cpp ' + \
+                'tools/cyclops_server/cyclops.cpp ' + \
+                'tools/cyclops_server/http_headers.cpp ' + \
+                'tools/cyclops_server/qhttp.cpp ' + \
+                'tools/cyclops_server/qhttpauthenticator.cpp ' + \
+                'tools/cyclops_server/yamlrpcserver.cpp', 
+                moc = \
+                'tools/cyclops_server/cyclops.h '+  \
+                'tools/cyclops_server/cyclopsmaster.h '+  \
+                'tools/cyclops_server/qhttp.h '+\
+                'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-                defines = ['GAIA_QT5'], 
-                uselib = 'QT5CORE QT5NETWORK', 
+                defines = 'GAIA_QT5 WAF', 
+                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS', 
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
@@ -209,13 +213,9 @@ def build_tools(bld):
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
-                moc = '''
-                tools/cyclops_server/cyclops.h
-                tools/cyclops_server/cyclopsmaster.h
-                tools/cyclops_server/yamlrpcserver.h
-                ''',
                 target = 'tools/cyclops',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                defines = 'WAF', 
                 uselib = 'QTCORE QTNETWORK', 
                 use = ['gaia2'] )
 
@@ -229,13 +229,9 @@ def build_tools(bld):
                 tools/cyclops_server/cyclops.cpp
                 tools/cyclops_server/yamlrpcserver.cpp
                 ''',
-                moc = '''
-                tools/cyclops_server/cyclops.h
-                tools/cyclops_server/cyclopsmaster.h
-                tools/cyclops_server/yamlrpcserver.h
-                ''',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                defines = 'WAF', 
                 uselib = 'QTCORE QTNETWORK', 
                 use = ['gaia2']) 
             
@@ -253,18 +249,61 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.recurse('bindings')
 
+   
     build_install(bld)
-## to have qt5 include files loaded automatically
 
+from waflib.Task import ASK_LATER
+from waflib.Tools.cxx import cxx
+def runnable_status(self):
+	ret = super(cxx, self).runnable_status()
+	self.more_tasks = []
+
+	# use a cache to avoid creating the same tasks
+	# for example, truc.cpp might be compiled twice
+	try:
+		shared = self.generator.bld.shared_tasks
+	except AttributeError:
+		shared = self.generator.bld.shared_tasks = {}
+
+	if ret != ASK_LATER:
+		for x in self.generator.bld.node_deps[self.uid()]:
+			node = x.parent.get_src().find_resource(x.name.replace('.h', '.cpp'))
+			if node:
+				try:
+					tsk = shared[node]
+				except:
+					tsk = shared[node] = self.generator.cxx_hook(node)
+
+					self.more_tasks.append(tsk)
+
+
+				# add the node created to the link task outputs
+				try:
+					link = self.generator.link_task
+				except AttributeError:
+					pass
+				else:
+					if not tsk.outputs[0] in link.inputs:
+						link.inputs.append(tsk.outputs[0])
+						link.set_run_after(tsk)
+
+						# any change in the order of the input nodes may cause a recompilation
+						link.inputs.sort(key=lambda x: x.abspath())
+
+		# if you want to modify some flags
+		# you *must* have the task recompute the signature
+		self.env.append_value('CXXFLAGS', '-O2')
+		delattr(self, 'cache_sig')
+		return super(cxx, self).runnable_status()
+"""
 # use the following to add the include paths for generated *.moc files automatically
-from waflib.TaskGen import feature, before, after
-@feature('cxx cyclops')
-@after('process_source')
-@before('apply_incpaths')
+from waflib.TaskGen import feature, before_method, after_method
+@feature('cxx')
+@after_method('process_source')
+@before_method('apply_incpaths')
 def add_includes_paths(self):
     incs = set(self.to_list(getattr(self, 'includes', '')))
     for x in self.compiled_tasks:
         incs.add(x.inputs[0].parent.path_from(self.path))
-    self.includes = sorted(incs)
-
-
+        self.includes = sorted(incs)
+"""

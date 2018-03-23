@@ -42,7 +42,8 @@ gaia_qt5 = False
 
 def options(opt):
     global gaia_qt5
-    opt.load('compiler_cxx compiler_c qt5 qt4')
+    opt.load('compiler_cxx compiler_c qt5')
+    opt.load('slow_qt4', tooldir='.')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -147,7 +148,10 @@ def configure(conf):
     # optional dependency: gaia_qt5, if asked for on linux platform
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['WITH_GAIA_QT5'] = gaia_qt5
-        conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
+        if conf.options.cyclops:
+             conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'QT5NETWORK','QT5WIDGETS','YAML' ]
+        else:
+            conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
     else :
         conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
 
@@ -204,12 +208,14 @@ def configure(conf):
     #if sys.version_info[1] > 4:
     #    # option not available in centos' gcc...
     #    conf.env['CXXFLAGS'] += [  '-Wno-unused-result' ]
-    conf.load('compiler_cxx compiler_c')
+    #conf.load('compiler_cxx compiler_c')
     
     if sys.platform.startswith('linux') and gaia_qt5: 
-        conf.load('qt5')
+        conf.load('compiler_cxx compiler_c qt5')
     else:
+        conf.load('compiler_cxx compiler_c')
         conf.load('qt4')
+        conf.load('slow_qt4',tooldir='.')
     
     conf.recurse('src')
 
