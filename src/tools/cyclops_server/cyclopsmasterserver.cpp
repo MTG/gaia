@@ -17,13 +17,14 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+
+#ifndef CYCLOPS_NORMAL
 #include <QCoreApplication>
 #include <QNetworkAccessManager>
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
 
-//#ifndef CYCLOPS_NORMAL
 FILE* logFile;
 
 void logToFile(QtMsgType type, const char *msg) {
@@ -56,4 +57,4 @@ int main(int argc, char* argv[]) {
 
   return app.exec();
 }
-//#endif
+#endif

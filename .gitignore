@@ -26,6 +26,8 @@ waflib-*
 test.txt
 gaia.txt
 *.py.bak
+src/tools/Build-Cyclops*
+src/tools/cyclops_server_*
 
 
 # Qt Creator prorject files for Cyclops

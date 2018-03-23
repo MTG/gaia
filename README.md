@@ -16,7 +16,7 @@ Dependencies:
   * Qt >= 4.5
   * libYAML >= 0.1.1
   * Python >= 2.4
-  * SWIG >= 3.0.10
+  * SWIG != 3.0.8
   * waf >= 2.0.6
   * Eigen 3.3.4 patched version (included in source)
 
@@ -26,7 +26,12 @@ INSTALL
 
 ## Linux
 
+- Currently working on issues with `vtable` and `swig` related to `./waf` please don't use.  `--with-cyclops`now compiles for both `qt4`and `qt5`.  Various build options are being tested.  Build with fail as `-with-cyclops`requires `defines = 'WAF'`.
+
+   ​
+
 - Install dependencies (Ubuntu/Debian)
+
    ```
    $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
    ```
@@ -51,7 +56,6 @@ INSTALL
    $ cd waf
    $ ./waf-light --help
    $ ./waf-light configure --tools=swig,qt5,qt4 build
-   $ ./waf
    $ sudo ./waf install
    $ export WAFDIR=~/waf
    ```

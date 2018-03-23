@@ -475,4 +475,6 @@ void Cyclops::setupFromYaml(const yaml::Mapping& config) {
   }
 }
 
-#include <cyclops.moc>
+#ifdef WAF
+#include "cyclops.moc"
+#endif

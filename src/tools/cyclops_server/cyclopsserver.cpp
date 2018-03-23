@@ -17,6 +17,7 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+#ifndef CYCLOPS_MASTER
 #include <QCoreApplication>
 #include <QFile>
 #include "yamlrpcserver.h"
@@ -94,3 +95,4 @@ int main(int argc, char* argv[]) {
 
   return app.exec();
 }
+#endif

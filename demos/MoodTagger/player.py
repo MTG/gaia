@@ -85,11 +85,3 @@ class Player(object):
             return position
         else:
             return 0
-
-
-
-    
-
-
-
-    

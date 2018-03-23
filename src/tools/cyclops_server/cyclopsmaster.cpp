@@ -27,7 +27,7 @@
 #ifndef GAIA_QT5
 #include <QHttp>
 #else
-#include <QNetworkAccessManager>
+#include "qhttp.h"
 #endif
 #include <QHostInfo>
 #include "yamlrpcserver.h"
@@ -89,32 +89,11 @@ void CyclopsMaster::setupClients(const QString& configFilename) {
 }
 
 int CyclopsMaster::sendSlaveRequest(const QPair<QHostAddress, int>& slave, const yaml::Mapping& request) {
-#ifndef GAIA_QT5
   QHttp* slaveRequest = new QHttp(slave.first.toString(), slave.second, this);
+
   // connect the reply from this slave to the replyFromSlave method
   connect(slaveRequest, SIGNAL(requestFinished(int,bool)),
           this, SLOT(replyFromSlave(int,bool)));
-#else
-  QNetworkAccessManager *slaveRequest = new QNetworkAccessManager(this);
-
-  connect(slaveRequest, SIGNAL(requestFinished(QNetworkReply*)),
-              this, SLOT(replyFromSlave(QNetworkReply*)));
-
-  slaveRequest->get(QNetworkRequest(slave.first.toString(), slave.second)));
-  QNetworkRequest networkRequest(serviceUrl);
-  /*
-   * // Call the webservice
-QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
-connect(networkManager, SIGNAL(finished(QNetworkReply*)),
-        SLOT(onPostAnswer(QNetworkReply*)));
-
-QNetworkRequest networkRequest(serviceUrl);
-networkRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
-
-networkManager->post(networkRequest,postData);
-   */
-
-#endif
 
   QBuffer* replyData = new QBuffer();
   int connid = slaveRequest->post("/", QByteArray("q=") + yaml::dump(request), replyData);
@@ -130,6 +109,14 @@ networkManager->post(networkRequest,postData);
 
 void CyclopsMaster::readClient() {
   QTcpSocket* socket = (QTcpSocket*)sender();
+  /*
+  socket = new QTcpSocket(NULL);
+  socket->setSocketDescriptor(sock_ptr);
+  connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::DirectConnection);
+  connect(socket, SIGNAL(readyRead()), this, SLOT(readData()), Qt::DirectConnection);
+  connect(socket, SIGNAL(disconnected()), this, SLOT(quit()), Qt::DirectConnection);
+  const QHostAddress &connected = socket->peerAddress();
+  */
 
   yaml::Mapping reply;
   reply.insert("id", "gloubi-boulga");
@@ -164,6 +151,8 @@ void CyclopsMaster::readClient() {
 
 
     // forward request to all slaves, changing the message if required (ie: load dataset)
+    //connect(tcpSocket, &QIODevice::readyRead, this, &Client::readFortune);
+    //connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
     distributeClientRequest(socket, q);
 
   }
@@ -747,4 +736,4 @@ void CyclopsMaster::setup(const QString& filename) {
 
 
 
-#include <cyclopsmaster.moc>
+#include "cyclopsmaster.moc"

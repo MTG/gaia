@@ -15,7 +15,6 @@
 # PARTICULAR PURPOSE.
 #
 # </copyright>
-
 from __future__ import print_function
 import sys
 
@@ -37,9 +36,9 @@ def configure(conf):
     conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
     if conf.env['WITH_PYTHON_BINDINGS']:
         if gaia_qt5:
-            conf.load('swig qt5 python')
+            conf.load('swig python qt5')
         else:
-            conf.load('swig qt4 python')
+            conf.load('swig python qt4')
 
         if type(conf.env.SWIG) == str:
             conf.env.SWIG = [ conf.env.SWIG ]
@@ -111,3 +110,46 @@ def build(bld):
     if bld.env['WITH_CYCLOPS']:
         bld.install_as('${PYTHONDIR}/gaia2/cyclops/__init__.py', '../tools/cyclops_client/cyclops.py')
 
+from waflib.Task import ASK_LATER
+from waflib.Tools.cxx import cxx
+def runnable_status(self):
+	ret = super(cxx, self).runnable_status()
+	self.more_tasks = []
+
+	# use a cache to avoid creating the same tasks
+	# for example, truc.cpp might be compiled twice
+	try:
+		shared = self.generator.bld.shared_tasks
+	except AttributeError:
+		shared = self.generator.bld.shared_tasks = {}
+
+	if ret != ASK_LATER:
+		for x in self.generator.bld.node_deps[self.uid()]:
+			node = x.parent.get_src().find_resource(x.name.replace('.h', '.cpp'))
+			if node:
+				try:
+					tsk = shared[node]
+				except:
+					tsk = shared[node] = self.generator.cxx_hook(node)
+
+					self.more_tasks.append(tsk)
+
+
+				# add the node created to the link task outputs
+				try:
+					link = self.generator.link_task
+				except AttributeError:
+					pass
+				else:
+					if not tsk.outputs[0] in link.inputs:
+						link.inputs.append(tsk.outputs[0])
+						link.set_run_after(tsk)
+
+						# any change in the order of the input nodes may cause a recompilation
+						link.inputs.sort(key=lambda x: x.abspath())
+
+		# if you want to modify some flags
+		# you *must* have the task recompute the signature
+		self.env.append_value('CXXFLAGS', '-O2')
+		delattr(self, 'cache_sig')
+		return super(cxx, self).runnable_status()

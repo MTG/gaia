@@ -23,6 +23,7 @@
 #include <QHttpRequestHeader>
 #else
 #include <QNetworkAccessManager>
+#include "http_headers.h"
 #endif
 #include <QUrl>
 #include <QDateTime>
@@ -33,28 +34,6 @@
 #include "../../utils.h"
 using namespace gaia2;
 
-/*
- * QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-connect(manager, SIGNAL(finished(QNetworkReply*)),
-        this, SLOT(replyFinished(QNetworkReply*)));
-
-manager->get(QNetworkRequest(QUrl("http://qt-project.org")));
-**********************************************
-**********************************************
-**********************************************
-QNetworkRequest request;
-request.setUrl(QUrl("http://qt-project.org"));
-request.setRawHeader("User-Agent", "MyOwnBrowser 1.0");
-
-QNetworkReply *reply = manager->get(request);
-connect(reply, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-        this, SLOT(slotError(QNetworkReply::NetworkError)));
-connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
-        this, SLOT(slotSslErrors(QList<QSslError>)));
-
- */
-
 inline QByteArray sid(const QTcpSocket* socket) {
   return QString("%1:%2 :").arg(socket->peerAddress().toString()).arg(int(socket->peerPort())).toUtf8();
 }
@@ -62,7 +41,6 @@ inline QByteArray sid(const QTcpSocket* socket) {
 int YamlRPCServer::numberConnectedClients() const {
   return _socketIDs.size();
 }
-
 
 YamlRPCServer::YamlRPCServer(quint16 port, YamlProxy* proxy) : QTcpServer(), _proxy(proxy) {
   // only listen to a port if given a valid port, otherwise wait to be told explicitly
@@ -91,7 +69,6 @@ void YamlRPCServer::incomingConnection(int socket) {
   _socketIDs.insert(s, sid(s));
   clog() << _socketIDs.value(s).constData() << "New connection";
 }
-
 
 QByteArray readHTTPRequest(QTcpSocket* socket) {
   bool done = false;
@@ -255,5 +232,6 @@ void YamlRPCServer::discardClient() {
   //qDebug() << "clients connected: " << numberConnectedClients();
 }
 
-
-#include <yamlrpcserver.moc>
+#ifdef WAF
+#include "yamlrpcserver.moc"
+#endif

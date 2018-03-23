@@ -29,7 +29,9 @@ GAIA_DEFINE_EXCEPTION(NotImplementedError);
 GAIA_DEFINE_EXCEPTION(InvalidParams);
 
 class YamlProxy : public QObject {
+#ifdef WAF
 Q_OBJECT
+#endif
  public:
   virtual gaia2::yaml::Node process(const gaia2::yaml::Mapping& query) = 0;
   virtual ~YamlProxy() {};
