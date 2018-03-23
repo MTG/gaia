@@ -38,6 +38,7 @@ moc_*
 Cyclops-*
 Makefile
 build-*
+.ipynb*
 
 
 # Qt Creator prorject files for Cyclops
