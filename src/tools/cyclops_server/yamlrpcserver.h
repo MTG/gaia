@@ -60,7 +60,9 @@ gaia2::yaml::Mapping readYamlRPCRequest(QTcpSocket* socket);
 
 
 class YamlRPCServer : public QTcpServer {
+#ifdef WAF
 Q_OBJECT
+#endif
 
  public:
 

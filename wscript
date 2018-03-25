@@ -229,7 +229,7 @@ def configure(conf):
 
     if sys.platform.startswith('linux') and gaia_qt5:
         opts = { 'prefix': prefix,
-            'qtlibdir': conf.env['USELIB'],
+            'qtlibdir': conf.env['USELIB']  or '/usr/lib',
             'qtincludedir': '-I' + \
                 ' -I'.join(conf.env['INCLUDES_QT5CORE']) +
                 ' -I'.join(conf.env['INCLUDES_QT5NETWORK']),

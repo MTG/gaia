@@ -22,7 +22,6 @@
 #ifndef GAIA_QT5
 #include <QHttpRequestHeader>
 #else
-#include <QNetworkAccessManager>
 #include "http_headers.h"
 #endif
 #include <QUrl>

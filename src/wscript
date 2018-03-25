@@ -54,6 +54,9 @@ def install_tree(bld, dst, src):
             bld.install_files(os.path.join(dst, relroot),
                               os.path.join(root, f))
 
+def write_pcfile(bld):
+    open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
+
 def build_library(bld):
     sources =  bld.path.ant_glob('*.cpp')   
     sources += bld.path.ant_glob('algorithms/*.cpp')
@@ -73,11 +76,7 @@ def build_library(bld):
         includes = [ '.', 'metrics', '3rdparty' ]
     )
     
-    def write_pcfile(task):
-        open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
-
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
-    bld.add_group()
     
 def build_install(bld):
 
@@ -96,7 +95,7 @@ def build_install(bld):
                                                               'parser/parsertypes.h',
                                                               'parser/grammar.h' ])
     
-    # also install all Eigen headers
+    # also install all Eigen headers.  this may be refined later to exclude those not required.
     import os
     os.chdir('src')
     install_tree(bld, '${PREFIX}/include/gaia2/3rdparty/Eigen', '3rdparty/Eigen')
@@ -157,7 +156,7 @@ def build_tools(bld):
             print ('Building Cyclops1')
             # cyclops "normal" server
             bld(
-                features = 'qt5 cxx cxxprogram',
+                features = 'qt5 cxx cxxprogram cyclops',
                 source = \
                 'tools/cyclops_server/cyclopsserver.cpp '+ \
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
@@ -178,7 +177,7 @@ def build_tools(bld):
 
             # cyclops "master" server
             bld(
-                features = 'qt5 cxx cxxprogram',
+                features = 'qt5 cxx cxxprogram cyclops',
                 source =  \
                 'tools/cyclops_server/cyclopsmasterserver.cpp '+ \
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
@@ -206,7 +205,7 @@ def build_tools(bld):
         if bld.env['WITH_CYCLOPS']:
             # cyclops "normal" server can use cflags = '-DGAIA_QT5'
             bld(
-                features = 'qt4 cxx cxxprogram',
+                features = 'qt4 cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -221,7 +220,7 @@ def build_tools(bld):
 
             # cyclops "master" server
             bld(
-                features = 'qt4 cxx cxxprogram',
+                features = 'qt4 cxx cxxprogram cyclops',
                 source = '''
                 tools/cyclops_server/cyclopsmasterserver.cpp
                 tools/cyclops_server/cyclopsproxy.cpp
@@ -238,67 +237,28 @@ def build_tools(bld):
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
             bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=755)
-    
+
+def build_swig(bld):  
+    if bld.env['WITH_PYTHON_BINDINGS']:
+        bld.recurse('bindings') 
+
+from waflib import Utils, Build
 def build(bld):
+    #task_test_b.set_run_after(task_test_b)
+    #bld.post_mode = Build.POST_LAZY
+
     build_library(bld)
     build_tools(bld)
+    build_swig(bld)
 
     if bld.env['WITH_TESTS']:
         bld.recurse('test')
-
-    if bld.env['WITH_PYTHON_BINDINGS']:
-        bld.recurse('bindings')
-
    
     build_install(bld)
 
-from waflib.Task import ASK_LATER
-from waflib.Tools.cxx import cxx
-def runnable_status(self):
-	ret = super(cxx, self).runnable_status()
-	self.more_tasks = []
-
-	# use a cache to avoid creating the same tasks
-	# for example, truc.cpp might be compiled twice
-	try:
-		shared = self.generator.bld.shared_tasks
-	except AttributeError:
-		shared = self.generator.bld.shared_tasks = {}
-
-	if ret != ASK_LATER:
-		for x in self.generator.bld.node_deps[self.uid()]:
-			node = x.parent.get_src().find_resource(x.name.replace('.h', '.cpp'))
-			if node:
-				try:
-					tsk = shared[node]
-				except:
-					tsk = shared[node] = self.generator.cxx_hook(node)
-
-					self.more_tasks.append(tsk)
-
-
-				# add the node created to the link task outputs
-				try:
-					link = self.generator.link_task
-				except AttributeError:
-					pass
-				else:
-					if not tsk.outputs[0] in link.inputs:
-						link.inputs.append(tsk.outputs[0])
-						link.set_run_after(tsk)
-
-						# any change in the order of the input nodes may cause a recompilation
-						link.inputs.sort(key=lambda x: x.abspath())
-
-		# if you want to modify some flags
-		# you *must* have the task recompute the signature
-		self.env.append_value('CXXFLAGS', '-O2')
-		delattr(self, 'cache_sig')
-		return super(cxx, self).runnable_status()
-"""
 # use the following to add the include paths for generated *.moc files automatically
 from waflib.TaskGen import feature, before_method, after_method
-@feature('cxx')
+@feature('cyclops')
 @after_method('process_source')
 @before_method('apply_incpaths')
 def add_includes_paths(self):
@@ -306,4 +266,3 @@ def add_includes_paths(self):
     for x in self.compiled_tasks:
         incs.add(x.inputs[0].parent.path_from(self.path))
         self.includes = sorted(incs)
-"""
