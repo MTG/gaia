@@ -43,7 +43,7 @@ gaia_qt5 = False
 def options(opt):
     global gaia_qt5
     opt.load('compiler_cxx compiler_c qt5')
-    opt.load('slow_qt4', tooldir='.')
+    #opt.load('slow_qt4', tooldir='.')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -149,7 +149,7 @@ def configure(conf):
     if sys.platform.startswith('linux') and gaia_qt5:
         conf.env['WITH_GAIA_QT5'] = gaia_qt5
         if conf.options.cyclops:
-             conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'QT5NETWORK','QT5WIDGETS','YAML' ]
+            conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'QT5NETWORK','QT5WIDGETS','YAML' ]
         else:
             conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
     else :
@@ -215,7 +215,7 @@ def configure(conf):
     else:
         conf.load('compiler_cxx compiler_c')
         conf.load('qt4')
-        conf.load('slow_qt4',tooldir='.')
+        #conf.load('slow_qt4',tooldir='.')
     
     conf.recurse('src')
 

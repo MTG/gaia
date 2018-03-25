@@ -34,7 +34,7 @@ def options(opt):
 
 def configure(conf):
     global gaia_qt5
-    gaia_qt5 = conf.options.gaia_qt5
+    gaia_qt5 = conf.env['WITH_GAIA_QT5']
     conf.env['WITH_STLFACADE'] = conf.options.with_stlfacade
     conf.env['WITH_TESTS'] = conf.options.with_tests
     conf.recurse('bindings')
@@ -110,7 +110,7 @@ def is_dev_version(bld):
 
 def build_tools(bld):
     global gaia_qt5
-    gaia_qt5 = bld.env['GAIA_QT5']
+    gaia_qt5 = bld.env['WITH_GAIA_QT5']
     # merge utility
     bld.program(
         source = 'tools/gaiamerge.cpp',
@@ -266,3 +266,4 @@ def add_includes_paths(self):
     for x in self.compiled_tasks:
         incs.add(x.inputs[0].parent.path_from(self.path))
         self.includes = sorted(incs)
+

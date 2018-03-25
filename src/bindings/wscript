@@ -18,6 +18,8 @@
 from __future__ import print_function
 import sys
 
+gaia_qt5 = False
+
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
@@ -32,7 +34,7 @@ def options(opt):
 
 def configure(conf):
     global gaia_qt5
-    gaia_qt5 = conf.options.gaia_qt5
+    gaia_qt5 = conf.env['WITH_GAIA_QT5']
     conf.env['WITH_PYTHON_BINDINGS'] = conf.options.with_python_bindings
     if conf.env['WITH_PYTHON_BINDINGS']:
         if gaia_qt5:
@@ -68,14 +70,14 @@ def configure(conf):
                 '../../src/bindings',
                 '../../src/metrics',
                 '../../src/3rdparty']
-            conf.env.uselib = 'QT5CORE QT5CONCURRENT YAML'
+            #conf.env.uselib = 'QT5CORE QT5CONCURRENT YAML'
             conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
         else:
             conf.env['CPPPATH_BINDINGS'] = [ '../../src',
                 '../../src/bindings',
                 '../../src/metrics',
                 '../../src/3rdparty']
-            conf.env.uselib = 'QTCORE QTCONCURRENT YAML'
+            #conf.env.uselib = 'QTCORE QTCONCURRENT YAML'
             conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
 
 def build_swig_qt5(bld):
@@ -84,8 +86,8 @@ def build_swig_qt5(bld):
         target = '_gaia2',
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
         swig_flags = '-c++ -python -w451',
-        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        uselib = 'QT5CORE QT5CONCURRENT YAML',
+        #use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        uselib = 'gaia2 QT5CORE QT5CONCURRENT YAML',
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
     )
@@ -94,8 +96,8 @@ def build_swig_qt4(bld):
         source = 'gaia.swig',
         target = '_gaia2',
         swig_flags = '-c++ -python -w451',
-        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        uselib = 'QTCORE YAML',
+        #use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        uselib = 'gaia2 QTCORE YAML',
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
     )
@@ -103,7 +105,7 @@ def build_swig_qt4(bld):
 from waflib import Utils, Build
 def build(bld):
     global gaia_qt5
-    gaia_qt5 = bld.env['GAIA_QT5']
+    gaia_qt5 = bld.env['WITH_GAIA_QT5']
     #print(bld.env.TOUCH)
     #print(bld.env.SWIG)
     #bld(rule='${TOUCH} ${TGT}', target='gaia.swig')
