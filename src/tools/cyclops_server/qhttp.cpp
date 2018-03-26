@@ -41,7 +41,7 @@
 #ifdef GAIA_QT5
 //#define QHTTP_DEBUG
 
-#include <qplatformdefs.h>
+//#include <qplatformdefs.h>
 #include "qhttp.h"
 
 #ifndef QT_NO_HTTP
@@ -3050,6 +3050,28 @@ void QHttpPrivate::setState(int s)
 #endif
     state = QHttp::State(s);
     emit q->stateChanged(s);
+}
+
+void QHttp::stateChanged(int state)
+{
+    if (state == QHttp::Unconnected && Aborting)
+    {
+        disconnectQHttp();
+        emit Aborted;
+    }
+}
+
+void QHttp::disconnectQHttp()
+{
+      abort();
+//    if (http != NULL)
+//    {
+//        http->disconnect(this, SLOT( dataReadProgressSlot(int, int) ) );
+//        http->disconnect(this, SLOT( doneSlot(bool) ) );
+//        http->disconnect(this, SLOT( headerReceived(const QHttpResponseHeader&) ) );
+//        http->disconnect(this, SLOT( stateChanged(int) ) );
+//        http = NULL;
+//    }
 }
 
 void QHttpPrivate::closeConn()

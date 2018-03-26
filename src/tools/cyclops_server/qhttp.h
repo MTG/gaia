@@ -184,6 +184,7 @@ public:
         Unconnected,
         HostLookup,
         Connecting,
+        Aborting,
         Sending,
         Reading,
         Connected,
@@ -266,7 +267,7 @@ Q_SIGNALS:
     void proxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *);
 #endif
     void authenticationRequired(const QString &hostname, quint16 port, QAuthenticator *);
-
+    void disconnectQHttp();
 #ifndef QT_NO_OPENSSL
     void sslErrors(const QList<QSslError> &errors);
 #endif

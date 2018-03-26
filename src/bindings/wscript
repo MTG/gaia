@@ -56,8 +56,7 @@ def configure(conf):
         conf.check_python_headers()
 
         conf.find_program('touch', var='TOUCH')
-        #conf.find_program('swig', var='SWIG')
-
+        
         # do not use the default extension of .bundle on MacOS
         # TODO: still necessary with waf 1.5.x?
         if sys.platform == 'darwin':
@@ -107,11 +106,8 @@ def build(bld):
     global gaia_qt5
     gaia_qt5 = bld.env['WITH_GAIA_QT5']
     #print(bld.env.TOUCH)
-    #print(bld.env.SWIG)
     #bld(rule='${TOUCH} ${TGT}', target='gaia.swig')
-    #bld = copy(env=bld.env) 
-    #bld.set_inputs(bld.path.find_resource('swig'))
-    
+        
     if gaia_qt5:
         build_swig_qt5(bld)
     else:

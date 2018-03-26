@@ -149,11 +149,12 @@ def build_tools(bld):
             uselib = 'QT5CORE',
             use = ['gaia2'] + bld.env['USELIB'])
 
+    #'tools/cyclops_server/http_headers.cpp ' + \
     # Cyclops server
     if sys.platform.startswith('linux') and gaia_qt5:
-        print ('gaia_qt5 = ', gaia_qt5)
+        #print ('gaia_qt5 = ', gaia_qt5)
         if bld.env['WITH_CYCLOPS']:
-            print ('Building Cyclops1')
+            #print ('Building Cyclops1')
             # cyclops "normal" server
             bld(
                 features = 'qt5 cxx cxxprogram cyclops',
@@ -161,18 +162,16 @@ def build_tools(bld):
                 'tools/cyclops_server/cyclopsserver.cpp '+ \
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
                 'tools/cyclops_server/cyclops.cpp ' + \
-                'tools/cyclops_server/http_headers.cpp ' + \
                 'tools/cyclops_server/qhttp.cpp ' + \
                 'tools/cyclops_server/qhttpauthenticator.cpp ' + \
                 'tools/cyclops_server/yamlrpcserver.cpp', 
                 moc = \
                 'tools/cyclops_server/cyclops.h '+ \
-                'tools/cyclops_server/qhttp.h '+\
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclops',
                 includes = [ '.', 'metrics', '3rdparty' ],
                 defines = 'GAIA_QT5 WAF', 
-                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS', 
+                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS',  
                 use = ['gaia2'] + bld.env['USELIB'])
 
             # cyclops "master" server
@@ -183,19 +182,17 @@ def build_tools(bld):
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
                 'tools/cyclops_server/cyclopsmaster.cpp ' + \
                 'tools/cyclops_server/cyclops.cpp ' + \
-                'tools/cyclops_server/http_headers.cpp ' + \
                 'tools/cyclops_server/qhttp.cpp ' + \
                 'tools/cyclops_server/qhttpauthenticator.cpp ' + \
                 'tools/cyclops_server/yamlrpcserver.cpp', 
                 moc = \
                 'tools/cyclops_server/cyclops.h '+  \
                 'tools/cyclops_server/cyclopsmaster.h '+  \
-                'tools/cyclops_server/qhttp.h '+\
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
                 defines = 'GAIA_QT5 WAF', 
-                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS', 
+                uselib = 'QT5CORE QT5NETWORK QT5WIDGETS',  
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
