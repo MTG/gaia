@@ -17,7 +17,7 @@ Dependencies:
   * libYAML >= 0.1.1
   * Python >= 2.4
   * SWIG != 3.0.8
-  * waf >= 2.0.6
+  * waf >= 1.9
   * Eigen 3.3.4 patched version (included in source)
 
 
@@ -26,7 +26,7 @@ INSTALL
 
 ## Linux
 
-- Currently working on issues with `vtable` and `swig` related to `./waf` please don't use.  `--with-cyclops`now compiles for both `qt4`and `qt5`.  Various build options are being tested.  Build with fail as `-with-cyclops`requires `defines = 'WAF'`.
+- Still an outstanding issue with `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`requires `defines = 'WAF'`.
 
    ​
 
@@ -40,7 +40,7 @@ INSTALL
    $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
 
-   Note that `Gaia` build will fail if you are using `swig 3.0.8`. Install either a previous or later version. You will encounter this problem if you are using `swig` package distributed with Ubuntu 16.04. In this case install the newest `swig` version from source `(https://github.com/swig/swig)`.
+   Note that `Gaia` build may fail if you are using `swig 3.0.8`. Install either a previous or later version. The newest `swig` version is available from source `(https://github.com/swig/swig)`.
 
    ​
 
@@ -56,14 +56,13 @@ INSTALL
    $ cd waf
    $ ./waf-light --help
    $ ./waf-light configure --tools=swig,qt5,qt4 build
-   $ sudo ./waf install
-   $ export WAFDIR=~/waf
+   $ cp waf ~/gaia/.
    ```
 
 - Configure `gaia` with the desired options, if `python3` wanted use
     ```
     $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] 
-    [--with-cyclops] [--with-gaia-qt5]
+    [--with-cyclops] [--with-tests] [--with-gaia-qt5]
     ```
     NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option
 
