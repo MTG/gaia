@@ -244,7 +244,7 @@ struct evaluator<PlainObjectBase<Derived> >
   {
     if (IsRowMajor)
       return pstoret<Scalar, PacketType, StoreMode>
-	            (const_cast<Scalar*>(m_d.data) + row * m_d.outerStride() + col, x);
+                (const_cast<Scalar*>(m_d.data) + row * m_d.outerStride() + col, x);
     else
       return pstoret<Scalar, PacketType, StoreMode>
                     (const_cast<Scalar*>(m_d.data) + row + col * m_d.outerStride(), x);

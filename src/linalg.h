@@ -56,10 +56,10 @@ void sortEigenVectors(Eigen::Matrix<T, Eigen::Dynamic, 1>& values,
 
       if (cmp(std::abs(values[j]), std::abs(values[j-1]))) {
 
-	// swap values in eigenvalues vector
+    // swap values in eigenvalues vector
         std::swap(values[j], values[j-1]);
 
-	// swap columns in eigenvectors matrix
+    // swap columns in eigenvectors matrix
         vectors.col(j).swap(vectors.col(j-1));
       }
     }

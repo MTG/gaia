@@ -103,7 +103,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   //param.svm_type = C_SVC;
   //param.kernel_type = RBF;
   //param.degree = 3;
-  //param.gamma = 0;	// 1/k
+  //param.gamma = 0;    // 1/k
   param.coef0 = 0;
   param.nu = 0.5;
   param.cache_size = 100;

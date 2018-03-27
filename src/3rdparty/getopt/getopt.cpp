@@ -93,7 +93,7 @@
 GetOpt::GetOpt()
 {
     if ( !qApp )
-	qFatal( "GetOpt: requires a QApplication instance to be constructed first" );
+    qFatal( "GetOpt: requires a QApplication instance to be constructed first" );
 
     init( qApp->argc(), qApp->argv(), 1 );
 }
@@ -104,7 +104,7 @@ GetOpt::GetOpt()
 GetOpt::GetOpt( int offset )
 {
     if ( !qApp )
-	qFatal( "GetOpt: requires a QApplication instance to be constructed first" );
+    qFatal( "GetOpt: requires a QApplication instance to be constructed first" );
 
     init( qApp->argc(), qApp->argv(), offset );
 }
@@ -151,11 +151,11 @@ void GetOpt::init( int argc, char *argv[], int offset )
     numReqArgs = numOptArgs = 0;
     currArg = 1; // appname is not part of the arguments
     if ( argc ) {
-	// application name
-	aname = QFileInfo( QString::fromUtf8( argv[0] ) ).fileName();
-	// arguments
-	for ( int i = offset; i < argc; ++i )
-	    args.append( QString::fromUtf8( argv[i] ) );
+    // application name
+    aname = QFileInfo( QString::fromUtf8( argv[0] ) ).fileName();
+    // arguments
+    for ( int i = offset; i < argc; ++i )
+        args.append( QString::fromUtf8( argv[i] ) );
     }
 }
 
@@ -184,11 +184,11 @@ bool GetOpt::parse( bool untilFirstSwitchOnly )
     QStack<QString> stack;
     {
       QStringList::const_iterator it = args.isEmpty() ? args.constEnd() : --args.constEnd();
-	const QStringList::const_iterator end = args.constEnd();
-	while ( it != end ) {
-	    stack.push( *it );
-	    --it;
-	}
+    const QStringList::const_iterator end = args.constEnd();
+    while ( it != end ) {
+        stack.push( *it );
+        --it;
+    }
     }
 
     const OptionConstIterator obegin = options.begin();
@@ -198,194 +198,194 @@ bool GetOpt::parse( bool untilFirstSwitchOnly )
     enum TokenType { LongOpt, ShortOpt, Arg, End } t, currType = End;
     bool extraLoop = true; // we'll do an extra round. fake an End argument
     while ( !stack.isEmpty() || extraLoop ) {
-	QString a;
-	QString origA;
-	// identify argument type
-	if ( !stack.isEmpty() ) {
-	    a = stack.pop();
-	    currArg++;
-	    origA = a;
-	    //	    qDebug( "popped %s", a.ascii() );
-	    if ( a.startsWith( QString::fromLatin1( "--" ) ) ) {
-		// recognized long option
-		a = a.mid( 2 );
-		if ( a.isEmpty() ) {
-		    qWarning( "'--' feature not supported, yet" );
-		    exit( 2 );
-		}
-		t = LongOpt;
-		// split key=value style arguments
-		int equal = a.indexOf( '=' );
-		if ( equal >= 0 ) {
-		    stack.push( a.mid( equal + 1 ) );
-		    currArg--;
-		    a = a.left( equal );
-		}
-	    } else if ( a.length() == 1 ) {
-		t = Arg;
-	    } else if ( a[0] == '-' ) {
+    QString a;
+    QString origA;
+    // identify argument type
+    if ( !stack.isEmpty() ) {
+        a = stack.pop();
+        currArg++;
+        origA = a;
+        //      qDebug( "popped %s", a.ascii() );
+        if ( a.startsWith( QString::fromLatin1( "--" ) ) ) {
+        // recognized long option
+        a = a.mid( 2 );
+        if ( a.isEmpty() ) {
+            qWarning( "'--' feature not supported, yet" );
+            exit( 2 );
+        }
+        t = LongOpt;
+        // split key=value style arguments
+        int equal = a.indexOf( '=' );
+        if ( equal >= 0 ) {
+            stack.push( a.mid( equal + 1 ) );
+            currArg--;
+            a = a.left( equal );
+        }
+        } else if ( a.length() == 1 ) {
+        t = Arg;
+        } else if ( a[0] == '-' ) {
 #if 0 // compat mode for -long style options
-		if ( a.length() == 2 ) {
-		    t = ShortOpt;
-		    a = a[1];
-		} else {
-		    a = a.mid( 1 );
-		    t = LongOpt;
-		    // split key=value style arguments
-		    int equal = a.find( '=' );
-		    if ( equal >= 0 ) {
-			stack.push( a.mid( equal + 1 ) );
-			currArg--;
-			a = a.left( equal );
-		    }
-		}
+        if ( a.length() == 2 ) {
+            t = ShortOpt;
+            a = a[1];
+        } else {
+            a = a.mid( 1 );
+            t = LongOpt;
+            // split key=value style arguments
+            int equal = a.find( '=' );
+            if ( equal >= 0 ) {
+            stack.push( a.mid( equal + 1 ) );
+            currArg--;
+            a = a.left( equal );
+            }
+        }
 #else
-		// short option
-		t = ShortOpt;
-		// followed by an argument ? push it for later processing.
-		if ( a.length() > 2 ) {
-		    stack.push( a.mid( 2 ) );
-		    currArg--;
-		}
-		a = a[1];
+        // short option
+        t = ShortOpt;
+        // followed by an argument ? push it for later processing.
+        if ( a.length() > 2 ) {
+            stack.push( a.mid( 2 ) );
+            currArg--;
+        }
+        a = a[1];
 #endif
-	    } else {
-		t = Arg;
-	    }
-	} else {
-	    // faked closing argument
-	    t = End;
-	}
-	// look up among known list of options
-	Option opt;
-	if ( t != End ) {
-	    OptionConstIterator oit = obegin;
-	    while ( oit != oend ) {
-		const Option &o = *oit;
-		if ( ( t == LongOpt && a == o.lname ) || // ### check state
-		     ( t == ShortOpt && a[0].unicode() == o.sname ) ) {
-		    opt = o;
-		    break;
-		}
-		++oit;
-	    }
-	    if ( t == LongOpt && opt.type == OUnknown ) {
-		if ( currOpt.type != OVarLen ) {
+        } else {
+        t = Arg;
+        }
+    } else {
+        // faked closing argument
+        t = End;
+    }
+    // look up among known list of options
+    Option opt;
+    if ( t != End ) {
+        OptionConstIterator oit = obegin;
+        while ( oit != oend ) {
+        const Option &o = *oit;
+        if ( ( t == LongOpt && a == o.lname ) || // ### check state
+             ( t == ShortOpt && a[0].unicode() == o.sname ) ) {
+            opt = o;
+            break;
+        }
+        ++oit;
+        }
+        if ( t == LongOpt && opt.type == OUnknown ) {
+        if ( currOpt.type != OVarLen ) {
                     qWarning( "Unknown option --%s", a.toAscii().data() );
-		    return false;
-		} else {
-		    // VarLength options support arguments starting with '-'
-		    t = Arg;
-		}
-	    } else if ( t == ShortOpt && opt.type == OUnknown ) {
-		if ( currOpt.type != OVarLen ) {
-		    qWarning( "Unknown option -%c", a[0].unicode() );
-		    return false;
-		} else {
-		    // VarLength options support arguments starting with '-'
-		    t = Arg;
-		}
-	    }
+            return false;
+        } else {
+            // VarLength options support arguments starting with '-'
+            t = Arg;
+        }
+        } else if ( t == ShortOpt && opt.type == OUnknown ) {
+        if ( currOpt.type != OVarLen ) {
+            qWarning( "Unknown option -%c", a[0].unicode() );
+            return false;
+        } else {
+            // VarLength options support arguments starting with '-'
+            t = Arg;
+        }
+        }
 
-	} else {
-	    opt = Option( OEnd );
-	}
+    } else {
+        opt = Option( OEnd );
+    }
 
-	// interpret result
-	switch ( state ) {
-	case StartState:
-	    if ( opt.type == OSwitch ) {
-		setSwitch( opt );
-		setOptions.insert( opt.lname, 1 );
-		setOptions.insert( QString( QChar( opt.sname ) ), 1 );
-	    } else if ( opt.type == OArg1 || opt.type == ORepeat ) {
-		state = ExpectingState;
-		currOpt = opt;
-		currType = t;
-		setOptions.insert( opt.lname, 1 );
-		setOptions.insert( QString( QChar( opt.sname ) ), 1 );
-	    } else if ( opt.type == OOpt || opt.type == OVarLen ) {
-		state = OptionalState;
-		currOpt = opt;
-		currType = t;
-		setOptions.insert( opt.lname, 1 );
-		setOptions.insert( QString( QChar( opt.sname ) ), 1 );
-	    } else if ( opt.type == OEnd ) {
-		// we're done
-	    } else if ( opt.type == OUnknown && t == Arg ) {
-		if ( numReqArgs > 0 ) {
-		    if ( reqArg.stringValue->isNull() ) { // ###
-			*reqArg.stringValue = a;
-		    } else {
-			qWarning( "Too many arguments" );
-			return false;
-		    }
-		} else if ( numOptArgs > 0 ) {
-		    if ( optArg.stringValue->isNull() ) { // ###
-			*optArg.stringValue = a;
-		    } else {
-			qWarning( "Too many arguments" );
-			return false;
-		    }
-		}
-	    } else {
-		qFatal( "unhandled StartState case %d",  opt.type );
-	    }
-	    break;
-	case ExpectingState:
-	    if ( t == Arg ) {
-		if ( currOpt.type == OArg1 ) {
-		    *currOpt.stringValue = a;
-		    state = StartState;
-		} else if ( currOpt.type == ORepeat ) {
-		    currOpt.listValue->append( a );
-		    state = StartState;
-		} else {
-		    abort();
-		}
-	    } else {
-		QString n = currType == LongOpt ?
-			    currOpt.lname : QString( QChar( currOpt.sname ) );
-		qWarning( "Expected an argument after '%s' option", n.toAscii().data() );
-		return false;
-	    }
-	    break;
-	case OptionalState:
-	    if ( t == Arg ) {
-		if ( currOpt.type == OOpt ) {
-		    *currOpt.stringValue = a;
-		    state = StartState;
-		} else if ( currOpt.type == OVarLen ) {
-		    currOpt.listValue->append( origA );
-		    // remain in this state
-		} else {
-		    abort();
-		}
-	    } else {
-		// optional argument not specified
-		if ( currOpt.type == OOpt )
-		    *currOpt.stringValue = currOpt.def;
-		if ( t != End ) {
-		    // re-evaluate current argument
-		    stack.push( origA );
-		    currArg--;
-		}
-		state = StartState;
-	    }
-	    break;
-	}
+    // interpret result
+    switch ( state ) {
+    case StartState:
+        if ( opt.type == OSwitch ) {
+        setSwitch( opt );
+        setOptions.insert( opt.lname, 1 );
+        setOptions.insert( QString( QChar( opt.sname ) ), 1 );
+        } else if ( opt.type == OArg1 || opt.type == ORepeat ) {
+        state = ExpectingState;
+        currOpt = opt;
+        currType = t;
+        setOptions.insert( opt.lname, 1 );
+        setOptions.insert( QString( QChar( opt.sname ) ), 1 );
+        } else if ( opt.type == OOpt || opt.type == OVarLen ) {
+        state = OptionalState;
+        currOpt = opt;
+        currType = t;
+        setOptions.insert( opt.lname, 1 );
+        setOptions.insert( QString( QChar( opt.sname ) ), 1 );
+        } else if ( opt.type == OEnd ) {
+        // we're done
+        } else if ( opt.type == OUnknown && t == Arg ) {
+        if ( numReqArgs > 0 ) {
+            if ( reqArg.stringValue->isNull() ) { // ###
+            *reqArg.stringValue = a;
+            } else {
+            qWarning( "Too many arguments" );
+            return false;
+            }
+        } else if ( numOptArgs > 0 ) {
+            if ( optArg.stringValue->isNull() ) { // ###
+            *optArg.stringValue = a;
+            } else {
+            qWarning( "Too many arguments" );
+            return false;
+            }
+        }
+        } else {
+        qFatal( "unhandled StartState case %d",  opt.type );
+        }
+        break;
+    case ExpectingState:
+        if ( t == Arg ) {
+        if ( currOpt.type == OArg1 ) {
+            *currOpt.stringValue = a;
+            state = StartState;
+        } else if ( currOpt.type == ORepeat ) {
+            currOpt.listValue->append( a );
+            state = StartState;
+        } else {
+            abort();
+        }
+        } else {
+        QString n = currType == LongOpt ?
+                currOpt.lname : QString( QChar( currOpt.sname ) );
+        qWarning( "Expected an argument after '%s' option", n.toAscii().data() );
+        return false;
+        }
+        break;
+    case OptionalState:
+        if ( t == Arg ) {
+        if ( currOpt.type == OOpt ) {
+            *currOpt.stringValue = a;
+            state = StartState;
+        } else if ( currOpt.type == OVarLen ) {
+            currOpt.listValue->append( origA );
+            // remain in this state
+        } else {
+            abort();
+        }
+        } else {
+        // optional argument not specified
+        if ( currOpt.type == OOpt )
+            *currOpt.stringValue = currOpt.def;
+        if ( t != End ) {
+            // re-evaluate current argument
+            stack.push( origA );
+            currArg--;
+        }
+        state = StartState;
+        }
+        break;
+    }
 
-	if ( untilFirstSwitchOnly && opt.type == OSwitch )
-	    return true;
+    if ( untilFirstSwitchOnly && opt.type == OSwitch )
+        return true;
 
-	// are we in the extra loop ? if so, flag the final end
-	if ( t == End )
-	    extraLoop = false;
+    // are we in the extra loop ? if so, flag the final end
+    if ( t == End )
+        extraLoop = false;
     }
 
     if ( numReqArgs > 0 && reqArg.stringValue->isNull() ) {
-	qWarning( "Lacking required argument" );
-	return false;
+    qWarning( "Lacking required argument" );
+    return false;
     }
 
     return true;
@@ -545,7 +545,7 @@ void GetOpt::addOptionalOption( const QString &l, QString *v,
    the value is not specified by the user it will be set to \a def.
  */
 void GetOpt::addOptionalOption( char s, const QString &l,
-				QString *v, const QString &def )
+                QString *v, const QString &def )
 {
     Option opt( OOpt, s, l );
     opt.stringValue = v;

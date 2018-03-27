@@ -45,9 +45,13 @@ INSTALL
    ​
 
 
-- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for certainty.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.
+- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for certainty.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.  Addendum:  All tabs converted to spaces
 
-   ​
+   `find ./ -iname '*.h' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;`
+
+   `find ./ -iname '*.cpp' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;`
+
+   `find ./ -iname '*.py' -type f -exec bash -c 'expand -t 2 "$0" | sponge "$0"' {} \;`
 
 - Online help is available for WAF or in build system home folder.
 

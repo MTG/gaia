@@ -61,7 +61,7 @@ public:
     void addOptionalOption( const QString &l, QString *v,
                                 const QString &def );
     void addOptionalOption( char s, const QString &l,
-				QString *v, const QString &def );
+                QString *v, const QString &def );
 
     // bare arguments
     void addArgument( const QString &name, QString *v );
@@ -89,8 +89,8 @@ private:
               boolValue( 0 ) { }
 
         OptionType type;
-        char sname;		// short option name (0 if none)
-        QString lname;	// long option name  (null if none)
+        char sname;     // short option name (0 if none)
+        QString lname;  // long option name  (null if none)
         union {
             bool *boolValue;
             QString *stringValue;

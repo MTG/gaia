@@ -244,7 +244,7 @@ void QHttpAuthenticator::setUser(const QString &user)
         } else {
             d->extractedUser = user;
             d->user = user;
-	    d->realm.clear();
+        d->realm.clear();
             d->userDomain.clear();
         }
         break;

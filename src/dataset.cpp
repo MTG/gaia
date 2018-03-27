@@ -946,33 +946,33 @@ DataSet* DataSet::mergeFiles(const QMap<QString, QString>& sigfiles,
 #define MAGIC_NUMBER 0x6AEA7230
 
 /*
-QDataStream::Qt_1_0	1	Version 1 (Qt 1.x)
-QDataStream::Qt_2_0	2	Version 2 (Qt 2.0)
-QDataStream::Qt_2_1	3	Version 3 (Qt 2.1, 2.2, 2.3)
-QDataStream::Qt_3_0	4	Version 4 (Qt 3.0)
-QDataStream::Qt_3_1	5	Version 5 (Qt 3.1, 3.2)
-QDataStream::Qt_3_3	6	Version 6 (Qt 3.3)
-QDataStream::Qt_4_0	7	Version 7 (Qt 4.0, Qt 4.1)
-QDataStream::Qt_4_1	Qt_4_0	Version 7 (Qt 4.0, Qt 4.1)
-QDataStream::Qt_4_2	8	Version 8 (Qt 4.2)
-QDataStream::Qt_4_3	9	Version 9 (Qt 4.3)
-QDataStream::Qt_4_4	10	Version 10 (Qt 4.4)
-QDataStream::Qt_4_5	11	Version 11 (Qt 4.5)
-QDataStream::Qt_4_6	12	Version 12 (Qt 4.6, Qt 4.7, Qt 4.8)
-QDataStream::Qt_4_7	Qt_4_6	Same as Qt_4_6.
-QDataStream::Qt_4_8	Qt_4_7	Same as Qt_4_6.
-QDataStream::Qt_4_9	Qt_4_8	Same as Qt_4_6.
-QDataStream::Qt_5_0	13	Version 13 (Qt 5.0)
-QDataStream::Qt_5_1	14	Version 14 (Qt 5.1)
-QDataStream::Qt_5_2	15	Version 15 (Qt 5.2)
-QDataStream::Qt_5_3	Qt_5_2	Same as Qt_5_2
-QDataStream::Qt_5_4	16	Version 16 (Qt 5.4)
-QDataStream::Qt_5_5	Qt_5_4	Same as Qt_5_4
-QDataStream::Qt_5_6	17	Version 17 (Qt 5.6)
-QDataStream::Qt_5_7	Qt_5_6	Same as Qt_5_6
-QDataStream::Qt_5_8	Qt_5_7	Same as Qt_5_6
-QDataStream::Qt_5_9	Qt_5_8	Same as Qt_5_6
-QDataStream::Qt_5_10 Qt_5_9	Same as Qt_5_6
+QDataStream::Qt_1_0 1   Version 1 (Qt 1.x)
+QDataStream::Qt_2_0 2   Version 2 (Qt 2.0)
+QDataStream::Qt_2_1 3   Version 3 (Qt 2.1, 2.2, 2.3)
+QDataStream::Qt_3_0 4   Version 4 (Qt 3.0)
+QDataStream::Qt_3_1 5   Version 5 (Qt 3.1, 3.2)
+QDataStream::Qt_3_3 6   Version 6 (Qt 3.3)
+QDataStream::Qt_4_0 7   Version 7 (Qt 4.0, Qt 4.1)
+QDataStream::Qt_4_1 Qt_4_0  Version 7 (Qt 4.0, Qt 4.1)
+QDataStream::Qt_4_2 8   Version 8 (Qt 4.2)
+QDataStream::Qt_4_3 9   Version 9 (Qt 4.3)
+QDataStream::Qt_4_4 10  Version 10 (Qt 4.4)
+QDataStream::Qt_4_5 11  Version 11 (Qt 4.5)
+QDataStream::Qt_4_6 12  Version 12 (Qt 4.6, Qt 4.7, Qt 4.8)
+QDataStream::Qt_4_7 Qt_4_6  Same as Qt_4_6.
+QDataStream::Qt_4_8 Qt_4_7  Same as Qt_4_6.
+QDataStream::Qt_4_9 Qt_4_8  Same as Qt_4_6.
+QDataStream::Qt_5_0 13  Version 13 (Qt 5.0)
+QDataStream::Qt_5_1 14  Version 14 (Qt 5.1)
+QDataStream::Qt_5_2 15  Version 15 (Qt 5.2)
+QDataStream::Qt_5_3 Qt_5_2  Same as Qt_5_2
+QDataStream::Qt_5_4 16  Version 16 (Qt 5.4)
+QDataStream::Qt_5_5 Qt_5_4  Same as Qt_5_4
+QDataStream::Qt_5_6 17  Version 17 (Qt 5.6)
+QDataStream::Qt_5_7 Qt_5_6  Same as Qt_5_6
+QDataStream::Qt_5_8 Qt_5_7  Same as Qt_5_6
+QDataStream::Qt_5_9 Qt_5_8  Same as Qt_5_6
+QDataStream::Qt_5_10 Qt_5_9 Same as Qt_5_6
 */
 // Data Stream format versions:
 // 100: Initial Gaia 2.0 data format
