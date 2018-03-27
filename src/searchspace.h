@@ -33,7 +33,6 @@
 # </copyright>
 */
 
-
 #ifndef GAIA_SEARCHSPACE_H
 #define GAIA_SEARCHSPACE_H
 
