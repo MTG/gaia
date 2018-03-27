@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifdef GAIA_QT5
+
 #ifndef QHTTPAUTHENTICATOR_P_H
 #define QHTTPAUTHENTICATOR_P_H
 
@@ -145,5 +145,4 @@ public:
 
 };
 
-#endif
 #endif

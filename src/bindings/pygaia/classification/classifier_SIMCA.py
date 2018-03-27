@@ -17,7 +17,20 @@
 #
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
-
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
 from __future__ import print_function
 from gaia2 import *

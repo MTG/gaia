@@ -42,6 +42,21 @@ from __future__ import print_function
 #    31/12/2009 Version 0.2
 #     - Added support for keyword queries (queryAsKeyword)
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
 from builtins import range
 from builtins import object
 from past.utils import old_div

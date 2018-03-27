@@ -4,19 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       = core network
-#DEFINES  += GAIA_QT5
+QT       = core network widgets
+DEFINES  += GAIA_QT5
 
 TARGET = Cyclops
 TEMPLATE = lib
 
-#DEFINES += CYCLOPS_MASTER
+DEFINES += CYCLOPS_MASTER
 #DEFINES += CYCLOPS_NORMAL
 
-CONFIG += c++03
+#CONFIG += c++03
 #CONFIG += staticlib
 #QMAKE_CXX = g++-7
-#CONFIG += c++11
+CONFIG += c++11
 
 
 # The following define makes your compiler emit warnings if you use
@@ -37,16 +37,25 @@ SOURCES += \
         cyclopsmasterserver.cpp \
         cyclopsproxy.cpp \
         cyclopsserver.cpp \
+        qhttp.cpp \
+        qhttpauthenticator.cpp \
         yamlrpcserver.cpp \
         ../../yamlcpp.cpp
+    #cyclopsnetworkreplyerror.cpp
 
 HEADERS += \
         cyclops.h \
         cyclopsmaster.h \
         cyclopsproxy.h \
         logging.h \
+        qhttp.h \
+        qringbuffer_p.h \
+        qhttpauthenticator_p.h \
         yamlrpcserver.h \
         ../../yamlcpp.h
+
+#HEADERS += qhttp.h qringbuffer_p.h qhttpauthenticator_p.h
+#SOURCES += qhttp.cpp qhttpauthenticator.cpp
 
 #cyclops.o: cyclops.moc
 

@@ -23,6 +23,21 @@
 # this file is only valid for the dataset_small.db file that is inside the
 # unittest/ directory. It can probably be easily adapted to any dataset, though.
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
 from __future__ import print_function
 from builtins import str
 from gaia2 import *

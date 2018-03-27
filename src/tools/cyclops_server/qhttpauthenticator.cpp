@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifdef GAIA_QT5
+
 #include "qhttpauthenticator_p.h"
 #include <qdebug.h>
 #include <qhash.h>
@@ -244,7 +244,7 @@ void QHttpAuthenticator::setUser(const QString &user)
         } else {
             d->extractedUser = user;
             d->user = user;
-        d->realm.clear();
+	    d->realm.clear();
             d->userDomain.clear();
         }
         break;
@@ -1443,4 +1443,3 @@ static QByteArray qNtlmPhase3(QHttpAuthenticatorPrivate *ctx, const QByteArray& 
 
 
 QT_END_NAMESPACE
-#endif

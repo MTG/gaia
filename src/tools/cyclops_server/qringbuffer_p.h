@@ -38,7 +38,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifdef GAIA_QT5
+
 #ifndef QRINGBUFFER_P_H
 #define QRINGBUFFER_P_H
 
@@ -445,4 +445,3 @@ private:
 };
 
 #endif // QRINGBUFFER_P_H
-#endif

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtNetwork module of the Qt Toolkit.
@@ -38,13 +38,14 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifdef GAIA_QT5
+
 //#define QHTTP_DEBUG
 
 //#include <qplatformdefs.h>
 #include "qhttp.h"
 
 #ifndef QT_NO_HTTP
+# include "qobject_p.h"
 # include "qtcpsocket.h"
 # include "qsslsocket.h"
 # include "qtextstream.h"
@@ -58,7 +59,7 @@
 # include "qurl.h"
 # include "qnetworkproxy.h"
 # include "qauthenticator.h"
-# include "qhttpauthenticator_p.h"
+# include "qauthenticator_p.h"
 # include "qdebug.h"
 # include "qtimer.h"
 #endif
@@ -90,17 +91,17 @@ private:
     static QBasicAtomicInt idCounter;
 };
 
-class QHttpPrivate
+class QHttpPrivate : public QObjectPrivate
 {
 public:
     Q_DECLARE_PUBLIC(QHttp)
 
-    inline QHttpPrivate(QHttp* parent)
+    inline QHttpPrivate()
         : socket(0), reconnectAttempts(2),
           deleteSocket(0), state(QHttp::Unconnected),
           error(QHttp::NoError), port(0), mode(QHttp::ConnectionModeHttp),
           toDevice(0), postDevice(0), bytesDone(0), chunkedSize(-1),
-          repost(false), pendingPost(false), q_ptr(parent)
+          repost(false), pendingPost(false)
     {
     }
 
@@ -170,14 +171,13 @@ public:
 
 #ifndef QT_NO_NETWORKPROXY
     QNetworkProxy proxy;
-    QHttpAuthenticator proxyAuthenticator;
+    QAuthenticator proxyAuthenticator;
 #endif
-    QHttpAuthenticator authenticator;
+    QAuthenticator authenticator;
     bool repost;
     bool hasFinishedWithError;
     bool pendingPost;
     QTimer post100ContinueTimer;
-    QHttp *q_ptr;
 };
 
 QBasicAtomicInt QHttpRequest::idCounter = Q_BASIC_ATOMIC_INITIALIZER(1);
@@ -243,35 +243,35 @@ private:
 
 void QHttpNormalRequest::start(QHttp *http)
 {
-    if (!http->d->socket)
-        http->d->setSock(0);
-    http->d->header = header;
+    if (!http->d_func()->socket)
+        http->d_func()->setSock(0);
+    http->d_func()->header = header;
 
     if (is_ba) {
-        http->d->buffer = *data.ba;
-        if (http->d->buffer.size() >= 0)
-            http->d->header.setContentLength(http->d->buffer.size());
+        http->d_func()->buffer = *data.ba;
+        if (http->d_func()->buffer.size() >= 0)
+            http->d_func()->header.setContentLength(http->d_func()->buffer.size());
 
-        http->d->postDevice = 0;
+        http->d_func()->postDevice = 0;
     } else {
-        http->d->buffer = QByteArray();
+        http->d_func()->buffer = QByteArray();
 
         if (data.dev && (data.dev->isOpen() || data.dev->open(QIODevice::ReadOnly))) {
-            http->d->postDevice = data.dev;
-            if (http->d->postDevice->size() >= 0)
-                http->d->header.setContentLength(http->d->postDevice->size());
+            http->d_func()->postDevice = data.dev;
+            if (http->d_func()->postDevice->size() >= 0)
+                http->d_func()->header.setContentLength(http->d_func()->postDevice->size());
         } else {
-            http->d->postDevice = 0;
+            http->d_func()->postDevice = 0;
         }
     }
 
     if (to && (to->isOpen() || to->open(QIODevice::WriteOnly)))
-        http->d->toDevice = to;
+        http->d_func()->toDevice = to;
     else
-        http->d->toDevice = 0;
+        http->d_func()->toDevice = 0;
 
-    http->d->reconnectAttempts = 2;
-    http->d->_q_slotSendRequest();
+    http->d_func()->reconnectAttempts = 2;
+    http->d_func()->_q_slotSendRequest();
 }
 
 bool QHttpNormalRequest::hasRequestHeader()
@@ -325,10 +325,10 @@ public:
 
 void QHttpPGHRequest::start(QHttp *http)
 {
-    if (http->d->port && http->d->port != 80)
-        header.setValue(QLatin1String("Host"), http->d->hostName + QLatin1Char(':') + QString::number(http->d->port));
+    if (http->d_func()->port && http->d_func()->port != 80)
+	header.setValue(QLatin1String("Host"), http->d_func()->hostName + QLatin1Char(':') + QString::number(http->d_func()->port));
     else
-        header.setValue(QLatin1String("Host"), http->d->hostName);
+	header.setValue(QLatin1String("Host"), http->d_func()->hostName);
     QHttpNormalRequest::start(http);
 }
 
@@ -360,20 +360,20 @@ private:
 
 void QHttpSetHostRequest::start(QHttp *http)
 {
-    http->d->hostName = hostName;
-    http->d->port = port;
-    http->d->mode = mode;
+    http->d_func()->hostName = hostName;
+    http->d_func()->port = port;
+    http->d_func()->mode = mode;
 
 #ifdef QT_NO_OPENSSL
     if (mode == QHttp::ConnectionModeHttps) {
         // SSL requested but no SSL support compiled in
-        http->d->finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "HTTPS connection requested but SSL support not compiled in")),
+        http->d_func()->finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "HTTPS connection requested but SSL support not compiled in")),
                           QHttp::UnknownError);
         return;
     }
 #endif
 
-    http->d->finishedWithSuccess();
+    http->d_func()->finishedWithSuccess();
 }
 
 /****************************************************
@@ -403,9 +403,9 @@ private:
 
 void QHttpSetUserRequest::start(QHttp *http)
 {
-    http->d->authenticator.setUser(user);
-    http->d->authenticator.setPassword(pass);
-    http->d->finishedWithSuccess();
+    http->d_func()->authenticator.setUser(user);
+    http->d_func()->authenticator.setPassword(pass);
+    http->d_func()->finishedWithSuccess();
 }
 
 #ifndef QT_NO_NETWORKPROXY
@@ -426,14 +426,14 @@ public:
 
     inline void start(QHttp *http)
     {
-        http->d->proxy = proxy;
+        http->d_func()->proxy = proxy;
         QString user = proxy.user();
         if (!user.isEmpty())
-            http->d->proxyAuthenticator.setUser(user);
+            http->d_func()->proxyAuthenticator.setUser(user);
         QString password = proxy.password();
         if (!password.isEmpty())
-            http->d->proxyAuthenticator.setPassword(password);
-        http->d->finishedWithSuccess();
+            http->d_func()->proxyAuthenticator.setPassword(password);
+        http->d_func()->finishedWithSuccess();
     }
 
     inline QIODevice *sourceDevice()
@@ -471,8 +471,8 @@ private:
 
 void QHttpSetSocketRequest::start(QHttp *http)
 {
-    http->d->setSock(socket);
-    http->d->finishedWithSuccess();
+    http->d_func()->setSock(socket);
+    http->d_func()->finishedWithSuccess();
 }
 
 /****************************************************
@@ -496,7 +496,7 @@ public:
 
 void QHttpCloseRequest::start(QHttp *http)
 {
-    http->d->closeConn();
+    http->d_func()->closeConn();
 }
 
 class QHttpHeaderPrivate
@@ -1456,7 +1456,7 @@ QString QHttpRequestHeader::toString() const
 
     To make an HTTP request you must set up suitable HTTP headers. The
     following example demonstrates how to request the main HTML page
-    from the Qt website (i.e., the URL \c http://qt.digia.com/index.html):
+    from the Qt website (i.e., the URL \c http://qt.nokia.com/index.html):
 
     \snippet doc/src/snippets/code/src_network_access_qhttp.cpp 2
 
@@ -1527,8 +1527,9 @@ QString QHttpRequestHeader::toString() const
     to the QObject constructor.
 */
 QHttp::QHttp(QObject *parent)
-    : QObject(parent), d(new QHttpPrivate(this))
+    : QObject(*new QHttpPrivate, parent)
 {
+    Q_D(QHttp);
     d->init();
 }
 
@@ -1541,8 +1542,9 @@ QHttp::QHttp(QObject *parent)
     \sa setHost()
 */
 QHttp::QHttp(const QString &hostName, quint16 port, QObject *parent)
-    : QObject(parent), d(new QHttpPrivate(this))
+    : QObject(*new QHttpPrivate, parent)
 {
+    Q_D(QHttp);
     d->init();
 
     d->hostName = hostName;
@@ -1562,8 +1564,9 @@ QHttp::QHttp(const QString &hostName, quint16 port, QObject *parent)
     \sa setHost()
 */
 QHttp::QHttp(const QString &hostName, ConnectionMode mode, quint16 port, QObject *parent)
-    : QObject(parent), d(new QHttpPrivate(this))
+    : QObject(*new QHttpPrivate, parent)
 {
+    Q_D(QHttp);
     d->init();
 
     d->hostName = hostName;
@@ -1824,6 +1827,7 @@ QHttp::~QHttp()
 */
 void QHttp::abort()
 {
+    Q_D(QHttp);
     if (d->pending.isEmpty())
         return;
 
@@ -1842,6 +1846,7 @@ void QHttp::abort()
 */
 qint64 QHttp::bytesAvailable() const
 {
+    Q_D(const QHttp);
 #if defined(QHTTP_DEBUG)
     qDebug("QHttp::bytesAvailable(): %d bytes", (int)d->rba.size());
 #endif
@@ -1861,6 +1866,7 @@ qint64 QHttp::bytesAvailable() const
 */
 qint64 QHttp::read(char *data, qint64 maxlen)
 {
+    Q_D(QHttp);
     if (data == 0 && maxlen != 0) {
         qWarning("QHttp::read: Null pointer error");
         return -1;
@@ -1906,6 +1912,7 @@ QByteArray QHttp::readAll()
 */
 int QHttp::currentId() const
 {
+    Q_D(const QHttp);
     if (d->pending.isEmpty())
         return 0;
     return d->pending.first()->id;
@@ -1921,6 +1928,7 @@ int QHttp::currentId() const
 */
 QHttpRequestHeader QHttp::currentRequest() const
 {
+    Q_D(const QHttp);
     if (!d->pending.isEmpty()) {
         QHttpRequest *r = d->pending.first();
         if (r->hasRequestHeader())
@@ -1938,6 +1946,7 @@ QHttpRequestHeader QHttp::currentRequest() const
 */
 QHttpResponseHeader QHttp::lastResponse() const
 {
+    Q_D(const QHttp);
     return d->response;
 }
 
@@ -1953,6 +1962,7 @@ QHttpResponseHeader QHttp::lastResponse() const
 */
 QIODevice *QHttp::currentSourceDevice() const
 {
+    Q_D(const QHttp);
     if (d->pending.isEmpty())
         return 0;
     return d->pending.first()->sourceDevice();
@@ -1970,6 +1980,7 @@ QIODevice *QHttp::currentSourceDevice() const
 */
 QIODevice *QHttp::currentDestinationDevice() const
 {
+    Q_D(const QHttp);
     if (d->pending.isEmpty())
         return 0;
     return d->pending.first()->destinationDevice();
@@ -1986,6 +1997,7 @@ QIODevice *QHttp::currentDestinationDevice() const
 */
 bool QHttp::hasPendingRequests() const
 {
+    Q_D(const QHttp);
     return d->pending.count() > 1;
 }
 
@@ -1998,6 +2010,7 @@ bool QHttp::hasPendingRequests() const
 */
 void QHttp::clearPendingRequests()
 {
+    Q_D(QHttp);
     // delete all entires except the first one
     while (d->pending.count() > 1)
         delete d->pending.takeLast();
@@ -2020,6 +2033,7 @@ void QHttp::clearPendingRequests()
 */
 int QHttp::setHost(const QString &hostName, quint16 port)
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpSetHostRequest(hostName, port, ConnectionModeHttp));
 }
 
@@ -2047,6 +2061,7 @@ int QHttp::setHost(const QString &hostName, ConnectionMode mode, quint16 port)
     if (mode == ConnectionModeHttps)
         qWarning("QHttp::setHost: HTTPS connection requested but SSL support not compiled in");
 #endif
+    Q_D(QHttp);
     if (port == 0)
         port = (mode == ConnectionModeHttp) ? 80 : 443;
     return d->addRequest(new QHttpSetHostRequest(hostName, port, mode));
@@ -2075,6 +2090,7 @@ int QHttp::setHost(const QString &hostName, ConnectionMode mode, quint16 port)
 */
 int QHttp::setSocket(QTcpSocket *socket)
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpSetSocketRequest(socket));
 }
 
@@ -2093,6 +2109,7 @@ int QHttp::setSocket(QTcpSocket *socket)
 */
 int QHttp::setUser(const QString &userName, const QString &password)
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpSetUserRequest(userName, password));
 }
 
@@ -2120,6 +2137,7 @@ int QHttp::setUser(const QString &userName, const QString &password)
 int QHttp::setProxy(const QString &host, int port,
                     const QString &username, const QString &password)
 {
+    Q_D(QHttp);
     QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, port, username, password);
     return d->addRequest(new QHttpSetProxyRequest(proxy));
 }
@@ -2140,6 +2158,7 @@ int QHttp::setProxy(const QString &host, int port,
 */
 int QHttp::setProxy(const QNetworkProxy &proxy)
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpSetProxyRequest(proxy));
 }
 
@@ -2178,6 +2197,7 @@ int QHttp::setProxy(const QNetworkProxy &proxy)
 */
 int QHttp::get(const QString &path, QIODevice *to)
 {
+    Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("GET"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
     return d->addRequest(new QHttpPGHRequest(header, (QIODevice *) 0, to));
@@ -2215,6 +2235,7 @@ int QHttp::get(const QString &path, QIODevice *to)
 */
 int QHttp::post(const QString &path, QIODevice *data, QIODevice *to )
 {
+    Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("POST"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
     return d->addRequest(new QHttpPGHRequest(header, data, to));
@@ -2227,6 +2248,7 @@ int QHttp::post(const QString &path, QIODevice *data, QIODevice *to )
 */
 int QHttp::post(const QString &path, const QByteArray &data, QIODevice *to)
 {
+    Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("POST"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
     return d->addRequest(new QHttpPGHRequest(header, new QByteArray(data), to));
@@ -2252,6 +2274,7 @@ int QHttp::post(const QString &path, const QByteArray &data, QIODevice *to)
 */
 int QHttp::head(const QString &path)
 {
+    Q_D(QHttp);
     QHttpRequestHeader header(QLatin1String("HEAD"), path);
     header.setValue(QLatin1String("Connection"), QLatin1String("Keep-Alive"));
     return d->addRequest(new QHttpPGHRequest(header, (QIODevice*)0, 0));
@@ -2286,6 +2309,7 @@ int QHttp::head(const QString &path)
 */
 int QHttp::request(const QHttpRequestHeader &header, QIODevice *data, QIODevice *to)
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpNormalRequest(header, data, to));
 }
 
@@ -2296,6 +2320,7 @@ int QHttp::request(const QHttpRequestHeader &header, QIODevice *data, QIODevice 
 */
 int QHttp::request(const QHttpRequestHeader &header, const QByteArray &data, QIODevice *to )
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpNormalRequest(header, new QByteArray(data), to));
 }
 
@@ -2325,6 +2350,7 @@ int QHttp::request(const QHttpRequestHeader &header, const QByteArray &data, QIO
 */
 int QHttp::close()
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpCloseRequest());
 }
 
@@ -2335,6 +2361,7 @@ int QHttp::close()
 */
 int QHttp::closeConnection()
 {
+    Q_D(QHttp);
     return d->addRequest(new QHttpCloseRequest());
 }
 
@@ -2432,13 +2459,13 @@ void QHttpPrivate::_q_slotSendRequest()
         proxyUrl.setHost(hostName);
         if (port && port != 80)
             proxyUrl.setPort(port);
-        QString request = QString::fromLatin1(proxyUrl.resolved(QUrl::fromEncoded(header.path().toLatin1())).toEncoded());
+        QString request = QString::fromAscii(proxyUrl.resolved(QUrl::fromEncoded(header.path().toLatin1())).toEncoded());
 
         header.setRequest(header.method(), request, header.majorVersion(), header.minorVersion());
         header.setValue(QLatin1String("Proxy-Connection"), QLatin1String("keep-alive"));
 
-        QHttpAuthenticatorPrivate *auth = QHttpAuthenticatorPrivate::getPrivate(proxyAuthenticator);
-        if (auth && auth->method != QHttpAuthenticatorPrivate::None) {
+        QAuthenticatorPrivate *auth = QAuthenticatorPrivate::getPrivate(proxyAuthenticator);
+        if (auth && auth->method != QAuthenticatorPrivate::None) {
             QByteArray response = auth->calculateResponse(header.method().toLatin1(), header.path().toLatin1());
             header.setValue(QLatin1String("Proxy-Authorization"), QString::fromLatin1(response));
         }
@@ -2454,8 +2481,8 @@ void QHttpPrivate::_q_slotSendRequest()
 
     // Username support. Insert the user and password into the query
     // string.
-    QHttpAuthenticatorPrivate *auth = QHttpAuthenticatorPrivate::getPrivate(authenticator);
-    if (auth && auth->method != QHttpAuthenticatorPrivate::None) {
+    QAuthenticatorPrivate *auth = QAuthenticatorPrivate::getPrivate(authenticator);
+    if (auth && auth->method != QAuthenticatorPrivate::None) {
         QByteArray response = auth->calculateResponse(header.method().toLatin1(), header.path().toLatin1());
         header.setValue(QLatin1String("Authorization"), QString::fromLatin1(response));
     }
@@ -2706,7 +2733,7 @@ void QHttpPrivate::_q_slotReadyRead()
         bool end = false;
         QString tmp;
         while (!end && socket->canReadLine()) {
-            tmp = QString::fromLatin1(socket->readLine());
+            tmp = QString::fromAscii(socket->readLine());
             if (tmp == QLatin1String("\r\n") || tmp == QLatin1String("\n") || tmp.isEmpty())
                 end = true;
             else
@@ -2731,7 +2758,7 @@ void QHttpPrivate::_q_slotReadyRead()
 
         int statusCode = response.statusCode();
         if (statusCode == 401 || statusCode == 407) { // (Proxy) Authentication required
-            QHttpAuthenticator *auth =
+            QAuthenticator *auth =
 #ifndef QT_NO_NETWORKPROXY
                 statusCode == 407
                 ? &proxyAuthenticator :
@@ -2739,42 +2766,26 @@ void QHttpPrivate::_q_slotReadyRead()
                 &authenticator;
             if (auth->isNull())
                 auth->detach();
-            QHttpAuthenticatorPrivate *priv = QHttpAuthenticatorPrivate::getPrivate(*auth);
+            QAuthenticatorPrivate *priv = QAuthenticatorPrivate::getPrivate(*auth);
             priv->parseHttpResponse(response, (statusCode == 407));
-            if (priv->phase == QHttpAuthenticatorPrivate::Done) {
+            if (priv->phase == QAuthenticatorPrivate::Done) {
                 socket->blockSignals(true);
 #ifndef QT_NO_NETWORKPROXY
-                if (statusCode == 407) {
-                    //need to emit a QAuthenticator to maintain source compatibility
-                    QAuthenticator qauthClean = auth->toQAuthenticator();
-                    QAuthenticator qauthToEmit = qauthClean;
-                    emit q->proxyAuthenticationRequired(proxy, &qauthToEmit);
-                    if (qauthClean != qauthToEmit) {
-                        //user changed something, copy back (which will reset our state)
-                        *auth = qauthToEmit;
-                    }
-                } else
+                if (statusCode == 407)
+                    emit q->proxyAuthenticationRequired(proxy, auth);
+                else
 #endif
-                {
-                    //need to emit a QAuthenticator to maintain source compatibility
-                    QAuthenticator qauthClean = auth->toQAuthenticator();
-                    QAuthenticator qauthToEmit = qauthClean;
-                    emit q->authenticationRequired(hostName, port, &qauthToEmit);
-                    if (qauthClean != qauthToEmit) {
-                        //user changed something, copy back (which will reset our state)
-                        *auth = qauthToEmit;
-                    }
-                }
+                    emit q->authenticationRequired(hostName, port, auth);
                 socket->blockSignals(false);
-            } else if (priv->phase == QHttpAuthenticatorPrivate::Invalid) {
+            } else if (priv->phase == QAuthenticatorPrivate::Invalid) {
                 finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "Unknown authentication method")),
                         QHttp::AuthenticationRequiredError);
                 closeConn();
                 return;
             }
 
-            // priv->phase will get reset to QHttpAuthenticatorPrivate::Start if the authenticator got modified in the signal above.
-            if (priv->phase == QHttpAuthenticatorPrivate::Done) {
+            // priv->phase will get reset to QAuthenticatorPrivate::Start if the authenticator got modified in the signal above.
+            if (priv->phase == QAuthenticatorPrivate::Done) {
 #ifndef QT_NO_NETWORKPROXY
                 if (statusCode == 407)
                     finishedWithError(QLatin1String(QT_TRANSLATE_NOOP("QHttp", "Proxy authentication required")),
@@ -2857,7 +2868,7 @@ void QHttpPrivate::_q_slotReadyRead()
                 if (chunkedSize == 0) {
                     if (!socket->canReadLine())
                         break;
-                    QString sizeString = QString::fromLatin1(socket->readLine());
+                    QString sizeString = QString::fromAscii(socket->readLine());
                     int tPos = sizeString.indexOf(QLatin1Char(';'));
                     if (tPos != -1)
                         sizeString.truncate(tPos);
@@ -2876,7 +2887,7 @@ void QHttpPrivate::_q_slotReadyRead()
 
                 // read trailer
                 while (chunkedSize == -2 && socket->canReadLine()) {
-                    QString read = QString::fromLatin1(socket->readLine());
+                    QString read = QString::fromAscii(socket->readLine());
                     if (read == QLatin1String("\r\n") || read == QLatin1String("\n"))
                         chunkedSize = -1;
                 }
@@ -3016,6 +3027,7 @@ void QHttpPrivate::_q_slotDoFinished()
 */
 QHttp::State QHttp::state() const
 {
+    Q_D(const QHttp);
     return d->state;
 }
 
@@ -3028,6 +3040,7 @@ QHttp::State QHttp::state() const
 */
 QHttp::Error QHttp::error() const
 {
+    Q_D(const QHttp);
     return d->error;
 }
 
@@ -3039,6 +3052,7 @@ QHttp::Error QHttp::error() const
 */
 QString QHttp::errorString() const
 {
+    Q_D(const QHttp);
     return d->errorString;
 }
 
@@ -3050,28 +3064,6 @@ void QHttpPrivate::setState(int s)
 #endif
     state = QHttp::State(s);
     emit q->stateChanged(s);
-}
-
-void QHttp::stateChanged(int state)
-{
-    if (state == QHttp::Unconnected && Aborting)
-    {
-        disconnectQHttp();
-        emit Aborted;
-    }
-}
-
-void QHttp::disconnectQHttp()
-{
-      abort();
-//    if (http != NULL)
-//    {
-//        http->disconnect(this, SLOT( dataReadProgressSlot(int, int) ) );
-//        http->disconnect(this, SLOT( doneSlot(bool) ) );
-//        http->disconnect(this, SLOT( headerReceived(const QHttpResponseHeader&) ) );
-//        http->disconnect(this, SLOT( stateChanged(int) ) );
-//        http = NULL;
-//    }
 }
 
 void QHttpPrivate::closeConn()
@@ -3149,6 +3141,7 @@ void QHttpPrivate::setSock(QTcpSocket *sock)
 #ifndef QT_NO_OPENSSL
 void QHttp::ignoreSslErrors()
 {
+    Q_D(QHttp);
     QSslSocket *sslSocket = qobject_cast<QSslSocket *>(d->socket);
     if (sslSocket)
         sslSocket->ignoreSslErrors();
@@ -3157,9 +3150,6 @@ void QHttp::ignoreSslErrors()
 
 QT_END_NAMESPACE
 
-#ifdef WAF
-#include "qhttp.moc"
-#endif
+#include "moc_qhttp.cpp"
 
-#endif
 #endif
