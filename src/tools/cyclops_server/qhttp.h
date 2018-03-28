@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2014 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtNetwork module of the Qt Toolkit.
@@ -50,12 +50,6 @@
 
 QT_BEGIN_HEADER
 
-QT_BEGIN_NAMESPACE
-
-QT_MODULE(Network)
-
-#ifndef QT_NO_HTTP
-
 class QTcpSocket;
 class QTimerEvent;
 class QIODevice;
@@ -66,7 +60,7 @@ class QSslError;
 class QHttpPrivate;
 
 class QHttpHeaderPrivate;
-class Q_NETWORK_EXPORT QHttpHeader
+class QHttpHeader
 {
 public:
     QHttpHeader();
@@ -116,7 +110,7 @@ private:
 };
 
 class QHttpResponseHeaderPrivate;
-class Q_NETWORK_EXPORT QHttpResponseHeader : public QHttpHeader
+class QHttpResponseHeader : public QHttpHeader
 {
 public:
     QHttpResponseHeader();
@@ -144,7 +138,7 @@ private:
 };
 
 class QHttpRequestHeaderPrivate;
-class Q_NETWORK_EXPORT QHttpRequestHeader : public QHttpHeader
+class QHttpRequestHeader : public QHttpHeader
 {
 public:
     QHttpRequestHeader();
@@ -170,7 +164,7 @@ private:
     Q_DECLARE_PRIVATE(QHttpRequestHeader)
 };
 
-class Q_NETWORK_EXPORT QHttp : public QObject
+class QHttp : public QObject
 {
     Q_OBJECT
 
@@ -232,10 +226,6 @@ public:
 
     qint64 bytesAvailable() const;
     qint64 read(char *data, qint64 maxlen);
-#ifdef QT3_SUPPORT
-    inline QT3_SUPPORT qint64 readBlock(char *data, quint64 maxlen)
-    { return read(data, qint64(maxlen)); }
-#endif
     QByteArray readAll();
 
     int currentId() const;
@@ -282,20 +272,20 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(QHttp)
-    Q_DECLARE_PRIVATE(QHttp)
+    QScopedPointer<QHttpPrivate> d;
 
-    Q_PRIVATE_SLOT(d_func(), void _q_startNextRequest())
-    Q_PRIVATE_SLOT(d_func(), void _q_slotReadyRead())
-    Q_PRIVATE_SLOT(d_func(), void _q_slotConnected())
-    Q_PRIVATE_SLOT(d_func(), void _q_slotError(QAbstractSocket::SocketError))
-    Q_PRIVATE_SLOT(d_func(), void _q_slotClosed())
-    Q_PRIVATE_SLOT(d_func(), void _q_slotBytesWritten(qint64 numBytes))
+    Q_PRIVATE_SLOT(d, void _q_startNextRequest())
+    Q_PRIVATE_SLOT(d, void _q_slotReadyRead())
+    Q_PRIVATE_SLOT(d, void _q_slotConnected())
+    Q_PRIVATE_SLOT(d, void _q_slotError(QAbstractSocket::SocketError))
+    Q_PRIVATE_SLOT(d, void _q_slotClosed())
+    Q_PRIVATE_SLOT(d, void _q_slotBytesWritten(qint64 numBytes))
 #ifndef QT_NO_OPENSSL
-    Q_PRIVATE_SLOT(d_func(), void _q_slotEncryptedBytesWritten(qint64 numBytes))
+    Q_PRIVATE_SLOT(d, void _q_slotEncryptedBytesWritten(qint64 numBytes))
 #endif
-    Q_PRIVATE_SLOT(d_func(), void _q_slotDoFinished())
-    Q_PRIVATE_SLOT(d_func(), void _q_slotSendRequest())
-    Q_PRIVATE_SLOT(d_func(), void _q_continuePost())
+    Q_PRIVATE_SLOT(d, void _q_slotDoFinished())
+    Q_PRIVATE_SLOT(d, void _q_slotSendRequest())
+    Q_PRIVATE_SLOT(d, void _q_continuePost())
 
     friend class QHttpNormalRequest;
     friend class QHttpSetHostRequest;
@@ -305,10 +295,6 @@ private:
     friend class QHttpCloseRequest;
     friend class QHttpPGHRequest;
 };
-
-#endif // QT_NO_HTTP
-
-QT_END_NAMESPACE
 
 QT_END_HEADER
 

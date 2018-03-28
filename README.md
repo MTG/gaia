@@ -184,8 +184,7 @@ which is distributed under the 3-clause BSD license.
 This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
 which is distributed under the LGPLv3 license.
 
-Cyclops for Qt5 contains source code from the Qt project archive,
-which is distributed under the terms specified under GNU GPLv3 license.  This does not work at present.
+Cyclops for Qt5 contains source code from the Qt project deprecated APIs which have been removed from Qt (https://github.com/qt/qthttp), which is distributed under the terms specified under GNU GPLv3 license.  The application to Cyclops does not work at present.
 
 This library contains source code from FrogLogic command line parser
 (http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)

@@ -1,0 +1,6 @@
+#ifndef QT_QTHTTP_MODULE_H
+#define QT_QTHTTP_MODULE_H
+//#include <QtHttp/QtHttpDepends>
+#include "qhttp.h"
+#include "qthttpversion.h"
+#endif
