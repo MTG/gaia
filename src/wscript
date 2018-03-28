@@ -42,7 +42,6 @@ def configure(conf):
         conf.env['pyext_PATTERN'] = "%s.so"
         python_dir = str(conf.env['PYTHONDIR'])
         python_dir = python_dir.replace ('3/', str(conf.env['PYTHON_VERSION'])+'/', 1)
-	print ('python_dir = ', python_dir)
         conf.env['PYTHONDIR'] = python_dir
 
 def install_tree(bld, dst, src):
@@ -172,8 +171,8 @@ def build_tools(bld):
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclops',
                 includes = [ '.', 'metrics', '3rdparty' ],
-                defines = 'GAIA_QT5 WAF', 
-                uselib = 'QT5CORE QTNETWORK QT5WIDGETS',  
+                defines = 'GAIA_QT5', 
+                uselib = 'QT5CORE QT5WIDGETS',  
                 use = ['gaia2'] + bld.env['USELIB'])
 
             # cyclops "master" server
@@ -194,8 +193,8 @@ def build_tools(bld):
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclopsmaster',
                 includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-                defines = 'GAIA_QT5 WAF', 
-                uselib = 'QT5CORE QTNETWORK QT5WIDGETS',  
+                defines = 'GAIA_QT5', 
+                uselib = 'QT5CORE QT5WIDGETS',  
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')

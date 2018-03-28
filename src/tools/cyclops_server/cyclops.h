@@ -47,9 +47,8 @@ class CyclopsResults {
 };
 
 class Cyclops : public QObject {
-#ifdef WAF
 Q_OBJECT
-#endif
+
  public:
 
   Cyclops();

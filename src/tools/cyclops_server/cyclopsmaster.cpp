@@ -735,6 +735,5 @@ void CyclopsMaster::setup(const QString& filename) {
 }
 
 
-#ifdef WAF
 #include "cyclopsmaster.moc"
-#endif
+

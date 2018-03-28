@@ -26,7 +26,7 @@ INSTALL
 
 ## Linux
 
-- Still an outstanding issue with `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`requires `defines = 'WAF'`.
+- Still an outstanding issue with `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`work for `qt4` but are still not working and in-progress for `qt5`.
 
    ​
 
@@ -45,7 +45,7 @@ INSTALL
    ​
 
 
-- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for certainty.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.  Addendum:  All tabs converted to spaces
+- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for version certainty.  `#define Vector` was replaced by `std::vector` to eliminate `c++11` errors.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.  Addendum:  All tabs converted to spaces
 
    `find ./ -iname '*.h' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;`
 
@@ -183,6 +183,9 @@ which is distributed under the 3-clause BSD license.
 
 This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
 which is distributed under the LGPLv3 license.
+
+Cyclops for Qt5 contains source code from the Qt project archive,
+which is distributed under the terms specified under GNU GPLv3 license.  This does not work at present.
 
 This library contains source code from FrogLogic command line parser
 (http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)

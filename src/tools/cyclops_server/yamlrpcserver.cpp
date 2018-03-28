@@ -231,6 +231,4 @@ void YamlRPCServer::discardClient() {
   //qDebug() << "clients connected: " << numberConnectedClients();
 }
 
-#ifdef WAF
 #include "yamlrpcserver.moc"
-#endif

@@ -3150,6 +3150,6 @@ void QHttp::ignoreSslErrors()
 
 QT_END_NAMESPACE
 
-#include "moc_qhttp.cpp"
+#include "qhttp.moc"
 
 #endif

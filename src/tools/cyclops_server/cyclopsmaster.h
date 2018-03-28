@@ -45,9 +45,8 @@ class PendingRequest {
 };
 
 class CyclopsMaster : public YamlRPCServer {
-#ifdef WAF
 Q_OBJECT
-#endif
+
  public:
 
   CyclopsMaster();
