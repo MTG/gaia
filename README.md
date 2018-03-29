@@ -26,7 +26,7 @@ INSTALL
 
 ## Linux
 
-- Still an outstanding issue with `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`work for `qt4` but are still not working and in-progress for `qt5`.
+- Testing `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`work for `qt4`.
 
    ​
 
@@ -184,7 +184,7 @@ which is distributed under the 3-clause BSD license.
 This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
 which is distributed under the LGPLv3 license.
 
-Cyclops for Qt5 contains source code from the Qt project deprecated APIs which have been removed from Qt (https://github.com/qt/qthttp), which is distributed under the terms specified under GNU GPLv3 license.  The application to Cyclops does not work at present.
+Cyclops for Qt5 contains source code from the Qt project deprecated APIs which have been removed from Qt (https://github.com/qt/qthttp), which is distributed under the terms specified under GNU GPLv3 license.  These have been heavily reorder to eliminate compile errors.
 
 This library contains source code from FrogLogic command line parser
 (http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)
