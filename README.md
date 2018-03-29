@@ -26,7 +26,7 @@ INSTALL
 
 ## Linux
 
-- Testing `--with-cyclops`for `qt5`.  Builds with `-with-cyclops`work for `qt4`.
+- Testing `--with-cyclops --with-gaia-qt5`.  It compiles cleanly but does not presently work.  Build with `-with-cyclops`(for `qt4) `works as before.
 
    ​
 
