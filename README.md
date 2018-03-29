@@ -26,7 +26,7 @@ INSTALL
 
 ## Linux
 
-- All features work except `project_file.py`and `regenerate_docstring.py`.  Build with `-with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`.  This `cyclops` compiles cleanly but does not presently work.  
+- All features work except `project_file.py`and `regenerate_docstring.py`.  Build with `-with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before.  
 
    ​
 
