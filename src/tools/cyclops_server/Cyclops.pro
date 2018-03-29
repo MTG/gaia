@@ -37,8 +37,8 @@ SOURCES += \
         cyclopsmasterserver.cpp \
         cyclopsproxy.cpp \
         cyclopsserver.cpp \
-        qhttp.cpp \
-        qhttpauthenticator.cpp \
+        qthttp/qhttp.cpp \
+        qthttp/qhttpauthenticator.cpp \
         yamlrpcserver.cpp \
         ../../yamlcpp.cpp
     #cyclopsnetworkreplyerror.cpp
@@ -48,9 +48,9 @@ HEADERS += \
         cyclopsmaster.h \
         cyclopsproxy.h \
         logging.h \
-        qhttp.h \
-        qringbuffer_p.h \
-        qhttpauthenticator_p.h \
+        qthttp/qhttp.h \
+        qthttp/qringbuffer_p.h \
+        qthttp/qhttpauthenticator_p.h \
         yamlrpcserver.h \
         ../../yamlcpp.h
 

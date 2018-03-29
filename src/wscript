@@ -162,17 +162,19 @@ def build_tools(bld):
                 'tools/cyclops_server/cyclopsserver.cpp '+ \
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
                 'tools/cyclops_server/cyclops.cpp ' + \
-                'tools/cyclops_server/qhttp.cpp ' + \
-                'tools/cyclops_server/qhttpauthenticator.cpp ' + \
+                'tools/cyclops_server/qthttp/qhttp.cpp ' + \
+                'tools/cyclops_server/qthttp/qhttpauthenticator.cpp ' + \
                 'tools/cyclops_server/yamlrpcserver.cpp', 
                 moc = \
                 'tools/cyclops_server/cyclops.h '+ \
-                'tools/cyclops_server/qhttp.h ' + \
+                'tools/cyclops_server/qthttp/qhttp.h ' + \
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclops',
-                includes = [ '.', 'metrics', '3rdparty' ],
+                includes = [ '.', 'tools/cyclops_server/qthttp',  
+                    '/usr/include/x86_64-linux-gnu/qt5/QtHttp',
+                    'metrics', '3rdparty' ],
                 defines = 'GAIA_QT5', 
-                uselib = 'QT5CORE QT5NETWORK',  
+                uselib = 'Qt5Http QT5CORE',  
                 use = ['gaia2'] + bld.env['USELIB'])
 
             # cyclops "master" server
@@ -183,18 +185,21 @@ def build_tools(bld):
                 'tools/cyclops_server/cyclopsproxy.cpp ' + \
                 'tools/cyclops_server/cyclopsmaster.cpp ' + \
                 'tools/cyclops_server/cyclops.cpp ' + \
-                'tools/cyclops_server/qhttp.cpp ' + \
-                'tools/cyclops_server/qhttpauthenticator.cpp ' + \
+                'tools/cyclops_server/qthttp/qhttp.cpp ' + \
+                'tools/cyclops_server/qthttp/qhttpauthenticator.cpp ' + \
                 'tools/cyclops_server/yamlrpcserver.cpp', 
                 moc = \
                 'tools/cyclops_server/cyclops.h '+  \
                 'tools/cyclops_server/cyclopsmaster.h '+  \
-                'tools/cyclops_server/qhttp.h ' + \
+                'tools/cyclops_server/qthttp/qhttp.h ' + \
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclopsmaster',
-                includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
+                includes = [ '.',  'tools/cyclops_server/qthttp', 
+                    '/usr/include/x86_64-linux-gnu/qt5/QtHttp',
+                    'metrics', '3rdparty',
+                    'tools/cyclops_server/' ],
                 defines = 'GAIA_QT5', 
-                uselib = 'QT5CORE QT5NETWORK',  
+                uselib = 'Qt5Http QT5CORE',  
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts
             bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')

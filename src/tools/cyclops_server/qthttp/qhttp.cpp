@@ -67,119 +67,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHttpNormalRequest;
-class QHttpRequest
-{
-public:
-    QHttpRequest() : finished(false)
-    { id = idCounter.fetchAndAddRelaxed(1); }
-    virtual ~QHttpRequest()
-    { }
-
-    virtual void start(QHttp *) = 0;
-    virtual bool hasRequestHeader();
-    virtual QHttpRequestHeader requestHeader();
-
-    virtual QIODevice *sourceDevice() = 0;
-    virtual QIODevice *destinationDevice() = 0;
-
-    int id;
-    bool finished;
-
-private:
-    static QBasicAtomicInt idCounter;
-};
-
-class QHttpPrivate
-{
-public:
-    Q_DECLARE_PUBLIC(QHttp)
-
-    inline QHttpPrivate(QHttp* parent)
-        : socket(0), reconnectAttempts(2),
-          deleteSocket(0), state(QHttp::Unconnected),
-          error(QHttp::NoError), port(0), mode(QHttp::ConnectionModeHttp),
-          toDevice(0), postDevice(0), bytesDone(0), chunkedSize(-1),
-          repost(false), pendingPost(false), q_ptr(parent)
-    {
-    }
-
-    inline ~QHttpPrivate()
-    {
-        while (!pending.isEmpty())
-            delete pending.takeFirst();
-
-        if (deleteSocket)
-            delete socket;
-    }
-
-    // private slots
-    void _q_startNextRequest();
-    void _q_slotReadyRead();
-    void _q_slotConnected();
-    void _q_slotError(QAbstractSocket::SocketError);
-    void _q_slotClosed();
-    void _q_slotBytesWritten(qint64 numBytes);
-#ifndef QT_NO_OPENSSL
-    void _q_slotEncryptedBytesWritten(qint64 numBytes);
-#endif
-    void _q_slotDoFinished();
-    void _q_slotSendRequest();
-    void _q_continuePost();
-
-    int addRequest(QHttpNormalRequest *);
-    int addRequest(QHttpRequest *);
-    void finishedWithSuccess();
-    void finishedWithError(const QString &detail, int errorCode);
-
-    void init();
-    void setState(int);
-    void closeConn();
-    void setSock(QTcpSocket *sock);
-
-    void postMoreData();
-
-    QTcpSocket *socket;
-    int reconnectAttempts;
-    bool deleteSocket;
-    QList<QHttpRequest *> pending;
-
-    QHttp::State state;
-    QHttp::Error error;
-    QString errorString;
-
-    QString hostName;
-    quint16 port;
-    QHttp::ConnectionMode mode;
-
-    QByteArray buffer;
-    QIODevice *toDevice;
-    QIODevice *postDevice;
-
-    qint64 bytesDone;
-    qint64 bytesTotal;
-    qint64 chunkedSize;
-
-    QHttpRequestHeader header;
-
-    bool readHeader;
-    QString headerStr;
-    QHttpResponseHeader response;
-
-    QRingBuffer rba;
-
-#ifndef QT_NO_NETWORKPROXY
-    QNetworkProxy proxy;
-    QHttpAuthenticator proxyAuthenticator;
-#endif
-    QHttpAuthenticator authenticator;
-    bool repost;
-    bool hasFinishedWithError;
-    bool pendingPost;
-    QTimer post100ContinueTimer;
-    QHttp *q_ptr;
-};
-
 QBasicAtomicInt QHttpRequest::idCounter = Q_BASIC_ATOMIC_INITIALIZER(1);
 
 bool QHttpRequest::hasRequestHeader()
@@ -191,55 +78,6 @@ QHttpRequestHeader QHttpRequest::requestHeader()
 {
     return QHttpRequestHeader();
 }
-
-/****************************************************
- *
- * QHttpNormalRequest
- *
- ****************************************************/
-
-class QHttpNormalRequest : public QHttpRequest
-{
-public:
-    QHttpNormalRequest(const QHttpRequestHeader &h, QIODevice *d, QIODevice *t) :
-        header(h), to(t)
-    {
-        is_ba = false;
-        data.dev = d;
-    }
-
-    QHttpNormalRequest(const QHttpRequestHeader &h, QByteArray *d, QIODevice *t) :
-        header(h), to(t)
-    {
-        is_ba = true;
-        data.ba = d;
-    }
-
-    ~QHttpNormalRequest()
-    {
-        if (is_ba)
-            delete data.ba;
-    }
-
-    void start(QHttp *);
-    bool hasRequestHeader();
-    QHttpRequestHeader requestHeader();
-    inline void setRequestHeader(const QHttpRequestHeader &h) { header = h; }
-
-    QIODevice *sourceDevice();
-    QIODevice *destinationDevice();
-
-protected:
-    QHttpRequestHeader header;
-
-private:
-    union {
-        QByteArray *ba;
-        QIODevice *dev;
-    } data;
-    bool is_ba;
-    QIODevice *to;
-};
 
 void QHttpNormalRequest::start(QHttp *http)
 {
@@ -296,33 +134,6 @@ QIODevice *QHttpNormalRequest::destinationDevice()
     return to;
 }
 
-/****************************************************
- *
- * QHttpPGHRequest
- * (like a QHttpNormalRequest, but for the convenience
- * functions put(), get() and head() -- i.e. set the
- * host header field correctly before sending the
- * request)
- *
- ****************************************************/
-
-class QHttpPGHRequest : public QHttpNormalRequest
-{
-public:
-    QHttpPGHRequest(const QHttpRequestHeader &h, QIODevice *d, QIODevice *t) :
-        QHttpNormalRequest(h, d, t)
-    { }
-
-    QHttpPGHRequest(const QHttpRequestHeader &h, QByteArray *d, QIODevice *t) :
-        QHttpNormalRequest(h, d, t)
-    { }
-
-    ~QHttpPGHRequest()
-    { }
-
-    void start(QHttp *);
-};
-
 void QHttpPGHRequest::start(QHttp *http)
 {
     if (http->d->port && http->d->port != 80)
@@ -332,31 +143,6 @@ void QHttpPGHRequest::start(QHttp *http)
     QHttpNormalRequest::start(http);
 }
 
-/****************************************************
- *
- * QHttpSetHostRequest
- *
- ****************************************************/
-
-class QHttpSetHostRequest : public QHttpRequest
-{
-public:
-    QHttpSetHostRequest(const QString &h, quint16 p, QHttp::ConnectionMode m)
-        : hostName(h), port(p), mode(m)
-    { }
-
-    void start(QHttp *);
-
-    QIODevice *sourceDevice()
-    { return 0; }
-    QIODevice *destinationDevice()
-    { return 0; }
-
-private:
-    QString hostName;
-    quint16 port;
-    QHttp::ConnectionMode mode;
-};
 
 void QHttpSetHostRequest::start(QHttp *http)
 {
@@ -382,25 +168,6 @@ void QHttpSetHostRequest::start(QHttp *http)
  *
  ****************************************************/
 
-class QHttpSetUserRequest : public QHttpRequest
-{
-public:
-    QHttpSetUserRequest(const QString &userName, const QString &password) :
-        user(userName), pass(password)
-    { }
-
-    void start(QHttp *);
-
-    QIODevice *sourceDevice()
-    { return 0; }
-    QIODevice *destinationDevice()
-    { return 0; }
-
-private:
-    QString user;
-    QString pass;
-};
-
 void QHttpSetUserRequest::start(QHttp *http)
 {
     http->d->authenticator.setUser(user);
@@ -408,43 +175,7 @@ void QHttpSetUserRequest::start(QHttp *http)
     http->d->finishedWithSuccess();
 }
 
-#ifndef QT_NO_NETWORKPROXY
 
-/****************************************************
- *
- * QHttpSetProxyRequest
- *
- ****************************************************/
-
-class QHttpSetProxyRequest : public QHttpRequest
-{
-public:
-    inline QHttpSetProxyRequest(const QNetworkProxy &proxy)
-    {
-        this->proxy = proxy;
-    }
-
-    inline void start(QHttp *http)
-    {
-        http->d->proxy = proxy;
-        QString user = proxy.user();
-        if (!user.isEmpty())
-            http->d->proxyAuthenticator.setUser(user);
-        QString password = proxy.password();
-        if (!password.isEmpty())
-            http->d->proxyAuthenticator.setPassword(password);
-        http->d->finishedWithSuccess();
-    }
-
-    inline QIODevice *sourceDevice()
-    { return 0; }
-    inline QIODevice *destinationDevice()
-    { return 0; }
-private:
-    QNetworkProxy proxy;
-};
-
-#endif // QT_NO_NETWORKPROXY
 
 /****************************************************
  *
@@ -452,22 +183,7 @@ private:
  *
  ****************************************************/
 
-class QHttpSetSocketRequest : public QHttpRequest
-{
-public:
-    QHttpSetSocketRequest(QTcpSocket *s) : socket(s)
-    { }
 
-    void start(QHttp *);
-
-    QIODevice *sourceDevice()
-    { return 0; }
-    QIODevice *destinationDevice()
-    { return 0; }
-
-private:
-    QTcpSocket *socket;
-};
 
 void QHttpSetSocketRequest::start(QHttp *http)
 {
@@ -481,34 +197,14 @@ void QHttpSetSocketRequest::start(QHttp *http)
  *
  ****************************************************/
 
-class QHttpCloseRequest : public QHttpRequest
-{
-public:
-    QHttpCloseRequest()
-    { }
-    void start(QHttp *);
 
-    QIODevice *sourceDevice()
-    { return 0; }
-    QIODevice *destinationDevice()
-    { return 0; }
-};
 
 void QHttpCloseRequest::start(QHttp *http)
 {
     http->d->closeConn();
 }
 
-class QHttpHeaderPrivate
-{
-    Q_DECLARE_PUBLIC(QHttpHeader)
-public:
-    inline virtual ~QHttpHeaderPrivate() {}
 
-    QList<QPair<QString, QString> > values;
-    bool valid;
-    QHttpHeader *q_ptr;
-};
 
 /****************************************************
  *
@@ -994,15 +690,6 @@ void QHttpHeader::setContentType(const QString &type)
     setValue(QLatin1String("content-type"), type);
 }
 
-class QHttpResponseHeaderPrivate : public QHttpHeaderPrivate
-{
-    Q_DECLARE_PUBLIC(QHttpResponseHeader)
-public:
-    int statCode;
-    QString reasonPhr;
-    int majVer;
-    int minVer;
-};
 
 /****************************************************
  *
@@ -1199,15 +886,7 @@ QString QHttpResponseHeader::toString() const
     return ret.arg(d->majVer).arg(d->minVer).arg(d->statCode).arg(d->reasonPhr).arg(QHttpHeader::toString());
 }
 
-class QHttpRequestHeaderPrivate : public QHttpHeaderPrivate
-{
-    Q_DECLARE_PUBLIC(QHttpRequestHeader)
-public:
-    QString m;
-    QString p;
-    int majVer;
-    int minVer;
-};
+
 
 /****************************************************
  *

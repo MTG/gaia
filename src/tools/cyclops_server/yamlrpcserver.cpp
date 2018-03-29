@@ -19,11 +19,8 @@
 
 #include <QTcpSocket>
 #include <QStringList>
-#ifndef GAIA_QT5
-#include <QHttpRequestHeader>
-#else
-#include "http_headers.h"
-#endif
+#include "qthttp/qhttp.h"
+#include "qthttp/QHttpRequestHeader"
 #include <QUrl>
 #include <QDateTime>
 #include "yamlrpcserver.h"

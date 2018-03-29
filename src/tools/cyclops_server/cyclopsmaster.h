@@ -84,13 +84,7 @@ Q_OBJECT
    * Send a reply to the client if all slaves have replied.
    */
   void sendReadyReply(QTcpSocket* client);
-#ifdef GAIA_QT5
-  void requestFinished(QNetworkReply* pReply);
-  void ReplyFinished();
-  void ReplyError(QNetworkReply::NetworkError code);
-  bool m_replyGotError;
-  void ReplySSLError(const QList<QSslError> & errors);
-#endif
+
   /**
    * Sends the specified message to client.
    */

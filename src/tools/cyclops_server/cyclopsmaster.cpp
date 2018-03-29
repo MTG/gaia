@@ -24,11 +24,7 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QTcpSocket>
-#ifndef GAIA_QT5
 #include <QHttp>
-#else
-#include "qhttp.h"
-#endif
 #include <QHostInfo>
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
