@@ -160,9 +160,11 @@ def configure(conf):
     conf.env['WITH_TBB'] = conf.options.tbb
     if conf.env['WITH_TBB']:
         check_tbb(conf)
-
+    
     # optional dependency: QtNetwork for Cyclops Server
+    print ('conf.options.cyclops = ',  conf.options.cyclops)
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops
+    print ('conf.env[WITH_CYCLOPS] = ',  conf.env['WITH_CYCLOPS'])
  
     conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
@@ -215,8 +217,8 @@ def configure(conf):
     else:
         conf.load('compiler_cxx compiler_c')
         conf.load('qt4')
-        if conf.options.cyclops:
-            conf.load('slow_qt4',tooldir='.')
+        #if conf.options.cyclops:
+        #    conf.load('slow_qt4',tooldir='.')
     
     conf.recurse('src')
 
