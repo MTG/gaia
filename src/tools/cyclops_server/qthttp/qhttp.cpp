@@ -81,7 +81,7 @@
 
 #ifndef QT_NO_HTTP
 
-//QT_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE
 
 QBasicAtomicInt QHttpRequest::idCounter = Q_BASIC_ATOMIC_INITIALIZER(1);
 
@@ -2828,7 +2828,7 @@ void QHttp::ignoreSslErrors()
 }
 #endif
 
-//QT_END_NAMESPACE
+QT_END_NAMESPACE
 
 //#include "qhttp.moc"
 
