@@ -20,6 +20,7 @@
 
 
 
+from builtins import str
 from gaia2 import View, MetricFactory
 
 def train_1NN(dataset, groundTruth, distance, params, dropBestResult = False):

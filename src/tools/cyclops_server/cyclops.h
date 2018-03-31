@@ -17,12 +17,30 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_CYCLOPS_H
 #define GAIA_CYCLOPS_H
 
-#include "dataset.h"
-#include "distancefunction.h"
-#include "searchspace.h"
+#include <QObject>
+//#include "cairo/dataset.h"
+#include "../../dataset.h"
+#include "../../metrics/distancefunction.h"
+#include "../../searchspace.h"
 
 typedef QList<QString> CyclopsResultsHeader;
 typedef QList<QList<QVariant> > CyclopsResultsValues;
@@ -46,10 +64,11 @@ class CyclopsResults {
 
 class Cyclops : public QObject {
 Q_OBJECT
+
  public:
 
   Cyclops();
-  ~Cyclops();
+  virtual ~Cyclops();
 
   /**
    * Load a dataset into memory and use the given name as identifier.

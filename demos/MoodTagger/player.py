@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import print_function
 # Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
 #
 # This file is part of Gaia
@@ -15,11 +17,28 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
+from builtins import object
+from past.utils import old_div
 import win32com.client
 from nowplayingfeatures import *
 from winampnew import *
 
-class Player:
+class Player(object):
 
     def __init__(self, ptype):
         if(ptype=='iTunes'):
@@ -42,7 +61,7 @@ class Player:
             elif(newtype=='winamp'):
                 self.app = Winamp()
         self.type = newtype
-        print self.type
+        print(self.type)
 
     def getCurrentTitle(self):
         if(self.type=='iTunes'):
@@ -77,15 +96,7 @@ class Player:
         if(self.type=='iTunes'):
             return self.app.PlayerPosition
         elif(self.type=='winamp'):
-            position = self.app.getPlayingTrackPosition()/1000
+            position = old_div(self.app.getPlayingTrackPosition(),1000)
             return position
         else:
             return 0
-
-
-
-    
-
-
-
-    

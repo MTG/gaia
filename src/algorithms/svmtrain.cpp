@@ -17,15 +17,32 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #include <QSet>
 #include <QFile>
 #include <QTextStream>
 #include <QTemporaryFile>
 #include "svmtrain.h"
-#include "3rdparty/libsvm/svm.h"
-#include "3rdparty/libsvm/gaiasvmutils.h"
-#include "utils.h"
-#include "algoutils.h"
+#include "../3rdparty/libsvm/svm.h"
+#include "../3rdparty/libsvm/gaiasvmutils.h"
+#include "../utils.h"
+#include "../algorithms/algoutils.h"
 
 namespace gaia2 {
 
@@ -103,7 +120,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   //param.svm_type = C_SVC;
   //param.kernel_type = RBF;
   //param.degree = 3;
-  //param.gamma = 0;	// 1/k
+  //param.gamma = 0;    // 1/k
   param.coef0 = 0;
   param.nu = 0.5;
   param.cache_size = 100;
@@ -183,7 +200,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   QString modelFilename = modelFile.fileName();
   modelFile.close();
 
-  if (svm_save_model(modelFilename.toAscii().constData(), model) == -1) {
+  if (svm_save_model(modelFilename.toLatin1().constData(), model) == -1) {
     throw GaiaException("SVMTrain: error while saving SVM model to temp file");
   }
 
@@ -195,7 +212,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   // if we asked for the model to be output specifically, also do it
   if (_params.value("modelFilename", "").toString() != "") {
     QString filename = _params.value("modelFilename").toString();
-    svm_save_model(filename.toAscii().constData(), model);
+    svm_save_model(filename.toLatin1().constData(), model);
   }
 
   // destroy the model allocated by libsvm

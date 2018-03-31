@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include <QStringList>
 #include "pointlayout.h"
 #include "utils.h"
@@ -542,6 +558,12 @@ QDataStream& gaia2::operator>>(QDataStream& in, PointLayout& layout) {
     G_DEBUG(GIO, "Loading point layout, gaia 2.1 format");
     in >> *layout._d->tree >> layout._d->enum2str >> layout._d->str2enum;
     break;
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading point layout, gaia 2.1 format");
+    in >> *layout._d->tree >> layout._d->enum2str >> layout._d->str2enum;
+    break;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading point layout, gaia 2.0 format");

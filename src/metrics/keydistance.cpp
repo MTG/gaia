@@ -17,6 +17,23 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #include "keydistance.h"
 
 namespace gaia2 {
@@ -27,7 +44,7 @@ class Key {
 
  public:
   Key(QString key) {
-    switch (key[0].toUpper().toAscii()) {
+    switch (key[0].toUpper().toLatin1()) {
     case 'A': _note = 0; break;
     case 'B': _note = 2; break;
     case 'C': _note = 3; break;
@@ -40,7 +57,7 @@ class Key {
 
     // is there an alteration or not?
     if (key.size() == 2) {
-      switch (key[1].toAscii()) {
+      switch (key[1].toLatin1()) {
       case '#': _note++; break;
       case 'b': _note--; break;
       default: throw GaiaException("impossible to parse key: ", key);

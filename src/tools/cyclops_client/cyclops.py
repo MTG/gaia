@@ -17,10 +17,36 @@
 #
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
+#
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
-
-import httplib, urllib, time
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
+from builtins import object
+from future.standard_library import install_aliases
+install_aliases()
+from future.utils import raise_
+from urllib.parse import urlparse, urlencode
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
+from six.move import http_client
+import time
 import gaia2.fastyaml as yaml
 
 VERBOSE = False
@@ -46,11 +72,11 @@ class YamlRPCMethod(object):
 
         if VERBOSE:
             responseTime = time.time() - serializeStart
-            print 'serialized request in %f seconds' % responseTime
+            print ('serialized request in %f seconds' % responseTime)
 
 
         # we don't want the '+'-quoting
-        params = urllib.urlencode({ 'q': q }).replace('+', ' ')
+        params = urlencode({ 'q': q }).replace('+', ' ')
 
         headers = { 'Content-type': 'application/x-www-form-urlencoded',
                     'Accept': 'text/plain'
@@ -58,18 +84,18 @@ class YamlRPCMethod(object):
 
         if VERBOSE: startTime = time.time()
 
-        conn = httplib.HTTPConnection(self.endPoint)
+        conn = http_client.HTTPConnection(self.endPoint)
 
         try:
             conn.request('POST', '/', params, headers)
-        except Exception, e:
+        except Exception as e:
             raise RuntimeError('request failed', self.endPoint, self.methodName, args, e)
 
         response = conn.getresponse()
 
         if VERBOSE:
             responseTime = time.time() - startTime
-            print 'received answer in %f seconds' % responseTime
+            print ('received answer in %f seconds' % responseTime)
             #print response.status, response.reason
 
             startParseTime = time.time()
@@ -78,10 +104,10 @@ class YamlRPCMethod(object):
 
         if VERBOSE:
             responseTime = time.time() - startParseTime
-            print 'parsed answer in %f seconds' % responseTime
+            print ('parsed answer in %f seconds' % responseTime)
 
             responseTime = time.time() - serializeStart
-            print 'total time: %f seconds' % responseTime
+            print ('total time: %f seconds' % responseTime)
 
         if 'error' in result:
             raise RuntimeError(result['error']['message'])
@@ -119,7 +145,7 @@ class ResultSet(YamlRPCMethod):
                 yield (str(pid), dist, {})
         else:
             for ((pid, dist), v) in zip(results['results'], results['values']):
-                yield (str(pid), dist, dict(zip(header, v)))
+                yield (str(pid), dist, dict(list(zip(header, v))))
 
     def limit(self, n):
         raise NotImplementedError('ResultSet does not allow calling limit() on it yet...')
@@ -184,6 +210,6 @@ class Cyclops(object):
     def __getattr__(self, methodName):
         # a little tip so that ipython doesn't get lost when autocompleting
         if methodName in [ '__methods__', 'trait_names', '_getAttributeNames', '__members__' ]:
-            raise AttributeError, methodName
+            raise_(AttributeError, methodName)
 
         return CyclopsRPCMethod(self.endPoint, methodName)

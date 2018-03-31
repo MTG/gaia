@@ -51,8 +51,8 @@ class ClassificationTaskManager:
     def __init__(self, yamlfile):
         try:
             conf = yaml.load(open(yamlfile).read())
-        except Exception, e:
-            print 'Unable to open project file:', e
+        except Exception as e:
+            print ('Unable to open project file:', e)
             raise
 
         self.conf = conf
@@ -126,7 +126,7 @@ class ClassificationTaskManager:
         try:
             ds = DataSet()
             ds.load(self.conf['datasetFilename'])
-        except Exception, e:
+        except Exception as e:
             raise ValueError('Could not open the dataset file "%s" because: %s' % (dsfilename, str(e)))
 
         return ds
@@ -228,6 +228,6 @@ def runSingleTest(args):
         try:
             #task.run(className, outfilename, trainingparam, dsname, gtname, evalconfig)
             task.run(*args)
-        except Exception, e:
+        except Exception as e:
             log.error('Running task failed: %s' % e)
 

@@ -17,6 +17,23 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #ifndef GAIA_VIEW_H
 #define GAIA_VIEW_H
 
@@ -25,8 +42,8 @@
 #include <queue>
 #include "dataset.h"
 #include "searchspacepool.h"
-#include "distancefunction.h"
-#include "frozendistance.h"
+#include "metrics/distancefunction.h"
+#include "metrics/frozendistance.h"
 
 namespace gaia2 {
 

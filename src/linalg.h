@@ -17,11 +17,28 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #ifndef GAIA_LINALG_H
 #define GAIA_LINALG_H
 
 #include "dataset.h"
-#include "Eigen/Eigen"
+#include "3rdparty/Eigen/Eigen"
 
 
 namespace gaia2 {
@@ -56,10 +73,10 @@ void sortEigenVectors(Eigen::Matrix<T, Eigen::Dynamic, 1>& values,
 
       if (cmp(std::abs(values[j]), std::abs(values[j-1]))) {
 
-	// swap values in eigenvalues vector
+    // swap values in eigenvalues vector
         std::swap(values[j], values[j-1]);
 
-	// swap columns in eigenvectors matrix
+    // swap columns in eigenvectors matrix
         vectors.col(j).swap(vectors.col(j-1));
       }
     }

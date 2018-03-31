@@ -17,11 +17,28 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_DATASET_H
 #define GAIA_DATASET_H
 
 #include <QVector>
 #include <QReadWriteLock>
+#include <QDataStream>
 #include "point.h"
 #include "pointlayout.h"
 #include "transformation.h"
@@ -481,13 +498,14 @@ class DataSet : public PointArray, public QObject {
   // because it needs to call the setHistoryNoCheck() method.
   friend DataSet* mergeDataSets(const DataSet* ds1, const DataSet* ds2);
 
-
   // serialization methods
-  friend QDataStream& operator<<(QDataStream& out, const DataSet& dataset);
-  friend QDataStream& operator>>(QDataStream& in, DataSet& dataset);
+  friend QDataStream &operator << ( QDataStream &out, const DataSet &dataset );
+  friend QDataStream &operator >> ( QDataStream &in, DataSet &dataset);
 
 };
 
+QDataStream &operator << ( QDataStream &out, const DataSet &dataset );
+QDataStream &operator >> ( QDataStream &in, DataSet &dataset);
 
 } // namespace gaia2
 

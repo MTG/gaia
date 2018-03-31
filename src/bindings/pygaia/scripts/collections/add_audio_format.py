@@ -17,7 +17,22 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
+from __future__ import print_function
 import sys, glob, os
 from os.path import *
 
@@ -35,15 +50,15 @@ def move_sub(basedir, subdir, dry_run = True):
 
     if dry_run:
         for cmd in cmds:
-            print cmd
+            print (cmd)
     else:
         for cmd in cmds:
             os.system(cmd)
 
 
 def usage():
-    print 'add_audio_format.py basedir audioFormat [--yes]'
-    print 'specifying --yes will actually make the changes, otherwise the commands are just printed on screen'
+    print ('add_audio_format.py basedir audioFormat [--yes]')
+    print ('specifying --yes will actually make the changes, otherwise the commands are just printed on screen')
     sys.exit(1)
 
 

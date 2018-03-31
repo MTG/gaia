@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
@@ -38,6 +54,12 @@ QDataStream& gaia2::operator>>(QDataStream& in, Scope& scope) {
   case Gaia_2_3:
     G_DEBUG(GIO, "Loading scope, gaia 2.1 format");
     return in >> scope.name >> scope.start >> scope.end;
+
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading scope, gaia 2.1 format");
+    return in >> scope.name >> scope.start >> scope.end;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading scope, gaia 2.0 format");
@@ -65,6 +87,13 @@ QDataStream& gaia2::operator>>(QDataStream& in, ScopedData& s) {
     return in >> s.scope
               >> s.data.vreal >> s.data.vlabel >> s.data.venumeration
               >> s.data.freal >> s.data.flabel >> s.data.fenumeration;
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading scoped data, gaia 2.1 format");
+    return in >> s.scope
+              >> s.data.vreal >> s.data.vlabel >> s.data.venumeration
+              >> s.data.freal >> s.data.flabel >> s.data.fenumeration;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading scoped data, gaia 2.0 format");

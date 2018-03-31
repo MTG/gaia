@@ -20,6 +20,7 @@
 
 
 
+from builtins import zip
 from ntuple import namedtuple
 from config import *
 
@@ -27,9 +28,9 @@ from config import *
 # that can be used for each evaluation type
 paramType = {}
 
-for evalType, params in orderedEvalConfig.items():
+for evalType, params in list(orderedEvalConfig.items()):
     # evalType needs to be the first field so we always know where to get it from
-    allparams = [ 'evalType' ] + commonConfig.keys() + [ p.keys()[0] for p in params ]
+    allparams = [ 'evalType' ] + list(commonConfig.keys()) + [ list(p.keys())[0] for p in params ]
     paramType[evalType] = namedtuple('Param_' + evalType, ' '.join(allparams))
 
 
@@ -49,7 +50,7 @@ def keyMatch(pattern, key):
 
 def findMatchingKeys(query, db):
     seedKey = toParam(query)
-    return sorted([ key for key, value in db.items() if keyMatch(seedKey, key) ])
+    return sorted([ key for key, value in list(db.items()) if keyMatch(seedKey, key) ])
 
 
 
@@ -70,13 +71,13 @@ def combinations(vrange):
 def getAllConfigs():
     '''Return all possible configurations given the parameter ranges contained in the config file.'''
     configs = []
-    commonParams = combinations ([ d.values()[0] for d in orderedCommonConfig ])
+    commonParams = combinations ([ list(d.values())[0] for d in orderedCommonConfig ])
 
     # first get all possible evaluations
-    for evalType, conf in evalConfig.items():
+    for evalType, conf in list(evalConfig.items()):
         evalParams = []
         for p in orderedEvalConfig[evalType]:
-            evalParams.append(conf[p.keys()[0]])
+            evalParams.append(conf[list(p.keys())[0]])
 
         configs += [ toParam((evalType,) + cp + ep) for cp in commonParams for ep in combinations(evalParams) ]
 

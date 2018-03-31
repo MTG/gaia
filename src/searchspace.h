@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_SEARCHSPACE_H
 #define GAIA_SEARCHSPACE_H
 
@@ -38,8 +54,7 @@ yaml::Node toYaml(const SearchResults& results);
 class DistanceFunction;
 class FrozenDistance;
 
-#define Vector std::vector
-
+//#define Vector std::vector
 
 class SearchPoint {
 public:
@@ -88,7 +103,7 @@ public:
  * automatically when a DataSet changes, but SearchSpace ones don't)
  */
 template <typename SearchPointType, typename DataSetType>
-class BaseSearchSpace : public Vector<SearchPointType> {
+class BaseSearchSpace : public std::vector<SearchPointType> {
 
  public:
   BaseSearchSpace(const Filter* filter = 0, bool ownsFilter = false);

@@ -17,8 +17,24 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
+from builtins import zip
+from builtins import range
 from gaia2 import *
 import unittest
 import testdata
@@ -193,7 +209,7 @@ class TestAlgorithms(unittest.TestCase):
         # that it'll have a different enum map
         p = Point()
         p.load('data/dataset_small/Vocal and Acapella/04 Blue Skies.mp3.sig')
-        print p.name()
+        print(p.name())
 
         #also create a transfo that forwards enums after we did the enumerate transfo
         dbes = transform(dbe, 'select', { 'descriptorNames': '*key*' })

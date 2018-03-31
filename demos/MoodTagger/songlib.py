@@ -17,12 +17,33 @@
 
 #songlib.py
 
+#
+# You should have received a copy of the Affero GNU General Public License     
+# version 3 along with this program. If not, see http://www.gnu.org/licenses/
+
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
+from __future__ import print_function
+from builtins import object
 from gaia2 import *
 import os
 import subprocess
 
 
-class SongLibrary:
+class SongLibrary(object):
     def __init__(self, name='songlibrary'):
         self.library = DataSet()
         self.library.setName(name)
@@ -33,7 +54,7 @@ class SongLibrary:
         files=os.listdir(directory)
         for song in files:
             input = directory+'\\'+song
-            print input
+            print(input)
             if(".mp3" in input):
                 if(".sig" not in input):
                     outputstr = directory+'\\'+song+".sig"
@@ -66,8 +87,8 @@ class SongLibrary:
 
     def setEmotions(self, point, emotions):
         self.library.point(point.name()).setLabel('emotion_tags', emotions)
-        print emotions
-        print self.library.point(point.name()).label('emotion_tags')
+        print(emotions)
+        print(self.library.point(point.name()).label('emotion_tags'))
         self.saveLib()
 
     def getEmotions(self, point):
@@ -77,7 +98,7 @@ class SongLibrary:
         files=os.listdir(directory)
         for song in files:
             input = directory+'\\'+song
-            print input
+            print(input)
             if(".mp3" in input):
                 if(".sig" not in input):
                     outputstr = directory+'\\'+song+".sig"
@@ -86,10 +107,3 @@ class SongLibrary:
                         p = self.addSong(outputstr)
                         self.setEmotions(p, emotionTag)
         self.saveLib()
-        
-
-        
-
-
-
-        

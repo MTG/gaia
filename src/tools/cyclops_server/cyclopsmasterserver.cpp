@@ -17,11 +17,35 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+#ifndef CYCLOPS_NORMAL
 #include <QCoreApplication>
 #include <QNetworkAccessManager>
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
+#include <QTextStream>
+#ifdef GAIA_QT5
+#include <QLoggingCategory>
+#include <qapplication.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
 
 FILE* logFile;
 
@@ -30,8 +54,49 @@ void logToFile(QtMsgType type, const char *msg) {
   fflush(logFile);
 }
 
+#ifdef GAIA_QT5
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtInfoMsg:
+        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        abort();
+    }
+}
+#endif
+
 int main(int argc, char* argv[]) {
+  QTextStream standardOutput(stdout);
+#ifdef GAIA_QT5
+  qInstallMessageHandler(myMessageOutput);
+#endif
   QCoreApplication app(argc, argv);
+#ifdef GAIA_QT5
+  QLoggingCategory::setFilterRules("*.debug=true");
+    qDebug() << "Debugging";
+    app.exit();
+  const int argumentCount = QCoreApplication::arguments().size();
+  const QStringList argumentList = QCoreApplication::arguments();
+  if (argumentCount == 0) {
+          standardOutput << QObject::tr("Usage: %1 <serialportname> [baudrate]")
+                            .arg(argumentList.first()) << endl;
+          return 1;
+      }
+#endif
+  //QCoreApplication app(argc, argv);
   gaia2::init();
 
   //logFile = fopen("/var/log/cyclops/master.log", "w");
@@ -55,3 +120,4 @@ int main(int argc, char* argv[]) {
 
   return app.exec();
 }
+#endif

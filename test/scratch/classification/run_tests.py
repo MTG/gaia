@@ -18,8 +18,22 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 from config import *
 from common import *
 from readresults import *
@@ -30,7 +44,7 @@ import subprocess
 
 
 def execute_single_test(cmd):
-    print cmd
+    print(cmd)
     proc = subprocess.Popen(cmd + ' > /dev/null', shell = True)
     proc.wait()
 
@@ -39,17 +53,17 @@ def execute_single_test(cmd):
 if __name__ == '__main__':
 
     # first merge the dataset from the essentia signatures
-    print '---- MERGING DATASET ----'
+    print('---- MERGING DATASET ----')
     os.system('python merge_base_dataset.py ' + projectFile)
 
 
     # then prepare the different datasets on different feature sets
-    print '---- PREPARING FEATURE SETS ----'
+    print('---- PREPARING FEATURE SETS ----')
     os.system('python do_feature_selection.py ' + projectFile)
 
 
     # compute classifiers results on all feature sets
-    print '---- COMPUTING CLASSIFIERS RESULTS ----'
+    print('---- COMPUTING CLASSIFIERS RESULTS ----')
     cmds = []
     # first %s corresponds to dataset name, need to prepend "python run_single_test.py"
     evalRunTemplate = { 'simca': 'simca ' + datasetdir + className + '_%(eqloud)s.db %(featset)d %(coveredVariance)d %(alpha).2f',

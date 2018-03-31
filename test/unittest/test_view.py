@@ -19,6 +19,8 @@
 
 
 
+from builtins import zip
+from builtins import range
 from gaia2 import *
 import math
 import unittest
@@ -93,7 +95,7 @@ class TestView(unittest.TestCase):
                 def __init__(self, ctor):
                     self._ctor = ctor
                 def __getitem__(self, key):
-                    if key not in self.keys():
+                    if key not in list(self.keys()):
                         dict.__setitem__(self, key, self._ctor())
                     return dict.__getitem__(self, key)
 

@@ -17,18 +17,39 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include <QTcpSocket>
 #include <QStringList>
+#ifdef GAIA_QT5
+#include "qthttp/qhttp.h"
+#include "qthttp/QHttpRequestHeader"
+#else
+#include <QHttp>
 #include <QHttpRequestHeader>
+#endif
 #include <QUrl>
 #include <QDateTime>
 #include "yamlrpcserver.h"
-#include "gaiaexception.h"
-#include "yamlcpp.h"
+#include "../../gaiaexception.h"
+#include "../../yamlcpp.h"
 #include "logging.h"
-#include "utils.h"
+#include "../../utils.h"
 using namespace gaia2;
-
 
 inline QByteArray sid(const QTcpSocket* socket) {
   return QString("%1:%2 :").arg(socket->peerAddress().toString()).arg(int(socket->peerPort())).toUtf8();
@@ -38,10 +59,10 @@ int YamlRPCServer::numberConnectedClients() const {
   return _socketIDs.size();
 }
 
-
 YamlRPCServer::YamlRPCServer(quint16 port, YamlProxy* proxy) : QTcpServer(), _proxy(proxy) {
   // only listen to a port if given a valid port, otherwise wait to be told explicitly
   // to listen to a specific port
+  qDebug () << "Inializing YamlRPCServer object";
   _startedOn = QDateTime::currentDateTime();
   if (port != 0) {
     bool ok = listen(QHostAddress::Any, port);
@@ -66,7 +87,6 @@ void YamlRPCServer::incomingConnection(int socket) {
   _socketIDs.insert(s, sid(s));
   clog() << _socketIDs.value(s).constData() << "New connection";
 }
-
 
 QByteArray readHTTPRequest(QTcpSocket* socket) {
   bool done = false;
@@ -230,5 +250,6 @@ void YamlRPCServer::discardClient() {
   //qDebug() << "clients connected: " << numberConnectedClients();
 }
 
-
+#ifndef GAIA_QT5
 #include "yamlrpcserver.moc"
+#endif

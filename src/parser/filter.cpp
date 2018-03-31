@@ -1,3 +1,20 @@
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 // only include grammar.c, it is the first part of our grammar, it also does
 // all the includes by itself
 #include <cassert>
@@ -210,7 +227,7 @@ Filter* FilterParser::parseFilter(const QString& strin) const {
   str.replace('\r', ' ');
 
   int yv;
-  YY_BUFFER_STATE buf = yy_scan_string(str.toAscii().data());
+  YY_BUFFER_STATE buf = yy_scan_string(str.toLatin1().data());
 
   Filter* result;
 

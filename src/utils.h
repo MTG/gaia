@@ -17,13 +17,29 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_UTILS_H
 #define GAIA_UTILS_H
 
 #include "dataset.h"
 #include "point.h"
 #include "pointlayout.h"
-#include "Eigen/Core"
+#include "3rdparty/Eigen/Core"
 
 
 // This file contains some useful functions that were not generic enough to go
@@ -189,7 +205,12 @@ void checkValidDataStream(QDataStream& in);
 enum BinaryFileFormat {
   Gaia_2_0 = 100,
   Gaia_2_1 = 101,
+#ifdef GAIA_QT5
+  Gaia_2_3 = 102,
+  Gaia_2_4 = 103
+#else
   Gaia_2_3 = 102
+#endif
 };
 
 /**

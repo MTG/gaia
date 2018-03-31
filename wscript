@@ -1,6 +1,22 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
+from __future__ import print_function
 import sys, glob
 ##import Options, Scripting
 from os.path import join, exists, normpath
@@ -12,8 +28,8 @@ def get_git_version():
     if os.path.exists(".git"):
         try:
             version = os.popen("git describe --dirty --always").read().strip()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
     return version
 
 APPNAME = 'gaia'
@@ -22,10 +38,12 @@ GIT_SHA = get_git_version();
 
 top = '.'
 out = 'build'
-
+gaia_qt5 = False
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt4')
+    global gaia_qt5
+    opt.load('compiler_cxx compiler_c qt5')
+    #opt.load('slow_qt4', tooldir='.')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -47,6 +65,11 @@ def options(opt):
     opt.add_option('--mode', action='store',
                    dest='MODE', default="release",
                    help='debug or release')
+                   
+    # whether to enable Qt5 or not
+    opt.add_option('--with-gaia-qt5', action='store_true',
+                   dest='gaia_qt5', default=False,
+                   help='whether to use Qt5 and c++11 or not')
 
 
 def debian_version():
@@ -64,21 +87,24 @@ def debian_version():
 
 
 def check_tbb(conf):
-    tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
-                         mandatory = 1,
-                         errmsg = 'Intel TBB is recommended in order to compile Gaia')
+    if sys.platform.startswith('linux') != True:
+        tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
+        mandatory = 1,
+        errmsg = 'Intel TBB is recommended in order to compile Gaia')
 
-    if not tbb:
-        return
+        if not tbb:
+            return
 
     conf.env['CXXDEFINES_TBB'] = 'HAVE_TBB'
     conf.env['LIB_TBB'] = 'tbb'
     conf.env['USELIB'] += [ 'TBB' ]
 
-
 def configure(conf):
-    if sys.platform != 'linux2' and sys.platform != 'darwin':
-        print 'Please use the QtCreator project for building Gaia in Windows...'
+    global gaia_qt5
+    gaia_qt5 = conf.options.gaia_qt5
+    
+    if sys.platform.startswith('linux') != True   and sys.platform != 'darwin':
+        print ('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
     print('→ configuring the project in ' + conf.path.abspath())
@@ -119,18 +145,27 @@ def configure(conf):
         conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
                       args=['--cflags', '--libs'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+    # optional dependency: gaia_qt5, if asked for on linux platform
+    if sys.platform.startswith('linux') and gaia_qt5:
+        conf.env['WITH_GAIA_QT5'] = gaia_qt5
+        if conf.options.cyclops:
+            conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'QT5NETWORK','QT5WIDGETS','YAML' ]
+        else:
+            conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML' ]
+    else :
+        conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
     if conf.env['WITH_TBB']:
         check_tbb(conf)
-
+    
     # optional dependency: QtNetwork for Cyclops Server
+    print ('conf.options.cyclops = ',  conf.options.cyclops)
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops
-    if conf.env['WITH_CYCLOPS']:
-        conf.env['USELIB'] += [ 'QTNETWORK' ]
-
+    print ('conf.env[WITH_CYCLOPS] = ',  conf.env['WITH_CYCLOPS'])
+ 
     conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
     if sys.platform == 'darwin':
@@ -146,8 +181,23 @@ def configure(conf):
         # add /usr/local/include as the brew formula for yaml doesn't have
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
-
-    conf.load('compiler_cxx compiler_c qt4')
+    
+    elif sys.platform.startswith('linux') and gaia_qt5:
+        conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
+            '-DGAIA_QT5',  \
+            '-Wint-in-bool-context', \
+            '-Wno-misleading-indentation', \
+            '-Wno-unused-result',\
+            '-fno-strict-aliasing',\
+            '-fPIC', '-fvisibility=hidden']
+        conf.env.uselib = 'QT5CORE QT5CONCURRENT YAML'
+    #elif sys.platform.startswith('linux'): 
+        #conf.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
+        #    '-Wint-in-bool-context', \
+        #    '-Wno-misleading-indentation', \
+        #    '-Wno-unused-result',\
+        #    '-fno-strict-aliasing',\
+        #    '-fPIC', '-fvisibility=hidden']
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -160,7 +210,16 @@ def configure(conf):
     #if sys.version_info[1] > 4:
     #    # option not available in centos' gcc...
     #    conf.env['CXXFLAGS'] += [  '-Wno-unused-result' ]
-
+    #conf.load('compiler_cxx compiler_c')
+    
+    if sys.platform.startswith('linux') and gaia_qt5: 
+        conf.load('compiler_cxx compiler_c qt5')
+    else:
+        conf.load('compiler_cxx compiler_c')
+        conf.load('qt4')
+        #if conf.options.cyclops:
+        #    conf.load('slow_qt4',tooldir='.')
+    
     conf.recurse('src')
 
     if conf.options.tbb:
@@ -171,14 +230,37 @@ def configure(conf):
     # write pkg-config file
     prefix = normpath(conf.options.prefix)
 
-    if sys.platform == 'linux2':
-
+    if sys.platform.startswith('linux') and gaia_qt5:
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
-             'version': VERSION,
-             'tbblib': tbblib,
-             }
+            'qtlibdir': conf.env['USELIB']  or '/usr/lib',
+            'qtincludedir': '-I' + \
+                ' -I'.join(conf.env['INCLUDES_QT5CORE']) +
+                ' -I'.join(conf.env['INCLUDES_QT5NETWORK']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
+        
+        pcfile = '''prefix=%(prefix)s
+        libdir=${prefix}/lib
+        includedir=${prefix}/include
+        qtlibdir=%(qtlibdir)s
+        qtincludes=%(qtincludedir)s
+
+        Name: libgaia2
+        Description: A library for doing similarity in semimetric spaces
+        Version: %(version)s
+        Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
+        Cflags: -I${includedir} ${qtincludes}
+        ''' % opts
+        
+    elif sys.platform.startswith('linux'):
+        opts = { 'prefix': prefix,
+            'qtlibdir': conf.env['USELIB'] or '/usr/lib', 
+            'qtincludedir': '-I' + \
+                ' -I'.join(conf.env['INCLUDES_QTCORE']),
+            'version': VERSION,
+            'tbblib': tbblib,
+            }
 
         pcfile = '''prefix=%(prefix)s
         libdir=${prefix}/lib
@@ -222,5 +304,6 @@ def configure(conf):
 
 
 def build(bld):
+    
     print('→ building from ' + bld.path.abspath())
     bld.recurse('src')

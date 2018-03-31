@@ -17,8 +17,22 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 from gaia2 import *
 import unittest
 import testdata
@@ -32,7 +46,7 @@ class TestMerge(unittest.TestCase):
         collection = yaml.load(open(testdata.TEST_DATABASE_FILES, 'r').read())
 
         # prepend 'data/' to the filenames
-        for pid, filename in collection.items():
+        for pid, filename in list(collection.items()):
             collection[pid] = 'data/' + filename
 
         cvar.verbose = False
@@ -67,10 +81,10 @@ class TestMerge(unittest.TestCase):
             os.remove(f)
 
         if fusion.returncode != 0:
-            print 'STDOUT' + '*'*100
-            print stdout
-            print 'STDERR' + '*'*100
-            print stderr
+            print('STDOUT' + '*'*100)
+            print(stdout)
+            print('STDERR' + '*'*100)
+            print(stderr)
 
         self.assertEqual(fusion.returncode, 0)
 

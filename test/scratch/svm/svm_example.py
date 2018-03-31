@@ -23,6 +23,24 @@
 # this file is only valid for the dataset_small.db file that is inside the
 # unittest/ directory. It can probably be easily adapted to any dataset, though.
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
+from __future__ import print_function
+from builtins import str
+from builtins import range
 from gaia2 import *
 addImportPath('..')
 import testutils as utils
@@ -45,10 +63,10 @@ def loadDataSet():
     ds = DataSet()
     try:
         ds.load(join(datadir, 'dataset_small.db'))
-    except Exception, e:
-        print 'Error:', str(e)
-        print 'You should first run the unittests to generate the dataset_small.db file before'
-        print 'trying to run this example.'
+    except Exception as e:
+        print('Error:', str(e))
+        print('You should first run the unittests to generate the dataset_small.db file before')
+        print('trying to run this example.')
         sys.exit(1)
 
     genreMap = utils.getClassMapFromDirectory(join(datadir, 'dataset_small'))
@@ -56,7 +74,7 @@ def loadDataSet():
     # transform the dataset to add the genre information
     ds = transform(ds, 'addfield', { 'string': 'genre' })
 
-    for pid, genre in genreMap.items():
+    for pid, genre in list(genreMap.items()):
         ds.point(pid).setLabel('genre', genre)
 
     # we're in a testing environment, prepare the dataset by cleaning it a bit more
@@ -87,8 +105,8 @@ def writeGroundTruth(ds, filename):
 def svmtrain():
     ds = loadDataSet()
 
-    print '*'*100
-    print 'creating svmtrain analyzer'
+    print('*'*100)
+    print('creating svmtrain analyzer')
     #svm = AnalyzerFactory.create('svmtrain', { 'descriptorNames': '*mfcc.mean',
     #                                           'class': 'genre',
     #                                           'modelFilename': '/tmp/pipo.model'})
@@ -160,7 +178,7 @@ def svmlitetrain(filename):
     for p in ds2.points():
         if p.label('class') == ds.point(p.name()).label('class'):
             correct += 1
-    print correct, 'correct out of', ds2.totalPoints()
+    print(correct, 'correct out of', ds2.totalPoints())
 
 
 def readSVMLiteDataset(filename):
@@ -173,8 +191,8 @@ def readSVMLiteDataset(filename):
             minidx = min(minidx, int(dim))
             maxidx = max(maxidx, int(dim))
 
-    print 'min =', minidx
-    print 'max =', maxidx
+    print('min =', minidx)
+    print('max =', maxidx)
 
     dimension = maxidx - minidx + 1
 

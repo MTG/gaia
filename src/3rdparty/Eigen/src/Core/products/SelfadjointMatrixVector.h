@@ -3,27 +3,14 @@
 //
 // Copyright (C) 2008-2009 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_SELFADJOINT_MATRIX_VECTOR_H
 #define EIGEN_SELFADJOINT_MATRIX_VECTOR_H
+
+namespace Eigen { 
 
 namespace internal {
 
@@ -32,11 +19,27 @@ namespace internal {
  * the number of load/stores of the result by a factor 2 and to reduce
  * the instruction dependency.
  */
-template<typename Scalar, typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs>
-static EIGEN_DONT_INLINE void product_selfadjoint_vector(
+
+template<typename Scalar, typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs, int Version=Specialized>
+struct selfadjoint_matrix_vector_product;
+
+template<typename Scalar, typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs, int Version>
+struct selfadjoint_matrix_vector_product
+
+{
+static EIGEN_DONT_INLINE void run(
   Index size,
   const Scalar*  lhs, Index lhsStride,
-  const Scalar* _rhs, Index rhsIncr,
+  const Scalar*  rhs,
+  Scalar* res,
+  Scalar alpha);
+};
+
+template<typename Scalar, typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs, int Version>
+EIGEN_DONT_INLINE void selfadjoint_matrix_vector_product<Scalar,Index,StorageOrder,UpLo,ConjugateLhs,ConjugateRhs,Version>::run(
+  Index size,
+  const Scalar*  lhs, Index lhsStride,
+  const Scalar*  rhs,
   Scalar* res,
   Scalar alpha)
 {
@@ -52,54 +55,41 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
 
   conj_helper<Scalar,Scalar,NumTraits<Scalar>::IsComplex && EIGEN_LOGICAL_XOR(ConjugateLhs,  IsRowMajor), ConjugateRhs> cj0;
   conj_helper<Scalar,Scalar,NumTraits<Scalar>::IsComplex && EIGEN_LOGICAL_XOR(ConjugateLhs, !IsRowMajor), ConjugateRhs> cj1;
-  conj_helper<Scalar,Scalar,NumTraits<Scalar>::IsComplex, ConjugateRhs> cjd;
+  conj_helper<RealScalar,Scalar,false, ConjugateRhs> cjd;
 
   conj_helper<Packet,Packet,NumTraits<Scalar>::IsComplex && EIGEN_LOGICAL_XOR(ConjugateLhs,  IsRowMajor), ConjugateRhs> pcj0;
   conj_helper<Packet,Packet,NumTraits<Scalar>::IsComplex && EIGEN_LOGICAL_XOR(ConjugateLhs, !IsRowMajor), ConjugateRhs> pcj1;
 
-  Scalar cjAlpha = ConjugateRhs ? conj(alpha) : alpha;
+  Scalar cjAlpha = ConjugateRhs ? numext::conj(alpha) : alpha;
 
-  // FIXME this copy is now handled outside product_selfadjoint_vector, so it could probably be removed.
-  // if the rhs is not sequentially stored in memory we copy it to a temporary buffer,
-  // this is because we need to extract packets
-  const Scalar* EIGEN_RESTRICT rhs = _rhs;
-  if (rhsIncr!=1)
-  {
-    Scalar* r = ei_aligned_stack_new(Scalar, size);
-    const Scalar* it = _rhs;
-    for (Index i=0; i<size; ++i, it+=rhsIncr)
-      r[i] = *it;
-    rhs = r;
-  }
 
-  Index bound = std::max(Index(0),size-8) & 0xfffffffe;
+  Index bound = (std::max)(Index(0),size-8) & 0xfffffffe;
   if (FirstTriangular)
     bound = size - bound;
 
   for (Index j=FirstTriangular ? bound : 0;
        j<(FirstTriangular ? size : bound);j+=2)
   {
-    register const Scalar* EIGEN_RESTRICT A0 = lhs + j*lhsStride;
-    register const Scalar* EIGEN_RESTRICT A1 = lhs + (j+1)*lhsStride;
+    const Scalar* EIGEN_RESTRICT A0 = lhs + j*lhsStride;
+    const Scalar* EIGEN_RESTRICT A1 = lhs + (j+1)*lhsStride;
 
     Scalar t0 = cjAlpha * rhs[j];
     Packet ptmp0 = pset1<Packet>(t0);
     Scalar t1 = cjAlpha * rhs[j+1];
     Packet ptmp1 = pset1<Packet>(t1);
 
-    Scalar t2 = 0;
+    Scalar t2(0);
     Packet ptmp2 = pset1<Packet>(t2);
-    Scalar t3 = 0;
+    Scalar t3(0);
     Packet ptmp3 = pset1<Packet>(t3);
 
-    size_t starti = FirstTriangular ? 0 : j+2;
-    size_t endi   = FirstTriangular ? j : size;
-    size_t alignedStart = (starti) + first_aligned(&res[starti], endi-starti);
-    size_t alignedEnd = alignedStart + ((endi-alignedStart)/(PacketSize))*(PacketSize);
+    Index starti = FirstTriangular ? 0 : j+2;
+    Index endi   = FirstTriangular ? j : size;
+    Index alignedStart = (starti) + internal::first_default_aligned(&res[starti], endi-starti);
+    Index alignedEnd = alignedStart + ((endi-alignedStart)/(PacketSize))*(PacketSize);
 
-    // TODO make sure this product is a real * complex and that the rhs is properly conjugated if needed
-    res[j]   += cjd.pmul(internal::real(A0[j]), t0);
-    res[j+1] += cjd.pmul(internal::real(A1[j+1]), t1);
+    res[j]   += cjd.pmul(numext::real(A0[j]), t0);
+    res[j+1] += cjd.pmul(numext::real(A1[j+1]), t1);
     if(FirstTriangular)
     {
       res[j]   += cj0.pmul(A1[j],   t1);
@@ -111,11 +101,11 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
       t2 += cj1.pmul(A0[j+1], rhs[j+1]);
     }
 
-    for (size_t i=starti; i<alignedStart; ++i)
+    for (Index i=starti; i<alignedStart; ++i)
     {
-      res[i] += t0 * A0[i] + t1 * A1[i];
-      t2 += conj(A0[i]) * rhs[i];
-      t3 += conj(A1[i]) * rhs[i];
+      res[i] += cj0.pmul(A0[i], t0) + cj0.pmul(A1[i],t1);
+      t2 += cj1.pmul(A0[i], rhs[i]);
+      t3 += cj1.pmul(A1[i], rhs[i]);
     }
     // Yes this an optimization for gcc 4.3 and 4.4 (=> huge speed up)
     // gcc 4.2 does this optimization automatically.
@@ -123,7 +113,7 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
     const Scalar* EIGEN_RESTRICT a1It  = A1  + alignedStart;
     const Scalar* EIGEN_RESTRICT rhsIt = rhs + alignedStart;
           Scalar* EIGEN_RESTRICT resIt = res + alignedStart;
-    for (size_t i=alignedStart; i<alignedEnd; i+=PacketSize)
+    for (Index i=alignedStart; i<alignedEnd; i+=PacketSize)
     {
       Packet A0i = ploadu<Packet>(a0It);  a0It  += PacketSize;
       Packet A1i = ploadu<Packet>(a1It);  a1It  += PacketSize;
@@ -135,7 +125,7 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
       ptmp3 = pcj1.pmadd(A1i,  Bi, ptmp3);
       pstore(resIt,Xi); resIt += PacketSize;
     }
-    for (size_t i=alignedEnd; i<endi; i++)
+    for (Index i=alignedEnd; i<endi; i++)
     {
       res[i] += cj0.pmul(A0[i], t0) + cj0.pmul(A1[i],t1);
       t2 += cj1.pmul(A0[i], rhs[i]);
@@ -147,12 +137,11 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
   }
   for (Index j=FirstTriangular ? 0 : bound;j<(FirstTriangular ? bound : size);j++)
   {
-    register const Scalar* EIGEN_RESTRICT A0 = lhs + j*lhsStride;
+    const Scalar* EIGEN_RESTRICT A0 = lhs + j*lhsStride;
 
     Scalar t1 = cjAlpha * rhs[j];
-    Scalar t2 = 0;
-    // TODO make sure this product is a real * complex and that the rhs is properly conjugated if needed
-    res[j] += cjd.pmul(internal::real(A0[j]), t1);
+    Scalar t2(0);
+    res[j] += cjd.pmul(numext::real(A0[j]), t1);
     for (Index i=FirstTriangular ? 0 : j+1; i<(FirstTriangular ? j : size); i++)
     {
       res[i] += cj0.pmul(A0[i], t1);
@@ -160,9 +149,6 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
     }
     res[j] += alpha * t2;
   }
-
-  if(rhsIncr!=1)
-    ei_aligned_stack_delete(Scalar, const_cast<Scalar*>(rhs), size);
 }
 
 } // end namespace internal 
@@ -172,128 +158,103 @@ static EIGEN_DONT_INLINE void product_selfadjoint_vector(
 ***************************************************************************/
 
 namespace internal {
-template<typename Lhs, int LhsMode, typename Rhs>
-struct traits<SelfadjointProductMatrix<Lhs,LhsMode,false,Rhs,0,true> >
-  : traits<ProductBase<SelfadjointProductMatrix<Lhs,LhsMode,false,Rhs,0,true>, Lhs, Rhs> >
-{};
-}
 
 template<typename Lhs, int LhsMode, typename Rhs>
-struct SelfadjointProductMatrix<Lhs,LhsMode,false,Rhs,0,true>
-  : public ProductBase<SelfadjointProductMatrix<Lhs,LhsMode,false,Rhs,0,true>, Lhs, Rhs >
+struct selfadjoint_product_impl<Lhs,LhsMode,false,Rhs,0,true>
 {
-  EIGEN_PRODUCT_PUBLIC_INTERFACE(SelfadjointProductMatrix)
+  typedef typename Product<Lhs,Rhs>::Scalar Scalar;
+  
+  typedef internal::blas_traits<Lhs> LhsBlasTraits;
+  typedef typename LhsBlasTraits::DirectLinearAccessType ActualLhsType;
+  typedef typename internal::remove_all<ActualLhsType>::type ActualLhsTypeCleaned;
+  
+  typedef internal::blas_traits<Rhs> RhsBlasTraits;
+  typedef typename RhsBlasTraits::DirectLinearAccessType ActualRhsType;
+  typedef typename internal::remove_all<ActualRhsType>::type ActualRhsTypeCleaned;
 
-  enum {
-    LhsUpLo = LhsMode&(Upper|Lower)
-  };
+  enum { LhsUpLo = LhsMode&(Upper|Lower) };
 
-  SelfadjointProductMatrix(const Lhs& lhs, const Rhs& rhs) : Base(lhs,rhs) {}
-
-  template<typename Dest> void scaleAndAddTo(Dest& dest, Scalar alpha) const
+  template<typename Dest>
+  static void run(Dest& dest, const Lhs &a_lhs, const Rhs &a_rhs, const Scalar& alpha)
   {
     typedef typename Dest::Scalar ResScalar;
-    typedef typename Base::RhsScalar RhsScalar;
-    typedef Map<Matrix<ResScalar,Dynamic,1>, Aligned> MappedDest;
+    typedef typename Rhs::Scalar RhsScalar;
+    typedef Map<Matrix<ResScalar,Dynamic,1>, EIGEN_PLAIN_ENUM_MIN(AlignedMax,internal::packet_traits<ResScalar>::size)> MappedDest;
     
-    eigen_assert(dest.rows()==m_lhs.rows() && dest.cols()==m_rhs.cols());
+    eigen_assert(dest.rows()==a_lhs.rows() && dest.cols()==a_rhs.cols());
 
-    const ActualLhsType lhs = LhsBlasTraits::extract(m_lhs);
-    const ActualRhsType rhs = RhsBlasTraits::extract(m_rhs);
+    typename internal::add_const_on_value_type<ActualLhsType>::type lhs = LhsBlasTraits::extract(a_lhs);
+    typename internal::add_const_on_value_type<ActualRhsType>::type rhs = RhsBlasTraits::extract(a_rhs);
 
-    Scalar actualAlpha = alpha * LhsBlasTraits::extractScalarFactor(m_lhs)
-                               * RhsBlasTraits::extractScalarFactor(m_rhs);
+    Scalar actualAlpha = alpha * LhsBlasTraits::extractScalarFactor(a_lhs)
+                               * RhsBlasTraits::extractScalarFactor(a_rhs);
 
     enum {
       EvalToDest = (Dest::InnerStrideAtCompileTime==1),
-      UseRhs = (_ActualRhsType::InnerStrideAtCompileTime==1)
+      UseRhs = (ActualRhsTypeCleaned::InnerStrideAtCompileTime==1)
     };
     
     internal::gemv_static_vector_if<ResScalar,Dest::SizeAtCompileTime,Dest::MaxSizeAtCompileTime,!EvalToDest> static_dest;
-    internal::gemv_static_vector_if<RhsScalar,_ActualRhsType::SizeAtCompileTime,_ActualRhsType::MaxSizeAtCompileTime,!UseRhs> static_rhs;
+    internal::gemv_static_vector_if<RhsScalar,ActualRhsTypeCleaned::SizeAtCompileTime,ActualRhsTypeCleaned::MaxSizeAtCompileTime,!UseRhs> static_rhs;
+
+    ei_declare_aligned_stack_constructed_variable(ResScalar,actualDestPtr,dest.size(),
+                                                  EvalToDest ? dest.data() : static_dest.data());
+                                                  
+    ei_declare_aligned_stack_constructed_variable(RhsScalar,actualRhsPtr,rhs.size(),
+        UseRhs ? const_cast<RhsScalar*>(rhs.data()) : static_rhs.data());
     
-    bool freeDestPtr = false;
-    ResScalar* actualDestPtr;
-    if(EvalToDest)
-      actualDestPtr = dest.data();
-    else
+    if(!EvalToDest)
     {
       #ifdef EIGEN_DENSE_STORAGE_CTOR_PLUGIN
-      int size = dest.size();
+      Index size = dest.size();
       EIGEN_DENSE_STORAGE_CTOR_PLUGIN
       #endif
-      if((actualDestPtr=static_dest.data())==0)
-      {
-        freeDestPtr = true;
-        actualDestPtr = ei_aligned_stack_new(ResScalar,dest.size());
-      }
       MappedDest(actualDestPtr, dest.size()) = dest;
     }
       
-    bool freeRhsPtr = false;
-    RhsScalar* actualRhsPtr;
-    if(UseRhs)
-      actualRhsPtr = const_cast<RhsScalar*>(rhs.data());
-    else
+    if(!UseRhs)
     {
       #ifdef EIGEN_DENSE_STORAGE_CTOR_PLUGIN
-      int size = rhs.size();
+      Index size = rhs.size();
       EIGEN_DENSE_STORAGE_CTOR_PLUGIN
       #endif
-      if((actualRhsPtr=static_rhs.data())==0)
-      {
-        freeRhsPtr = true;
-        actualRhsPtr = ei_aligned_stack_new(RhsScalar,rhs.size());
-      }
-      Map<typename _ActualRhsType::PlainObject>(actualRhsPtr, rhs.size()) = rhs;
+      Map<typename ActualRhsTypeCleaned::PlainObject>(actualRhsPtr, rhs.size()) = rhs;
     }
       
       
-    internal::product_selfadjoint_vector<Scalar, Index, (internal::traits<_ActualLhsType>::Flags&RowMajorBit) ? RowMajor : ColMajor, int(LhsUpLo), bool(LhsBlasTraits::NeedToConjugate), bool(RhsBlasTraits::NeedToConjugate)>
+    internal::selfadjoint_matrix_vector_product<Scalar, Index, (internal::traits<ActualLhsTypeCleaned>::Flags&RowMajorBit) ? RowMajor : ColMajor,
+                                                int(LhsUpLo), bool(LhsBlasTraits::NeedToConjugate), bool(RhsBlasTraits::NeedToConjugate)>::run
       (
         lhs.rows(),                             // size
         &lhs.coeffRef(0,0),  lhs.outerStride(), // lhs info
-        actualRhsPtr, 1,                        // rhs info
+        actualRhsPtr,                           // rhs info
         actualDestPtr,                          // result info
         actualAlpha                             // scale factor
       );
     
     if(!EvalToDest)
-    {
       dest = MappedDest(actualDestPtr, dest.size());
-      if(freeDestPtr) ei_aligned_stack_delete(ResScalar, actualDestPtr, dest.size());
-    }
-    if(freeRhsPtr) ei_aligned_stack_delete(RhsScalar, actualRhsPtr, rhs.size());
   }
 };
 
-namespace internal {
 template<typename Lhs, typename Rhs, int RhsMode>
-struct traits<SelfadjointProductMatrix<Lhs,0,true,Rhs,RhsMode,false> >
-  : traits<ProductBase<SelfadjointProductMatrix<Lhs,0,true,Rhs,RhsMode,false>, Lhs, Rhs> >
-{};
-}
-
-template<typename Lhs, typename Rhs, int RhsMode>
-struct SelfadjointProductMatrix<Lhs,0,true,Rhs,RhsMode,false>
-  : public ProductBase<SelfadjointProductMatrix<Lhs,0,true,Rhs,RhsMode,false>, Lhs, Rhs >
+struct selfadjoint_product_impl<Lhs,0,true,Rhs,RhsMode,false>
 {
-  EIGEN_PRODUCT_PUBLIC_INTERFACE(SelfadjointProductMatrix)
+  typedef typename Product<Lhs,Rhs>::Scalar Scalar;
+  enum { RhsUpLo = RhsMode&(Upper|Lower)  };
 
-  enum {
-    RhsUpLo = RhsMode&(Upper|Lower)
-  };
-
-  SelfadjointProductMatrix(const Lhs& lhs, const Rhs& rhs) : Base(lhs,rhs) {}
-
-  template<typename Dest> void scaleAndAddTo(Dest& dest, Scalar alpha) const
+  template<typename Dest>
+  static void run(Dest& dest, const Lhs &a_lhs, const Rhs &a_rhs, const Scalar& alpha)
   {
     // let's simply transpose the product
     Transpose<Dest> destT(dest);
-    SelfadjointProductMatrix<Transpose<const Rhs>, int(RhsUpLo)==Upper ? Lower : Upper, false,
-                             Transpose<const Lhs>, 0, true>(m_rhs.transpose(), m_lhs.transpose()).scaleAndAddTo(destT, alpha);
+    selfadjoint_product_impl<Transpose<const Rhs>, int(RhsUpLo)==Upper ? Lower : Upper, false,
+                             Transpose<const Lhs>, 0, true>::run(destT, a_rhs.transpose(), a_lhs.transpose(), alpha);
   }
 };
 
+} // end namespace internal
+
+} // end namespace Eigen
 
 #endif // EIGEN_SELFADJOINT_MATRIX_VECTOR_H

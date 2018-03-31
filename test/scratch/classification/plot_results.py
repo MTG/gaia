@@ -20,6 +20,10 @@
 
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
 from config import *
 from common import *
 from collections import defaultdict
@@ -36,7 +40,7 @@ def createCurves(points, xaxis):
         curves[toParam(ckey)] += [ (k[xpos], value) ] # tuple of point (x, y)
 
     # get curves sorted by alphanumerical order, and their points sorted by X
-    for c, values in curves.items():
+    for c, values in list(curves.items()):
         curves[c] = sorted(values)
     curves = sorted(curves.items())
 
@@ -47,7 +51,7 @@ def getCurves(db, xaxis, parms = {}, cond = lambda x: True):
     pattern = toParam(parms)
     points = []
 
-    for key, value in db.items():
+    for key, value in list(db.items()):
         if keyMatch(pattern, key) and cond(key):
             points.append((key, value))
 
@@ -72,9 +76,9 @@ def plotCurves(curves, xaxis, legendPos = 'upper right', lineStyleVar = None):
         if lineStyleVar:
             styleIdx = possibleValues.index(getattr(k, lineStyleVar))
             style = lineStyles[styleIdx % len(lineStyles)]
-            ax.plot(*(zip(*values) + [ style ]))
+            ax.plot(*(list(zip(*values)) + [ style ]))
         else:
-            ax.plot(*zip(*values))
+            ax.plot(*list(zip(*values)))
 
 
     ax.set_xlabel(xaxis)
@@ -100,17 +104,17 @@ def plotCurves(curves, xaxis, legendPos = 'upper right', lineStyleVar = None):
 
 
 def loadEvaluationData():
-    import cPickle
+    import pickle
 
     cached = False
     if cached:
-        cpick = cPickle.load(open('results.db'))
+        cpick = pickle.load(open('results.db'))
         c = dict([ (toParam(k), v) for k, v in cpick ])
     else:
         from readresults import readResults
         c = readResults()
-        cpick = [ (tuple(k), v) for k, v in c.items() ]
-        cPickle.dump(cpick, open('results.db', 'w'))
+        cpick = [ (tuple(k), v) for k, v in list(c.items()) ]
+        pickle.dump(cpick, open('results.db', 'w'))
 
     return c
 

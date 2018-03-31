@@ -17,9 +17,22 @@
 #
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
-
+from __future__ import print_function
 from gaia2 import *
 from numpy import array, dot, linalg
 import math
@@ -48,7 +61,7 @@ def model_SIMCA(ds, groundTruth, descriptorNames, exclude = [], coveredVariance 
     model = {}
 
     for c in allClasses:
-        if verbose: print 'Training SIMCA for class', c
+        if verbose: print ('Training SIMCA for class', c)
 
         # get sub-space containing all the points of a given class
         points = [ p for p in ds.points() if p[groundTruth.className] == c ]
@@ -108,7 +121,7 @@ def model_SIMCA(ds, groundTruth, descriptorNames, exclude = [], coveredVariance 
 
 
 def train_SIMCA(ds, groundTruth, descriptorNames, exclude = [], alpha = 0.5, coveredVariance = 95., useBoundaryDistance = True, verbose = False):
-    if verbose: print '------------------ TRAINING SIMCA'
+    if verbose: print ('------------------ TRAINING SIMCA')
     ds = ds.copy()
     ds.forgetHistory()
     ds = transform(ds, 'normalize', { 'descriptorNames': descriptorNames, 'except': exclude })
@@ -117,7 +130,7 @@ def train_SIMCA(ds, groundTruth, descriptorNames, exclude = [], alpha = 0.5, cov
 
     model = model_SIMCA(ds, groundTruth, descriptorNames, exclude, coveredVariance = coveredVariance, verbose = verbose)
 
-    if verbose: print '------------------ TESTING SIMCA'
+    if verbose: print ('------------------ TESTING SIMCA')
 
     def classifier(p):
         p = preprocess.mapPoint(p)

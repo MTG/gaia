@@ -18,8 +18,22 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 import gaia2
 import gaia2.fastyaml as yaml
 import environment
@@ -58,7 +72,7 @@ class Collection(object):
             audioFormats = self._config['audioFormats'].keys()
             audioFormat = audioFormats[0]
             if len(audioFormats) > 1:
-                print 'WARNING: multiple audio formats, choosing "%s" out of %s' % (audioFormat, audioFormats)
+                print ('WARNING: multiple audio formats, choosing "%s" out of %s' % (audioFormat, audioFormats))
 
         return join(self._basepath, 'audio', audioFormat)
 
@@ -68,7 +82,7 @@ class Collection(object):
             audioFormats = self._config['audioFormats'].keys()
             audioFormat = audioFormats[0]
             if len(audioFormats) > 1:
-                print 'WARNING: only taking audio format: %s out of: %s' % (audioFormat, audioFormats)
+                print ('WARNING: only taking audio format: %s out of: %s' % (audioFormat, audioFormats))
 
         filelist = self._config['audioFormats'][audioFormat]['filelist']
 
@@ -88,10 +102,10 @@ class Collection(object):
         if name is None:
             name = gttypes[0]
             if len(gttypes) > 1:
-                print 'WARNING: more than 1 GroundTruth file, selecting default "%s" (out of %s)' % (name, gttypes)
+                print ('WARNING: more than 1 GroundTruth file, selecting default "%s" (out of %s)' % (name, gttypes))
         else:
             if name not in gttypes:
-                print 'WARNING: invalid ground truth: "%s", selecting default one instead: "%s" (out of %s)' % (name, gttypes[0], gttypes)
+                print ('WARNING: invalid ground truth: "%s", selecting default one instead: "%s" (out of %s)' % (name, gttypes[0], gttypes))
                 name = gttypes[0]
 
         self._groundTruthFile = self.groundTruthFilePath(name)

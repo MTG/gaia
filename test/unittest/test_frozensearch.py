@@ -19,6 +19,9 @@
 
 
 
+from builtins import str
+from builtins import zip
+from builtins import range
 from gaia2 import *
 import math
 import unittest
@@ -117,7 +120,7 @@ class TestFrozenSearch(unittest.TestCase):
         fdist = FrozenMetricFactory.create('Euclidean', fds.layout()) #, { 'descriptorName': 'pca' })
         found = fv.nnSearch(fds[pidx], fdist).get(nresults)
 
-        (names1, names2), (dists1, dists2) = zip(zip(*expected), zip(*found))
+        (names1, names2), (dists1, dists2) = list(zip(list(zip(*expected)), list(zip(*found))))
         self.assertEqual(names1, names2)
         for d1, d2 in zip(dists1, dists2):
             self.assertAlmostEqual(d1, d2, 3)
@@ -131,7 +134,7 @@ class TestFrozenSearch(unittest.TestCase):
         fdist = FrozenMetricFactory.create('CosineAngle', fds.layout()) #, { 'descriptorName': 'pca' })
         found = fv.nnSearch(fds[pidx], fdist).get( nresults)
 
-        (names1, names2), (dists1, dists2) = zip(zip(*expected), zip(*found))
+        (names1, names2), (dists1, dists2) = list(zip(list(zip(*expected)), list(zip(*found))))
         self.assertEqual(names1, names2)
         for d1, d2 in zip(dists1, dists2):
             self.assertAlmostEqual(d1, d2, 3)

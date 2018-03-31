@@ -18,6 +18,22 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+
+from __future__ import print_function
 import sys, os, shutil
 from optparse import OptionParser
 from os.path import basename, splitext, join
@@ -29,7 +45,7 @@ import select_best_model
 
 def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file):
     if not os.path.isfile(project_file):
-        print "Creating classification project", project_file
+        print ("Creating classification project", project_file)
 
         # /datasets and /results location
         datasets_dir = join(project_dir, 'datasets')
@@ -59,7 +75,7 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
                 groundtruth_file, filelist_file, project_file, datasets_dir, results_dir)
 
     else:
-        print "Project file", project_file, "has been found. Skipping project generation step."
+        print ("Project file", project_file, "has been found. Skipping project generation step.")
 
     # run tests
     run_tests.runTests(project_file)

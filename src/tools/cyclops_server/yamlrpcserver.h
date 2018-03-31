@@ -17,21 +17,39 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_YAMLRPCSERVER_H
 #define GAIA_YAMLRPCSERVER_H
 
+#include <QObject>
 #include <QTcpServer>
 #include <QDateTime>
-#include "yamlcpp.h"
-
+#include "../../yamlcpp.h"
 
 GAIA_DEFINE_EXCEPTION(NotImplementedError);
 GAIA_DEFINE_EXCEPTION(InvalidParams);
 
-class YamlProxy {
+class YamlProxy : public QObject {
+Q_OBJECT
+
  public:
   virtual gaia2::yaml::Node process(const gaia2::yaml::Mapping& query) = 0;
-  virtual ~YamlProxy() {}
+  virtual ~YamlProxy() {};
 };
 
 /**

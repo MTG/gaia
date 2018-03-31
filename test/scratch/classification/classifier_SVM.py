@@ -20,6 +20,7 @@
 
 
 
+from builtins import str
 from gaia2 import DataSet, transform
 
 def train_SVM(dataset, groundTruth, descriptorNames, exclude = [], svmtype = 'c-svc', kernel = 'rbf', c = 1, gamma = 1):

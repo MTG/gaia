@@ -17,6 +17,23 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #ifndef GAIA_POINT_H
 #define GAIA_POINT_H
 
@@ -312,6 +329,11 @@ class Point {
 
 // some useful defines that will be used in lots of places
 #define FORSEG(p) for (int nseg=0; nseg<(p).numberSegments(); nseg++)
+
+QDataStream& operator<<(QDataStream& out, const Point& point);
+QDataStream& operator>>(QDataStream& in, Point& point);
+QDataStream& operator<<(QDataStream& out, const Scope& scope);
+QDataStream& operator>>(QDataStream& in, Scope& scope);
 
 } // namespace gaia2
 

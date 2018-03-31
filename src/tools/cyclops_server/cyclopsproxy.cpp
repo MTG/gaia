@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include "cyclopsproxy.h"
 #include "cyclops.h"
 using namespace gaia2;
@@ -410,7 +426,7 @@ yaml::Node CyclopsProxy::process(const yaml::Mapping& query) {
 
     try {
       point64 = params[0];
-      query.fromBase64(point64.toAscii());
+      query.fromBase64(point64.toLatin1());
 
       datasetName = params[1];
       distanceName = params[2];
@@ -443,7 +459,7 @@ yaml::Node CyclopsProxy::process(const yaml::Mapping& query) {
 
     try {
       point64 = params[0];
-      query.fromBase64(point64.toAscii());
+      query.fromBase64(point64.toLatin1());
 
       datasetName = params[1];
       distanceName = params[2];

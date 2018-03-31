@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include "region.h"
 #include "utils.h"
 using namespace gaia2;
@@ -57,6 +73,14 @@ QDataStream& gaia2::operator>>(QDataStream& in, Segment& segment) {
     segment.type = (DescriptorType)t;
     segment.ltype = (DescriptorLengthType)l;
     return in;
+#ifdef GAIA_QT5
+  case Gaia_2_4:
+    G_DEBUG(GIO, "Loading segment, gaia 2.1 format");
+    in >> segment.name >> t >> l >> segment.begin >> segment.end;
+    segment.type = (DescriptorType)t;
+    segment.ltype = (DescriptorLengthType)l;
+    return in;
+#endif
 
   case Gaia_2_0:
     G_DEBUG(GIO, "Loading segment, gaia 2.0 format");

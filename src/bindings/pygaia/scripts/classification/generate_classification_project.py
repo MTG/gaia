@@ -18,8 +18,22 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 from __future__ import with_statement
 import sys
 from os.path import join, abspath
@@ -35,7 +49,7 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
         className = gt['className']
         groundTruth = gt['groundTruth']
     except:
-        print groundtruth_file, "groundtruth file has incorrect format"
+        print (groundtruth_file, "groundtruth file has incorrect format")
         sys.exit(2)
 
     fl = yaml.load(open(filelist_file, 'r'))
@@ -45,16 +59,16 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
 
     # check that there are no dublicate ids
     if len(gt_trackids) != len(set(gt_trackids)):
-        print groundtruth_file, "contains dublicate track ids"
+        print (groundtruth_file, "contains dublicate track ids")
         sys.exit(3)
 
     if len(fl_trackids) != len(set(fl_trackids)):
-        print filelist_file, "contains dublicate track ids"
+        print (filelist_file, "contains dublicate track ids")
         sys.exit(3)
 
     # check if filelist is consistent with groundtruth (no files missing)
     if set(gt_trackids) != set(fl_trackids):
-        print "track ids found in", groundtruth_file, "are inconsistent with", filelist_file
+        print ("track ids found in", groundtruth_file, "are inconsistent with", filelist_file)
         sys.exit(4)
 
     # write the project file
@@ -65,7 +79,7 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
                                          'filelist': abspath(filelist_file),
                                          'groundtruth': abspath(groundtruth_file) })
 
-    print 'Successfully written', project_file
+    print ('Successfully written', project_file)
 
 
 if __name__ == '__main__':

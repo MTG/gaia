@@ -12,11 +12,13 @@ Documentation: http://essentia.upf.edu/documentation/gaia
 
 
 Dependencies:
-  
+
   * Qt >= 4.5
   * libYAML >= 0.1.1
   * Python >= 2.4
-  * SWIG >= 1.3.31
+  * SWIG != 3.0.8
+  * waf >= 1.9
+  * Eigen 3.3.4 patched version (included in source)
 
 
 INSTALL
@@ -24,38 +26,63 @@ INSTALL
 
 ## Linux
 
+- All features work except `project_file.py`and `regenerate_docstring.py`.  Build with `--with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before.  
+
+   ​
+
 - Install dependencies (Ubuntu/Debian)
+
    ```
-   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
+   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
+   ```
+   ​     or for `Qt5`
+   ```
+   $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
    ```
 
-   Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
+   Note that `Gaia` build may fail if you are using `swig 3.0.8`. Install either a previous or later version. The newest `swig` version is available from source `(https://github.com/swig/swig)`.
+
+   ​
 
 
-- Online help for WAF (build system)
+- Relase Notes: `Eigen 3.3.4`is provided with source code since one header file was missing from the `release`archive and for `c++11` compatibility.  Previous `Eigen`had too many missing header or `include` files for version certainty.  `#define Vector` was replaced by `std::vector` to eliminate `c++11` errors.  Location of `Eigen` headers changed to `3rdparty/Eigen`rather than `Eigen. Waf2.0.6`is used primarily because it handles `Qt5`and the`moc` files required for `cyclops`. `libtbb-dev`can optionally be installed but the check for `tbb` has been removed  from the build process because it didn't work.  `Python2.7.15`and `python3.6.3`both have been tested.  However, not all versions of `python` have been used.  Python packages are located at either `/usr/local/lib/python2.7/dist-packages` or `/usr/local/lib/python3.6/dist-packages`and utilize the `major` and `minor` `python` version numbers.  Addendum:  All tabs converted to spaces
+
+   `find ./ -iname '*.h' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;`
+
+   `find ./ -iname '*.cpp' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;`
+
+   `find ./ -iname '*.py' -type f -exec bash -c 'expand -t 2 "$0" | sponge "$0"' {} \;`
+
+- Online help is available for WAF or in build system home folder.
+
    ```
-   $ ./waf --help
+   $ git clone https://github.com/waf-project/waf.git
+   $ cd waf
+   $ ./waf-light --help
+   $ ./waf-light configure --tools=swig,qt5,qt4 build
+   $ cp waf ~/gaia/.
    ```
-   
-- Configure with the desired options
+
+- Configure `gaia` with the desired options, if `python3` wanted use
     ```
-    $ ./waf configure [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
-    ```    
-    NOTE: in order to link Essentia library with Gaia, do not use --with-stlfacade option
-
-- Compile libgaia.a:
+    $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] 
+    [--with-cyclops] [--with-tests] [--with-gaia-qt5]
     ```
-    $ ./waf
+    NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option
+
+- Compile `libgaia.a`or `_gaia2.so`:
+    ```
+    $ python3 ./waf
     ```
     
 - Install (to install system-wide you might need ```sudo```)
     ```
-    $ ./waf install [--destdir=/where/ever/]
+    $ python3 ./waf install [--destdir=/where/ever/]
     ```
     
-- Build documentation (optional), it will be located at build/doc/ folder
+- Build documentation (optional or online), it will be located at build/doc/ folder - currently doesn't work
     ```
-    $ ./python src/doc/regenerate_docstring.py
+    $ python3 src/doc/regenerate_docstring.py
     ```
 
 ## MacOS X
@@ -122,7 +149,7 @@ INSTALL
     ```
     $ cp /path_to_gaia_source/src/bindings/gaia_wrap.cxx /path_to_gaia_source/packaging/darwin/Gaia2Python/
     ```
-        
+    
 - use QtCreator to open the project file 'Gaia2Python.pro' in packaging/darwin/Gaia2Python/ and compile
 
 - run ./make_release_tarball in packaging/darwin:
@@ -137,6 +164,7 @@ INSTALL
 ## Windows
 
 - use the QtCreator projects inside the packaging/win32 directory (not tested).
+- using `msys64`and `mingw64_shell.bat`partially works but is currently not available and untested.
 
 
 
@@ -155,6 +183,8 @@ which is distributed under the 3-clause BSD license.
 
 This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
 which is distributed under the LGPLv3 license.
+
+Cyclops for Qt5 contains source code from the Qt project deprecated APIs which have been removed from Qt (https://github.com/qt/qthttp), which is distributed under the terms specified under GNU GPLv3 license.  These have been heavily reorder to eliminate compile errors.
 
 This library contains source code from FrogLogic command line parser
 (http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)

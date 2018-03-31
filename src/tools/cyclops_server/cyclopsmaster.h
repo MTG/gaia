@@ -17,12 +17,31 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+//#ifndef CYCLOPS_NORMAL
 #ifndef GAIA_CYCLOPSMASTER_H
 #define GAIA_CYCLOPSMASTER_H
 
+#include <QObject>
 #include <QNetworkReply>
 #include <QHostAddress>
 #include <QBuffer>
+#include "yamlrpcserver.h"
 #include "cyclops.h"
 
 class PendingRequest {
@@ -43,6 +62,7 @@ class PendingRequest {
 
 class CyclopsMaster : public YamlRPCServer {
 Q_OBJECT
+
  public:
 
   CyclopsMaster();
@@ -100,5 +120,5 @@ Q_OBJECT
 
 };
 
-
 #endif // GAIA_CYCLOPSMASTER_H
+//#endif

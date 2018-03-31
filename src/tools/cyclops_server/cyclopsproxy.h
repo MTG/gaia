@@ -17,11 +17,27 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #ifndef GAIA_CYCLOPSPROXY_H
 #define GAIA_CYCLOPSPROXY_H
 
 #include "yamlrpcserver.h"
-#include "yamlcpp.h"
+#include "../../yamlcpp.h"
 #include "cyclops.h"
 
 
@@ -29,7 +45,8 @@ gaia2::yaml::Node toYaml(const CyclopsResults& results);
 
 
 class CyclopsProxy : public YamlProxy {
- public:
+
+public:
 
   /**
    * Create a CyclopsProxy instance that can translate a Yaml-RPC call to an actual
@@ -47,6 +64,5 @@ class CyclopsProxy : public YamlProxy {
  protected:
   Cyclops* _cyclops;
 };
-
 
 #endif // GAIA_CYCLOPSPROXY_H

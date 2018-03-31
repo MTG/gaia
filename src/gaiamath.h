@@ -17,6 +17,23 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
+
 #ifndef GAIA_GAIAMATH_H
 #define GAIA_GAIAMATH_H
 
@@ -213,10 +230,10 @@ void hist(const T* array, uint n, int* n_array, T* x_array, uint n_bins) {
     while (dist[i] > current_cutoff) {
       // last case; skip the rest and fill in the last bin
       if (current_cutoff_idx == n_bins-2) {
-	n_array[n_bins-1] = n-i; // fill in the last bin with what's left
-	i = n; // to jump out of the 2nd loop (the 'for' one)
-	n_array[n_bins-2]--; // to compensate for the last one that will be added before jumping out of the loop
-	break;
+    n_array[n_bins-1] = n-i; // fill in the last bin with what's left
+    i = n; // to jump out of the 2nd loop (the 'for' one)
+    n_array[n_bins-2]--; // to compensate for the last one that will be added before jumping out of the loop
+    break;
       }
       current_cutoff_idx++;
       current_cutoff = cutoff[current_cutoff_idx];

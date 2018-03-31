@@ -18,15 +18,31 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 import os, os.path
 import fnmatch
 import subprocess
 import multiprocessing
-import sys
+import sys,  traceback
 import signal
+import functools
 
+print = functools.partial(print, flush=True)
 
 def analyzeSingleFile(extractorPath, inputFile, outputFile, progress = None, overwrite = False, captureStdout = False):
     # make sure output directory exists
@@ -52,8 +68,7 @@ def analyzeSingleFile(extractorPath, inputFile, outputFile, progress = None, ove
         if captureStdout:
             return stdout
         else:
-            print stdout,
-            sys.stdout.flush()
+            print (stdout,flush=True)
             return
 
     # always run from the extractor directory, as it might be accompanied by SVM models
@@ -64,8 +79,7 @@ def analyzeSingleFile(extractorPath, inputFile, outputFile, progress = None, ove
         stdout += pstdout
 
     else:
-        print stdout,
-        sys.stdout.flush()
+        print (stdout,flush=True)
         subprocess.Popen(args).communicate()
 
     os.chdir(curdir)
@@ -80,10 +94,10 @@ def analyze(args):
         # print all at once to try to prevent output to be interwoven
         # Note: this just makes it unlikely, not impossible. To do this, one would
         #       have to lock stdout when printing on it
-        print stdout,
+        #print stdout,
 
     except KeyboardInterrupt:
-        print 'Child process interrupted, stopping parent as well...'
+        traceback.print_exc('Child process interrupted, stopping parent as well...')
         os.kill(os.getppid(), signal.SIGQUIT) # SIGQUIT might seem a bit brutal as we will kill the interpreter if running it interactively, but I couldn't figure out a way to propagate the exception to the parent process properly
         sys.exit(1)
 
@@ -95,17 +109,17 @@ def _analyzeFiles(extractorPath, filelist):
     nfiles = len(filelist)
     filelist = sorted(filelist)
 
-    print 'Found %d files to analyze...' % nfiles
+    print ('Found %d files to analyze...' % nfiles)
     if not filelist:
         return
 
     if NCPUS == 1:
-        print 'Found 1 CPU core, running the analysis in a single process...'
+        print ('Found 1 CPU core, running the analysis in a single process...')
 
         for i, (inputFile, outputFile) in enumerate(filelist):
             analyzeSingleFile(extractorPath, inputFile, outputFile, (i+1, nfiles))
     else:
-        print 'Found %d CPU cores, running the analysis using that many processes...' % NCPUS
+        print ('Found %d CPU cores, running the analysis using that many processes...' % NCPUS)
         pool = multiprocessing.Pool(NCPUS)
 
         arglist = [ (extractorPath, f, (i+1, nfiles)) for i, f in enumerate(filelist) ]
@@ -121,7 +135,7 @@ def analyzeFiles(extractorPath, outputDir, audioDir, exts = [ '*' ]):
 
     filelist = []
 
-    print 'Finding list of files to analyze...'
+    print ('Finding list of files to analyze...')
 
     for root, dirs, files in os.walk(audioDir, followlinks = True):
         for f in files:
@@ -153,7 +167,7 @@ def analyzeCollection(extractorPath, outputDir, collection):
     """Analyze all audio files found in the given mtgdb.Collection using the extractor and
     write the resulting sigfiles in the output dir, preserving the same hierarchy."""
 
-    print 'Analyzing %r' % collection
+    print ('Analyzing %r' % collection)
     filelist = sigfileList(collection, outputDir)
 
     _analyzeFiles(extractorPath, filelist)
@@ -161,18 +175,17 @@ def analyzeCollection(extractorPath, outputDir, collection):
 
 
 def usage(msg = None):
-    print 'Usage: %s essentia_extractor audio_dir sigs_dir' % sys.argv[0]
-    print 'Where:'
-    print '  essentia_extractor: is the path to the Essentia extractor that you want to'
-    print '                      use to extract the features'
-    print '  audio_dir: is the directory in which your audio files are located; it will'
-    print '             be searched recursively for all files contained in there'
-    print '  sigs_dir: is the directory where to write the signature files. The hierarchy'
-    print '            found in audio_dir will be preserved here.'
+    print ('Usage: %s essentia_extractor audio_dir sigs_dir' % sys.argv[0])
+    print ('Where:')
+    print ('  essentia_extractor: is the path to the Essentia extractor that you want to')
+    print ('                      use to extract the features')
+    print ('  audio_dir: is the directory in which your audio files are located; it will')
+    print ('             be searched recursively for all files contained in there')
+    print ('  sigs_dir: is the directory where to write the signature files. The hierarchy')
+    print ('            found in audio_dir will be preserved here.')
 
     if msg:
-        print
-        print 'ERROR:', msg
+        print ('\nERROR:', msg)
 
     sys.exit(1)
 

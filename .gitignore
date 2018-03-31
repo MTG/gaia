@@ -2,9 +2,63 @@ build/
 *.pyc
 
 .lock-wscript
+.swn
+.swo
+.swp
+.README*
+
+# waf files
 .waf-1*
 *~
+.waf-2*
+.waf3*
+waflib-*
+.lock-waf*
 
+# temporary files
+cyclops.txt
+cyclops*.txt
+gaia*.tar.bz2
+new_*
+org_*
+wscript_*
+waflib-*
+test.txt
+gaia.txt
+*.py.bak
+src/tools/Build-Cyclops*
+src/tools/cyclops_server_*
+src/tools/cyclops_server/*.pro.user
+src/tools/cyclops_server/*.pro
+src/tools/cyclops_server/Makefile
+src/tools/cyclops_server/lib*.so
+src/tools/cyclops_server/lib*.so.*
+*.ipynb
+*.o
+*.pro
+*.pro.*
+Build-*
+moc_*
+__pycache__
+*.pro.user
+Cyclops-*
+Makefile
+build-*
+.ipynb*
+
+
+# Qt Creator prorject files for Cyclops
+
+
+# waf and waflib used in build
+waf
+waflib
+
+# copied version of wscripts
+wscript_*
+src/wscript_*
+src/bindings/wscript_*
+src/test/wscript_*
 # data files for the unittests
 test/unittest/data/tmp_*
 test/unittest/data/test.1

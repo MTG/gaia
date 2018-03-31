@@ -17,9 +17,25 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include <QFile>
 #include "cyclops.h"
-#include "view.h"
+#include "../../view.h"
 #include "logging.h"
 #include "yamlrpcserver.h" // for InvalidParams exception
 using namespace gaia2;
@@ -316,7 +332,7 @@ ResultSet Cyclops::nnSearch(const QString& methodName, const yaml::Sequence& arg
 
   QString point64 = args[0];
   Point query;
-  query.fromBase64(point64.toAscii());
+  query.fromBase64(point64.toLatin1());
 
   if (methodName == "nnSearchByExample") {
     checkArgs(args, 3, methodName);
@@ -475,4 +491,7 @@ void Cyclops::setupFromYaml(const yaml::Mapping& config) {
   }
 }
 
+#ifndef GAIA_QT5
 #include "cyclops.moc"
+#endif
+

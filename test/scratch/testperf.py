@@ -17,8 +17,23 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
+from builtins import str
 from gaia2 import *
 cvar.verbose = True
 try:
@@ -27,11 +42,11 @@ try:
 except:
     searchSpaceBranch = False
 
-print 'Loading PCA dataset...'
+print('Loading PCA dataset...')
 ds = DataSet()
 ds.load('/var/data/data_nico/itunes/data_merged/itunes_ess0.5.norm.pca1M.db')
 
-print 'Loading reference dataset...'
+print('Loading reference dataset...')
 dsref = DataSet()
 dsref.load('/var/data/data_nico/itunes/data_merged/itunes_ess0.5.bpm_key.db')
 
@@ -76,10 +91,10 @@ queries = [ (p, 10, ''),
 
 
 for pid, nn, filt in queries:
-    print '*'* 100
-    print 'Performing query for %d NN with filter = \'%s\' (point.id = %s)' % (nn, filt, pid)
+    print('*'* 100)
+    print('Performing query for %d NN with filter = \'%s\' (point.id = %s)' % (nn, filt, pid))
     s = v.nnSearch(pid, nn, filt)
     for r in s:
         p = dsref.point(r[0])
-        print r, 'bpm=', p['tempotap_bpm'], ' - key =', p['tonal_key_key'], p['tonal_key_mode']
+        print(r, 'bpm=', p['tempotap_bpm'], ' - key =', p['tonal_key_key'], p['tonal_key_mode'])
 

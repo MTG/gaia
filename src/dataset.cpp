@@ -17,6 +17,22 @@
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
 
+/* <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+#
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
+*/
+
 #include <QFile>
 #include <QBuffer>
 #include <QMutex>
@@ -945,14 +961,41 @@ DataSet* DataSet::mergeFiles(const QMap<QString, QString>& sigfiles,
 
 #define MAGIC_NUMBER 0x6AEA7230
 
-
-
+/*
+QDataStream::Qt_1_0 1   Version 1 (Qt 1.x)
+QDataStream::Qt_2_0 2   Version 2 (Qt 2.0)
+QDataStream::Qt_2_1 3   Version 3 (Qt 2.1, 2.2, 2.3)
+QDataStream::Qt_3_0 4   Version 4 (Qt 3.0)
+QDataStream::Qt_3_1 5   Version 5 (Qt 3.1, 3.2)
+QDataStream::Qt_3_3 6   Version 6 (Qt 3.3)
+QDataStream::Qt_4_0 7   Version 7 (Qt 4.0, Qt 4.1)
+QDataStream::Qt_4_1 Qt_4_0  Version 7 (Qt 4.0, Qt 4.1)
+QDataStream::Qt_4_2 8   Version 8 (Qt 4.2)
+QDataStream::Qt_4_3 9   Version 9 (Qt 4.3)
+QDataStream::Qt_4_4 10  Version 10 (Qt 4.4)
+QDataStream::Qt_4_5 11  Version 11 (Qt 4.5)
+QDataStream::Qt_4_6 12  Version 12 (Qt 4.6, Qt 4.7, Qt 4.8)
+QDataStream::Qt_4_7 Qt_4_6  Same as Qt_4_6.
+QDataStream::Qt_4_8 Qt_4_7  Same as Qt_4_6.
+QDataStream::Qt_4_9 Qt_4_8  Same as Qt_4_6.
+QDataStream::Qt_5_0 13  Version 13 (Qt 5.0)
+QDataStream::Qt_5_1 14  Version 14 (Qt 5.1)
+QDataStream::Qt_5_2 15  Version 15 (Qt 5.2)
+QDataStream::Qt_5_3 Qt_5_2  Same as Qt_5_2
+QDataStream::Qt_5_4 16  Version 16 (Qt 5.4)
+QDataStream::Qt_5_5 Qt_5_4  Same as Qt_5_4
+QDataStream::Qt_5_6 17  Version 17 (Qt 5.6)
+QDataStream::Qt_5_7 Qt_5_6  Same as Qt_5_6
+QDataStream::Qt_5_8 Qt_5_7  Same as Qt_5_6
+QDataStream::Qt_5_9 Qt_5_8  Same as Qt_5_6
+QDataStream::Qt_5_10 Qt_5_9 Same as Qt_5_6
+*/
 // Data Stream format versions:
 // 100: Initial Gaia 2.0 data format
 // 101: same as before + the following:
 //      - Points now also write the Scope structure
 //      - Transformations now also write the info field
-
+// 102: For Qt_5_6 to Qt_5_10
 QDataStream& gaia2::operator<<(QDataStream& out, const DataSet& dataset) {
   dataset.checkAllPointsShareSameLayout();
 
@@ -1068,7 +1111,34 @@ int DataSet::load(QDataStream& in, int start, int end, bool readAllPointsFromStr
 
     break;
   }
+#ifdef GAIA_QT5
+  case Gaia_2_4: {
+    // load all points that we asked for
+    in >> size;
 
+    // make sure we don't segfault
+    start = qMin(qMax(start, 0), size);
+    if (end < 0) end = size;
+    end = qMin(qMax(end, 0), size);
+
+    Point dummy;
+    for (int i=0; i<start; i++) in >> dummy;
+
+    for (int i=start; i<end; i++) {
+      Point* p = new Point();
+      in >> *p;
+      *this << p;
+    }
+
+    // in some cases, we might want to read those leftover points anyway, to
+    // leave the stream in a correct state
+    if (readAllPointsFromStream) {
+      for (int i=end; i<size; i++) in >> dummy;
+    }
+
+    break;
+  }
+#endif
   }
 
   // make sure dataset is valid & compact memory

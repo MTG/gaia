@@ -17,8 +17,22 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+# <copyright entity="UPF">
+# UPF. All Right Reserved, http://www.upf.edu/
+#
+# This source is subject to the Contributor License Agreement of the Essentia project.
+# Please see the CLA.txt file available at http://essentia.upf.edu/contribute/
+# for more
+# information.
+# 
+# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY 
+# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# </copyright>
 
-
+from __future__ import print_function
 from gaia2 import *
 
 DATASET_FILE = '/home/nwack/tmp/pv_tracks_10000chunk.db'
@@ -28,19 +42,19 @@ POINTID = '05683a1cae064732801e4b1421306d3b'
 ds = FrozenDataSet()
 ds.load(FROZEN_DATASET_FILE)
 
-print 'Dataset dimensions: points =', ds.size(), '- dim =', ds.dimension()
-print 'Descriptor names:', ds.descriptorNames()
+print('Dataset dimensions: points =', ds.size(), '- dim =', ds.dimension())
+print('Descriptor names:', ds.descriptorNames())
 
 # frozen distances are not created through a factory, but instantiated directly
 v = FrozenView(ds)
 #dist = FrozenEuclideanDistance(ds, 'colfilter')
 dist = FrozenDistanceFactory.create('euclidean', ds, { 'descriptorName': 'colfilter' })
 
-print 'For point', POINTID
-print v.nnSearch(POINTID, dist).get(10)
+print('For point', POINTID)
+print(v.nnSearch(POINTID, dist).get(10))
 
 p = ds.point(POINTID)
-print v.nnSearch(p, dist).get(10)
+print(v.nnSearch(p, dist).get(10))
 
 hybriddist = FrozenDistanceFactory.create('LinearCombination', ds,
                                         { 'CF': { 'distance': 'CosineAngle',
@@ -56,7 +70,7 @@ hybriddist = FrozenDistanceFactory.create('LinearCombination', ds,
                                                   'weight': 0.2 }
                                           })
 
-print v.nnSearch(p, hybriddist).get(10)
+print(v.nnSearch(p, hybriddist).get(10))
 
 hybridexpdist = FrozenDistanceFactory.create('ExponentialCompress', ds,
                                            { 'distance': 'linearcombination',
@@ -74,4 +88,4 @@ hybridexpdist = FrozenDistanceFactory.create('ExponentialCompress', ds,
                                                          }
                                              })
 
-print v.nnSearch(p, hybridexpdist).get(10)
+print(v.nnSearch(p, hybridexpdist).get(10))
