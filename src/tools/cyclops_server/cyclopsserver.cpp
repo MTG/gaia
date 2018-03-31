@@ -40,6 +40,7 @@
 #include "cyclopsproxy.h"
 #include "cyclops.h"
 #include "../../yamlcpp.h"
+#ifdef GAIA_QT5
 #include <QLoggingCategory>
 #include <qapplication.h>
 #include <stdio.h>
@@ -66,13 +67,21 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         abort();
     }
 }
+#endif
 
 int main(int argc, char* argv[]) {
+
+#ifdef GAIA_QT5
   qInstallMessageHandler(myMessageOutput);
+#endif
+
   QCoreApplication app(argc, argv);
+
+#ifdef GAIA_QT5
   QLoggingCategory::setFilterRules("*.debug=true");
     qDebug() << "Debugging";
     app.exit();
+#endif
 
   gaia2::init();
 

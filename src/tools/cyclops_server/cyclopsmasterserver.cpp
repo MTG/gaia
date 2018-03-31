@@ -40,18 +40,21 @@
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
 #include <QTextStream>
+#ifdef GAIA_QT5
 #include <QLoggingCategory>
 #include <qapplication.h>
 #include <stdio.h>
 #include <stdlib.h>
+#endif
 
 FILE* logFile;
 
-//void logToFile(QtMsgType type, const char *msg) {
-//  fprintf(logFile, "%s\n", msg);
-//  fflush(logFile);
-//}
+void logToFile(QtMsgType type, const char *msg) {
+  fprintf(logFile, "%s\n", msg);
+  fflush(logFile);
+}
 
+#ifdef GAIA_QT5
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
@@ -73,11 +76,15 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         abort();
     }
 }
+#endif
 
 int main(int argc, char* argv[]) {
   QTextStream standardOutput(stdout);
+#ifdef GAIA_QT5
   qInstallMessageHandler(myMessageOutput);
+#endif
   QCoreApplication app(argc, argv);
+#ifdef GAIA_QT5
   QLoggingCategory::setFilterRules("*.debug=true");
     qDebug() << "Debugging";
     app.exit();
@@ -88,7 +95,7 @@ int main(int argc, char* argv[]) {
                             .arg(argumentList.first()) << endl;
           return 1;
       }
-
+#endif
   //QCoreApplication app(argc, argv);
   gaia2::init();
 

@@ -491,5 +491,7 @@ void Cyclops::setupFromYaml(const yaml::Mapping& config) {
   }
 }
 
-//#include "cyclops.moc"
+#ifndef GAIA_QT5
+#include "cyclops.moc"
+#endif
 

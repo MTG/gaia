@@ -215,7 +215,8 @@ def configure(conf):
     else:
         conf.load('compiler_cxx compiler_c')
         conf.load('qt4')
-        #conf.load('slow_qt4',tooldir='.')
+        if conf.options.cyclops:
+            conf.load('slow_qt4',tooldir='.')
     
     conf.recurse('src')
 

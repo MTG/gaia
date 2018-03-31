@@ -35,10 +35,13 @@
 
 #include <QTcpSocket>
 #include <QStringList>
+#ifdef GAIA_QT5
 #include "qthttp/qhttp.h"
 #include "qthttp/QHttpRequestHeader"
-//#include <QHttp>
-//#include <QHttpRequestHeader>
+#else
+#include <QHttp>
+#include <QHttpRequestHeader>
+#endif
 #include <QUrl>
 #include <QDateTime>
 #include "yamlrpcserver.h"
@@ -247,4 +250,6 @@ void YamlRPCServer::discardClient() {
   //qDebug() << "clients connected: " << numberConnectedClients();
 }
 
-//#include "yamlrpcserver.moc"
+#ifndef GAIA_QT5
+#include "yamlrpcserver.moc"
+#endif

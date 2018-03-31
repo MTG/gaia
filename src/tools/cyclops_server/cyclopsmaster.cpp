@@ -747,6 +747,6 @@ void CyclopsMaster::setup(const QString& filename) {
   distributeClientRequest(0, setupRequest);
 }
 
-
-//#include "cyclopsmaster.moc"
-
+#ifndef GAIA_QT5
+#include "cyclopsmaster.moc"
+#endif
