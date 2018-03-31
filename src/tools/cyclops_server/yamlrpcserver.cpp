@@ -37,6 +37,8 @@
 #include <QStringList>
 #include "qthttp/qhttp.h"
 #include "qthttp/QHttpRequestHeader"
+//#include <QHttp>
+//#include <QHttpRequestHeader>
 #include <QUrl>
 #include <QDateTime>
 #include "yamlrpcserver.h"
@@ -57,6 +59,7 @@ int YamlRPCServer::numberConnectedClients() const {
 YamlRPCServer::YamlRPCServer(quint16 port, YamlProxy* proxy) : QTcpServer(), _proxy(proxy) {
   // only listen to a port if given a valid port, otherwise wait to be told explicitly
   // to listen to a specific port
+  qDebug () << "Inializing YamlRPCServer object";
   _startedOn = QDateTime::currentDateTime();
   if (port != 0) {
     bool ok = listen(QHostAddress::Any, port);
@@ -244,4 +247,4 @@ void YamlRPCServer::discardClient() {
   //qDebug() << "clients connected: " << numberConnectedClients();
 }
 
-#include "yamlrpcserver.moc"
+//#include "yamlrpcserver.moc"

@@ -170,10 +170,11 @@ def build_tools(bld):
                 'tools/cyclops_server/qthttp/qhttp.h ' + \
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclops',
-                includes = [ '.', 'tools/cyclops_server/qthttp',  
+                includes = [ '.', 
+                    'tools/cyclops_server/qthttp',  
                     #'/usr/include/x86_64-linux-gnu/qt5/QtHttp',
                     'metrics', '3rdparty' ],
-                defines = 'GAIA_QT5', 
+                defines = 'GAIA_QT5 QT_DISABLE_DEPRECATED_BEFORE=0', 
                 uselib = 'QT5CORE QT5NETWORK',  
                 use = ['gaia2'] + bld.env['USELIB'])
 
@@ -194,11 +195,12 @@ def build_tools(bld):
                 'tools/cyclops_server/qthttp/qhttp.h ' + \
                 'tools/cyclops_server/yamlrpcserver.h',
                 target = 'tools/cyclopsmaster',
-                includes = [ '.',  'tools/cyclops_server/qthttp', 
+                includes = [ '.',
+                    'tools/cyclops_server/qthttp', 
                     #'/usr/include/x86_64-linux-gnu/qt5/QtHttp',
                     'metrics', '3rdparty',
                     'tools/cyclops_server/' ],
-                defines = 'GAIA_QT5', 
+                defines = 'GAIA_QT5 QT_DISABLE_DEPRECATED_BEFORE=0', 
                 uselib = 'QT5CORE QT5NETWORK',  
                 use = ['gaia2'] + bld.env['USELIB'])
             # cyclops init scripts

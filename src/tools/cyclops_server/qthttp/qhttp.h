@@ -65,6 +65,7 @@
 #include <QtCore/qscopedpointer.h>
 #include <QAbstractSocket>
 
+
 #ifndef QT_NO_HTTP
 # include "qtcpsocket.h"
 # include "qsslsocket.h"
@@ -84,8 +85,8 @@
 # include "qtimer.h"
 #endif
 
-QT_BEGIN_HEADER
-QT_BEGIN_NAMESPACE
+//QT_BEGIN_HEADER
+//QT_BEGIN_NAMESPACE
 
 class QTcpSocket;
 class QTimerEvent;
@@ -689,7 +690,7 @@ private:
  *
  ****************************************************/
 
-QT_END_NAMESPACE
-QT_END_HEADER
+//QT_END_NAMESPACE
+//QT_END_HEADER
 
 #endif // QHTTP_H

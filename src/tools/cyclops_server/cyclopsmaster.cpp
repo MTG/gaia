@@ -40,7 +40,7 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QTcpSocket>
-#include <QHttp>
+#include <qthttp/QtHttp>
 #include <QHostInfo>
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
@@ -101,6 +101,7 @@ void CyclopsMaster::setupClients(const QString& configFilename) {
 }
 
 int CyclopsMaster::sendSlaveRequest(const QPair<QHostAddress, int>& slave, const yaml::Mapping& request) {
+
   QHttp* slaveRequest = new QHttp(slave.first.toString(), slave.second, this);
 
   // connect the reply from this slave to the replyFromSlave method
@@ -747,5 +748,5 @@ void CyclopsMaster::setup(const QString& filename) {
 }
 
 
-#include "cyclopsmaster.moc"
+//#include "cyclopsmaster.moc"
 

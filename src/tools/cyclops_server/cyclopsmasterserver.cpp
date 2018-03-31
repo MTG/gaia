@@ -39,16 +39,31 @@
 #include "yamlrpcserver.h"
 #include "cyclopsproxy.h"
 #include "cyclopsmaster.h"
+#include <QTextStream>
+#include <QLoggingCategory>
 
 FILE* logFile;
 
-void logToFile(QtMsgType type, const char *msg) {
-  fprintf(logFile, "%s\n", msg);
-  fflush(logFile);
-}
+//void logToFile(QtMsgType type, const char *msg) {
+//  fprintf(logFile, "%s\n", msg);
+//  fflush(logFile);
+//}
 
 int main(int argc, char* argv[]) {
+  QTextStream standardOutput(stdout);
   QCoreApplication app(argc, argv);
+  QLoggingCategory::setFilterRules("*.debug=true");
+    qDebug() << "Debugging";
+    app.exit();
+  const int argumentCount = QCoreApplication::arguments().size();
+  const QStringList argumentList = QCoreApplication::arguments();
+  if (argumentCount == 0) {
+          standardOutput << QObject::tr("Usage: %1 <serialportname> [baudrate]")
+                            .arg(argumentList.first()) << endl;
+          return 1;
+      }
+
+  //QCoreApplication app(argc, argv);
   gaia2::init();
 
   //logFile = fopen("/var/log/cyclops/master.log", "w");

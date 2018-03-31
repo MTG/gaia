@@ -40,9 +40,15 @@
 #include "cyclopsproxy.h"
 #include "cyclops.h"
 #include "../../yamlcpp.h"
+#include <QLoggingCategory>
 
 int main(int argc, char* argv[]) {
+
   QCoreApplication app(argc, argv);
+  QLoggingCategory::setFilterRules("*.debug=true");
+    qDebug() << "Debugging";
+    app.exit();
+
   gaia2::init();
 
   if (argc != 1 && argc != 3) {

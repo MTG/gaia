@@ -69,7 +69,7 @@
 
 //#define NTLMV1_CLIENT
 
-QT_BEGIN_NAMESPACE
+//QT_BEGIN_NAMESPACE
 
 #ifdef NTLMV1_CLIENT
 #include "../../3rdparty/des/des.cpp"
@@ -1458,4 +1458,4 @@ static QByteArray qNtlmPhase3(QHttpAuthenticatorPrivate *ctx, const QByteArray& 
 
 
 
-QT_END_NAMESPACE
+//QT_END_NAMESPACE
