@@ -45,7 +45,7 @@ from future.utils import raise_
 from urllib.parse import urlparse, urlencode
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
-from six.move import http_client
+from six.moves import http_client
 import time
 import gaia2.fastyaml as yaml
 
