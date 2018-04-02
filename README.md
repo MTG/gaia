@@ -26,18 +26,18 @@ INSTALL
 
 ## Linux
 
-- All features work except `project_file.py`and `regenerate_docstring.py`.  Build with `--with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before.  
+- All features work except `project_file.py`.  Build with `--with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before.  
 
    ​
 
 - Install dependencies (Ubuntu/Debian)
 
    ```
-   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config 
+   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config doxygen 
    ```
    ​     or for `Qt5`
    ```
-   $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config
+   $ apt-get install build-essential qt5-default qtbase5-dev libyaml-dev swig python3-dev pkg-config doxygen
    ```
 
    Note that `Gaia` build may fail if you are using `swig 3.0.8`. Install either a previous or later version. The newest `swig` version is available from source `(https://github.com/swig/swig)`.
@@ -81,7 +81,7 @@ INSTALL
     ```
     ***NOTE: be careful to use `python3` consistently as `./waf install`on its own will use the default `python.`***
 
-- Build documentation (optional or online), it will be located at build/doc/ folder - currently doesn't work
+- Build documentation (optional or online), it will be located at build/doc/ folder
 
     ```
     $ python3 src/doc/regenerate_docstring.py
