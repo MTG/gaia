@@ -68,7 +68,7 @@ INSTALL
     $ python3 ./waf configure [--with-python] [--with-stlfacade] [--with-asserts] 
     [--with-cyclops] [--with-tests] [--with-gaia-qt5]
     ```
-    NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option
+    ***NOTE: in order to link Essentia library with Gaia, do not use `--with-stlfacade` option***
 
 - Compile `libgaia.a`or `_gaia2.so`:
     ```
@@ -79,8 +79,10 @@ INSTALL
     ```
     $ python3 ./waf install [--destdir=/where/ever/]
     ```
-    
+    ***NOTE: be careful to use `python3` consistently as `./waf install`on its own will use the default `python.`***
+
 - Build documentation (optional or online), it will be located at build/doc/ folder - currently doesn't work
+
     ```
     $ python3 src/doc/regenerate_docstring.py
     ```
