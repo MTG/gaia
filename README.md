@@ -4,8 +4,6 @@ Gaia 2
 ABOUT
 -----
 
-*<u>I've broken the build - `import gaia2` does not work.  Working on fixing it.</u>*
-
 Gaia is a C++ library with python bindings which implements similarity measures and classiﬁcations on the results of audio analysis, and generates classiﬁcation models that Essentia can use to compute high-level description of music. 
 
 Licence: [Affero GPLv3 license](http://www.gnu.org/licenses/agpl.html)

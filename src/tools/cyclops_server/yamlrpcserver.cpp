@@ -64,6 +64,8 @@ YamlRPCServer::YamlRPCServer(quint16 port, YamlProxy* proxy) : QTcpServer(), _pr
   // to listen to a specific port
   qDebug () << "Inializing YamlRPCServer object";
   _startedOn = QDateTime::currentDateTime();
+  //QDateTime xmas(QDate(_startedOn.date().year(), 12, 25), QTime(0, 0));
+  //qDebug("There are %d seconds to Christmas", _startedOn.secsTo(xmas));
   if (port != 0) {
     bool ok = listen(QHostAddress::Any, port);
     if (!ok) {

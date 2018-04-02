@@ -55,29 +55,27 @@ def configure(conf):
         conf.check_python_version((2,4))
         conf.check_python_headers()
 
-        conf.find_program('touch', var='TOUCH')
+        #conf.find_program('touch', var='TOUCH')
         
         # do not use the default extension of .bundle on MacOS
         # TODO: still necessary with waf 1.5.x?
         if sys.platform == 'darwin':
             conf.env['pyext_SUFFIX'] = '.so'
 
-        #print ('conf.env WITH_GAIA_QT5',conf.env['WITH_GAIA_QT5'] )
-
         if sys.platform.startswith('linux') and conf.env['WITH_GAIA_QT5']:
             conf.env['CPPPATH_BINDINGS'] = [ '../../src',
                 '../../src/bindings',
                 '../../src/metrics',
-                '../../src/3rdparty']
+                '../../src/3rdparty'] 
             #conf.env.uselib = 'QT5CORE QT5CONCURRENT YAML'
-            conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-DGAIA_QT5','-msse2','-Wno-parentheses', '-Wno-uninitialized' ] 
         else:
             conf.env['CPPPATH_BINDINGS'] = [ '../../src',
                 '../../src/bindings',
                 '../../src/metrics',
-                '../../src/3rdparty']
+                '../../src/3rdparty'] 
             #conf.env.uselib = 'QTCORE QTCONCURRENT YAML'
-            conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ] #TODO is that ever used?
+            conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ]  
 
 def build_swig_qt5(bld):
     bld(features = 'cxx cshlib pyext',
@@ -85,8 +83,9 @@ def build_swig_qt5(bld):
         target = '_gaia2',
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
         swig_flags = '-c++ -python -w451',
-        #use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        uselib = 'gaia2 QT5CORE QT5CONCURRENT YAML',
+        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        uselib = 'QT5CORE QT5CONCURRENT YAML',
+        #defines = bld.env['SWIG_DEFINES'], 
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
     )
@@ -95,8 +94,9 @@ def build_swig_qt4(bld):
         source = 'gaia.swig',
         target = '_gaia2',
         swig_flags = '-c++ -python -w451',
-        #use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        uselib = 'gaia2 QTCORE YAML',
+        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        uselib = 'QTCORE YAML',
+        #defines = bld.env['SWIG_DEFINES'], 
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
     )

@@ -100,7 +100,7 @@ def check_tbb(conf):
     conf.env['USELIB'] += [ 'TBB' ]
 
 def configure(conf):
-    global gaia_qt5
+    global gaia_qt5,  VERSION, GIT_SHA 
     gaia_qt5 = conf.options.gaia_qt5
     
     if sys.platform.startswith('linux') != True   and sys.platform != 'darwin':
@@ -162,11 +162,13 @@ def configure(conf):
         check_tbb(conf)
     
     # optional dependency: QtNetwork for Cyclops Server
-    print ('conf.options.cyclops = ',  conf.options.cyclops)
+    #print ('conf.options.cyclops = ',  conf.options.cyclops)
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops
-    print ('conf.env[WITH_CYCLOPS] = ',  conf.env['WITH_CYCLOPS'])
- 
-    conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
+    #print ('conf.env[WITH_CYCLOPS] = ',  conf.env['WITH_CYCLOPS'])
+    if (sys.platform.startswith('linux') == False):
+        conf.env.DEFINES = ['GAIA_VERSION=\"%s\"' % VERSION, 'GAIA_GIT_SHA=\"%s\"' % GIT_SHA]
+    #conf.env['SWIG_DEFINES'] = 'GAIA_VERSION=\"%s\" GAIA_GIT_SHA=\"%s\"' % (VERSION,  GIT_SHA)
+    #print ('conf.env[SWIG_DEFINES] = ', conf.env['SWIG_DEFINES'])
 
     if sys.platform == 'darwin':
         # force the use of clang as compiler, we don't want gcc anymore on mac
@@ -184,6 +186,8 @@ def configure(conf):
     
     elif sys.platform.startswith('linux') and gaia_qt5:
         conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
+            '-DGAIA_VERSION=\"%s\"' % VERSION, \
+            '-DGAIA_GIT_SHA=\"%s\"' % GIT_SHA, \
             '-DGAIA_QT5',  \
             '-Wint-in-bool-context', \
             '-Wno-misleading-indentation', \
@@ -191,14 +195,17 @@ def configure(conf):
             '-fno-strict-aliasing',\
             '-fPIC', '-fvisibility=hidden']
         conf.env.uselib = 'QT5CORE QT5CONCURRENT YAML'
-    #elif sys.platform.startswith('linux'): 
-        #conf.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
-        #    '-Wint-in-bool-context', \
-        #    '-Wno-misleading-indentation', \
-        #    '-Wno-unused-result',\
-        #    '-fno-strict-aliasing',\
-        #    '-fPIC', '-fvisibility=hidden']
+    elif sys.platform.startswith('linux'): 
+        conf.env.CXXFLAGS += [ '-std=c++03', '-msse2','-Wall', \
+            '-DGAIA_VERSION=\"%s\"' % VERSION, \
+            '-DGAIA_GIT_SHA=\"%s\"' % GIT_SHA, \
+            '-Wint-in-bool-context', \
+            '-Wno-misleading-indentation', \
+            '-Wno-unused-result',\
+            '-fno-strict-aliasing',\
+            '-fPIC', '-fvisibility=hidden']
 
+    #print ('CXXFLAGS = ',  conf.env.CXXFLAGS)
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
     # add this key otherwise gcc 4.8 will complain

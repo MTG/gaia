@@ -185,7 +185,7 @@ def build_tools_qt5(bld):
                 #'/usr/include/x86_64-linux-gnu/qt5/QtHttp',
                 'metrics', '3rdparty' ],
             defines = 'GAIA_QT5 QT_DISABLE_DEPRECATED_BEFORE=0', 
-            uselib = 'QT5CORE QT5NETWORK',  
+            uselib = 'QT5CORE QT5NETWORK QT5WIDGETS YAML',  
             use = ['gaia2'] + bld.env['USELIB'])
 
         # cyclops "master" server
@@ -211,7 +211,7 @@ def build_tools_qt5(bld):
                 'metrics', '3rdparty',
                 'tools/cyclops_server/' ],
             defines = 'GAIA_QT5 QT_DISABLE_DEPRECATED_BEFORE=0', 
-            uselib = 'QT5CORE QT5NETWORK',  
+            uselib = 'QT5CORE QT5NETWORK QT5WIDGETS YAML',  
             use = ['gaia2'] + bld.env['USELIB'])
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
@@ -270,8 +270,8 @@ def build_tools_qt4(bld):
             ''',
             target = 'tools/cyclops',
             includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            uselib = 'QTCORE QTNETWORK', 
-            use = ['gaia2'] )
+            uselib = 'QTCORE QTNETWORK YAML', 
+            use = ['gaia2'] + bld.env['USELIB'] )
 
         # cyclops "master" server
         bld(
@@ -285,8 +285,8 @@ def build_tools_qt4(bld):
             ''',
             target = 'tools/cyclopsmaster',
             includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            uselib = 'QTCORE QTNETWORK', 
-            use = ['gaia2']) 
+            uselib = 'QTCORE QTNETWORK YAML', 
+            use = ['gaia2'] + bld.env['USELIB']) 
             
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
@@ -301,6 +301,7 @@ def build(bld):
     global with_cyclops
     if bld.env['WITH_CYCLOPS']:
         with_cyclops = True
+
     #task_test_b.set_run_after(task_test_b)
     #bld.post_mode = Build.POST_LAZY
 
