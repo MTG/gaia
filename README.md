@@ -34,7 +34,11 @@ INSTALL
 
    `FAILED (failures=1, errors=48)` so still some unresolved `python3` issues.
 
-   ​
+   Check `build/src/bindings/gaia2.py` to ensure `# -*- coding: utf-8 -*-` is very first line.
+
+   Plan to modify `build_swig` to be `python3` specific when the project is built for `python3` and
+
+   therefore `build` folder needs to be removed before building for `python2`.
 
 - Install dependencies (Ubuntu/Debian)
 
