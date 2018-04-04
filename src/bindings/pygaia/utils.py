@@ -34,6 +34,9 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import zip
+from builtins import range
+from builtins import object
 import functools
 import os, sys, errno
 from os.path import join, basename, splitext, abspath
@@ -45,9 +48,9 @@ def toMatrix(vec):
     result = []
     dim1 = vec[0]
     dim2 = vec[1]
-    for i in xrange(int(dim1)):
+    for i in range(int(dim1)):
         row = []
-        for j in xrange(int(dim2)):
+        for j in range(int(dim2)):
             row.append(vec[i*int(dim2)+j+2])
         result.append(row)
     return result
@@ -55,7 +58,7 @@ def toMatrix(vec):
 
 def tuplify(obj):
     if isinstance(obj, dict):
-        return tuplify(obj.items())
+        return tuplify(list(obj.items()))
     elif isinstance(obj, (list, tuple)):
         return tuple(tuplify(elem) for elem in obj)
     else:
@@ -75,8 +78,8 @@ def combinations(vrange):
 def dictcombinations(d):
     """From a dictionary of key to possible values, generate dictionaries with all possible combinations for the values."""
     keys = tuple(d.keys())
-    for values in combinations(d.values()):
-        yield dict(zip(keys, values))
+    for values in combinations(list(d.values())):
+        yield dict(list(zip(keys, values)))
 
 
 def makedir(path):
@@ -91,7 +94,7 @@ def makedir(path):
         else: raise
 
 
-class TextProgress:
+class TextProgress(object):
 
     def __init__(self, total, format = '[%(current)d/%(total)d] (%(percent)d%% done)...'):
         self.total = total
@@ -135,7 +138,7 @@ def generateMergeFilelist(basedir,
         for filename in filenames:
             d[filename2gid(filename)] += [ filename ]
 
-        for pid, filenames in d.items():
+        for pid, filenames in list(d.items()):
             if len(filenames) > 1:
                 print ('\n%s:' % pid)
                 for f in filenames:

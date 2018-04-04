@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import print_function
+from past.builtins import basestring
 import os, os.path
 import fnmatch
 import subprocess
@@ -157,7 +158,7 @@ def sigfileList(collection, outputDir):
     absfiles = collection.files()
     relfiles = collection.relativePathFiles()
 
-    for id, path in absfiles.items():
+    for id, path in list(absfiles.items()):
         filelist.append((path, os.path.join(outputDir, relfiles[id]) + '.sig'))
 
     return filelist

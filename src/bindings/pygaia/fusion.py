@@ -34,6 +34,9 @@
 # </copyright>
 
 from __future__ import print_function
+from past.builtins import basestring
+from builtins import filter
+from builtins import str
 import gaia2
 from gaia2 import DataSet, transform, applyTransfoChain, fastyaml
 import os, sys, tempfile, subprocess
@@ -149,7 +152,7 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
     if exclude:
         try:
             p = gaia2.Point()
-            p.load(gaia2.fastyaml.loadfile(pointList).items()[0][1])
+            p.load(list(gaia2.fastyaml.loadfile(pointList).items())[0][1])
             excluded = p.layout().descriptorNames(exclude)
         except:
             raise
