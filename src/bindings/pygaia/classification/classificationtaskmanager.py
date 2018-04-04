@@ -20,13 +20,19 @@
 
 
 
+from __future__ import print_function
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import sys, os, logging
 import yaml
 from gaia2 import *
-import cPickle
+import pickle
 import subprocess
 import multiprocessing
-import cStringIO
+import io
 from os.path import join, split, exists
 from gaia2.utils import makedir, tuplify, dictcombinations
 from gaia2.classification import GroundTruth
@@ -39,7 +45,7 @@ validEvaluations = [ 'nfoldcrossvalidation' ]
 def taskhash(config):
     return hash(str(tuplify(config)))
 
-class ClassificationTaskManager:
+class ClassificationTaskManager(object):
     """Main class used for classification that contains all the possible configurations we want to run.
 
     It will read a full project configuration from a yaml project file, and generate all the corresponding
@@ -52,7 +58,7 @@ class ClassificationTaskManager:
         try:
             conf = yaml.load(open(yamlfile).read())
         except Exception as e:
-            print ('Unable to open project file:', e)
+            print(('Unable to open project file:', e))
             raise
 
         self.conf = conf
@@ -73,8 +79,8 @@ class ClassificationTaskManager:
 
 
         # make sure that each classifier has a list of valid preprocessed datasets specified, otherwise add them
-        preprocessingSteps = conf['preprocessing'].keys()
-        for trainer, configs in conf['classifiers'].items():
+        preprocessingSteps = list(conf['preprocessing'].keys())
+        for trainer, configs in list(conf['classifiers'].items()):
             for config in configs:
                 if 'preprocessing' not in config:
                     log.warning('Preprocessing for classifier ' + trainer +
@@ -101,7 +107,7 @@ class ClassificationTaskManager:
         self.allconfigs = []
         self.evalconfigs = []
 
-        for classifier, configs in self.conf['classifiers'].items():
+        for classifier, configs in list(self.conf['classifiers'].items()):
             if classifier not in validClassifiers:
                 log.warning('Not a valid classifier: %s' % classifier)
                 continue
@@ -111,7 +117,7 @@ class ClassificationTaskManager:
                 dconfig.update(conf)
                 self.allconfigs += list(dictcombinations(dconfig))
 
-        for evaluation, configs in self.conf['evaluations'].items():
+        for evaluation, configs in list(self.conf['evaluations'].items()):
             if evaluation not in validEvaluations:
                 log.warning('Not a valid evaluation: %s' % evaluation)
                 continue
@@ -142,7 +148,7 @@ class ClassificationTaskManager:
         # datasets have already been prepared
         origDataSet = None
 
-        for name, steps in c['preprocessing'].items():
+        for name, steps in list(c['preprocessing'].items()):
             dsfilename = join(c['datasetsDirectory'], '%s-%s.db' % (c['className'], name))
 
             if exists(dsfilename) :
@@ -212,9 +218,9 @@ def runSingleTest(args):
                                 #stdout = subprocess.PIPE,
                                 #stderr = subprocess.PIPE)
 
-        inputs = cStringIO.StringIO()
+        inputs = io.StringIO()
         #cPickle.dump((className, outfilename, trainingparam, dsname, gtname, evalconfig), inputs)
-        cPickle.dump(args, inputs)
+        pickle.dump(args, inputs)
 
         stdout, stderr = proc.communicate(inputs.getvalue())
 
@@ -222,7 +228,7 @@ def runSingleTest(args):
         # we can't use stderr, because that's where we log the messages...
 
     else:
-        from classificationtask import ClassificationTask
+        from .classificationtask import ClassificationTask
 
         task = ClassificationTask()
         try:

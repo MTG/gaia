@@ -34,6 +34,10 @@
 # </copyright>
 
 from __future__ import print_function
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import sys
 import os
 from os.path import join, exists, dirname
@@ -57,7 +61,7 @@ def makedir(path):
 
 def isExecutable(path):
     try:
-        usermode = (os.stat(path).st_mode / 64) % 8
+        usermode = (old_div(os.stat(path).st_mode, 64)) % 8
         return os.path.isfile(path) and (usermode % 2) == 1
 
     except:

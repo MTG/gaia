@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import object
 import sys, glob
 from os.path import join, splitext
 from gaia2.classification import ConfusionMatrix
@@ -77,7 +78,7 @@ class ClassificationResults(object):
 
     def filterResults(self, filters):
         result = self.results
-        for param, value in filters.items():
+        for param, value in list(filters.items()):
             result = [ (filename, cm, param) for (filename, cm, param) in result if param['model'][param] == value ]
 
         return result

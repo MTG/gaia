@@ -34,9 +34,11 @@
 # </copyright>
 
 from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import gaia2
 import gaia2.fastyaml as yaml
-import environment
+from . import environment
 from gaia2.classification import GroundTruth
 from os.path import join, split
 
@@ -52,7 +54,7 @@ class Collection(object):
         self._config = yaml.loadfile(self.configFilePath())
 
         self._files = {}
-        for type, props in self._config['audioFormats'].items():
+        for type, props in list(self._config['audioFormats'].items()):
             self._files[type] = self.absolutePathFiles(type, props['filelist'])
 
         self.loadGroundTruth(groundTruth)
@@ -69,7 +71,7 @@ class Collection(object):
 
     def audioDirectory(self, audioFormat = None):
         if audioFormat is None:
-            audioFormats = self._config['audioFormats'].keys()
+            audioFormats = list(self._config['audioFormats'].keys())
             audioFormat = audioFormats[0]
             if len(audioFormats) > 1:
                 print ('WARNING: multiple audio formats, choosing "%s" out of %s' % (audioFormat, audioFormats))
@@ -79,7 +81,7 @@ class Collection(object):
 
     def relativePathFiles(self, audioFormat = None):
         if audioFormat is None:
-            audioFormats = self._config['audioFormats'].keys()
+            audioFormats = list(self._config['audioFormats'].keys())
             audioFormat = audioFormats[0]
             if len(audioFormats) > 1:
                 print ('WARNING: only taking audio format: %s out of: %s' % (audioFormat, audioFormats))
@@ -92,12 +94,12 @@ class Collection(object):
     def absolutePathFiles(self, audioFormat, filelist):
         """Returns a map with the given list of audio files with their path expanded."""
         flist = yaml.loadfile(join(self._basepath, 'metadata', filelist))
-        expanded = dict((id, join(self.audioDirectory(audioFormat), fpath)) for id, fpath in flist.items())
+        expanded = dict((id, join(self.audioDirectory(audioFormat), fpath)) for id, fpath in list(flist.items()))
         return expanded
 
 
     def loadGroundTruth(self, name = None):
-        gttypes = self._config['groundTruth'].keys()
+        gttypes = list(self._config['groundTruth'].keys())
 
         if name is None:
             name = gttypes[0]
@@ -115,11 +117,11 @@ class Collection(object):
     def files(self, type = None):
         if type is None:
             if len(self._files) == 1:
-                return self._files.values()[0]
+                return list(self._files.values())[0]
             else:
-                raise ValueError('You need to specify which type of filelist you want. Available are: %s', self._files.keys())
+                raise ValueError('You need to specify which type of filelist you want. Available are: %s', list(self._files.keys()))
 
         return self._files[type]
 
     def size():
-        return len(self._files.values()[0])
+        return len(list(self._files.values())[0])

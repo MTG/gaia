@@ -34,14 +34,15 @@
 # </copyright>
 
 from __future__ import print_function
+from __future__ import absolute_import
 import sys, os, shutil
 from optparse import OptionParser
 from os.path import basename, splitext, join
 
-import json_to_sig
-import generate_classification_project
-import run_tests
-import select_best_model
+from . import json_to_sig
+from . import generate_classification_project
+from . import run_tests
+from . import select_best_model
 
 def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file):
     if not os.path.isfile(project_file):

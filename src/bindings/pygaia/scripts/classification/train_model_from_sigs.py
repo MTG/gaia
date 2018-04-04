@@ -17,8 +17,9 @@
 # </copyright>
 
 from __future__ import print_function
-import train_model
-import json_to_sig
+from __future__ import absolute_import
+from . import train_model
+from . import json_to_sig
 
 import gaia2.fastyaml as yaml
 import sys

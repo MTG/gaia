@@ -34,10 +34,12 @@
 # </copyright>
 
 from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
 import sys, os.path, shutil
 from gaia2.fastyaml import yaml
-from get_classification_results import ClassificationResults
-from generate_svm_history_from_config import trainSVMHistory
+from .get_classification_results import ClassificationResults
+from .generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
 from optparse import OptionParser
 

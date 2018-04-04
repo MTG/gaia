@@ -1,4 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pca import PCA
+from __future__ import absolute_import
+from .pca import PCA

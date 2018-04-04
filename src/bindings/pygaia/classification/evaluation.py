@@ -20,10 +20,13 @@
 
 
 
+from __future__ import absolute_import
+from builtins import str
+from builtins import range
 from gaia2 import DataSet
 from gaia2.utils import TextProgress
-from groundtruth import GroundTruth
-from confusionmatrix import ConfusionMatrix
+from .groundtruth import GroundTruth
+from .confusionmatrix import ConfusionMatrix
 import random
 import logging
 
@@ -49,7 +52,7 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True)
 
     confusion = confusion or ConfusionMatrix()
 
-    for pointId, expected in groundTruth.items():
+    for pointId, expected in list(groundTruth.items()):
         try:
             found = classifier(dataset.point(pointId))
             confusion.add(expected, found, pointId)
@@ -86,14 +89,14 @@ def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
     # get map from class to point names
     iclasses = {}
     for c in classes:
-        iclasses[c] = [ p for p in groundTruth.keys() if groundTruth[p] == c ]
+        iclasses[c] = [ p for p in list(groundTruth.keys()) if groundTruth[p] == c ]
         random.shuffle(iclasses[c])
 
     # get folds
     folds = {}
     for i in range(nfold):
         folds[i] = []
-        for c in iclasses.values():
+        for c in list(iclasses.values()):
             foldsize = (len(c)-1)//nfold + 1 # -1/+1 so we take all instances into account, last fold might have fewer instances
             folds[i] += c[ foldsize * i : foldsize * (i+1) ]
 
@@ -107,11 +110,11 @@ def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
 
         trainds = DataSet()
         trainds.addPoints([ dataset.point(pname) for pname in pnames if pname not in folds[i] ])
-        traingt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in groundTruth.items() if p not in folds[i] ]))
+        traingt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in list(groundTruth.items()) if p not in folds[i] ]))
 
         testds = DataSet()
         testds.addPoints([ dataset.point(str(pname)) for pname in folds[i] ])
-        testgt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in groundTruth.items() if p in folds[i] ]))
+        testgt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in list(groundTruth.items()) if p in folds[i] ]))
 
         classifier = trainingFunc(trainds, traingt, *args, **kwargs)
         confusion = evaluate(classifier, testds, testgt, confusion, verbose = False)

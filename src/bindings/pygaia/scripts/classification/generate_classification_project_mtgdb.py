@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import with_statement
+from __future__ import print_function
 import os, sys
 from os.path import join, abspath, splitext, exists
 from optparse import OptionParser
@@ -62,7 +63,7 @@ def sigfileListFromCollection(collection, sigfiles_dir):
     #     useless to us (and probably amount to noise, even if we were able to deal with them)
 
     sigfileList = dict((pid, abspath(join(sigfiles_dir, f) + '.sig'))
-                       for pid, f in audioFiles.items()
+                       for pid, f in list(audioFiles.items())
                        if pid in collection.groundTruth)
 
     return sigfileList
@@ -106,7 +107,7 @@ def generateProjectFromCollection():
                                          'filelist': filelistFilename,
                                          'groundtruth': abspath(collec._groundTruthFile) })
 
-    print ('Successfully written', project_file)
+    print(('Successfully written', project_file))
 
 
 

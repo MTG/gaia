@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import str
 import sys, yaml, glob
 from os.path import join, exists, basename
 from gaia2.classification import GroundTruth
@@ -73,7 +74,7 @@ def validate(basedir):
     print ('Found formats:', str(audioFolders))
 
     # check the audio formats are valid, in particular that they have a valid filelist
-    for format, desc in audioFormats.items():
+    for format, desc in list(audioFormats.items()):
         print ("\nChecking format '%s':" % format)
         # TODO: at some point in the future we should also check for valid values in desc
         if not exists(join(basedir, 'audio', format)):
@@ -85,7 +86,7 @@ def validate(basedir):
         filelist = yaml.load(open(join(basedir, 'metadata', desc['filelist'])).read())
         print ('  filelist OK, lists %d files' % len(filelist))
 
-        for pid, filename in filelist.items():
+        for pid, filename in list(filelist.items()):
             fullpath = join(basedir, 'audio', format, filename)
             if not exists(fullpath):
                 raise Exception('For format "%s": file "%s" appears in filelist, however there is no corresponding "%s"' % (format, filename, fullpath))
@@ -94,14 +95,14 @@ def validate(basedir):
     # check that the groundtruth files do actually exist if they are specified
     print ('\nChecking groundtruth files...')
     groundTruth = config.get('groundTruth', {})
-    print ('Found groundtruth files:', str(groundTruth.keys()))
-    for name, gtfile in groundTruth.items():
+    print ('Found groundtruth files:', str(list(groundTruth.keys())))
+    for name, gtfile in list(groundTruth.items()):
         print ("\nChecking groundtruth '%s':" % name)
         gt = GroundTruth('')
         gt.load(join(basedir, 'metadata', gtfile))
         # check that the IDs used in the groundtruth files exist in all the filelists
-        for afname, af in audioFormats.items():
-            flist = yaml.load(open(join(basedir, 'metadata', af['filelist'])).read()).keys()
+        for afname, af in list(audioFormats.items()):
+            flist = list(yaml.load(open(join(basedir, 'metadata', af['filelist'])).read()).keys())
             for gid in gt:
                 if gid not in flist:
                     raise Exception("ID '%s' is in GroundTruth '%s', but could not be found in filelist for audio format '%s'" % (gid, gtfile, afname))

@@ -57,7 +57,7 @@ G_MOUNT_POINTS = {
 
 
 import os
-if os.environ.has_key('MTGDB_AUDIO'):
+if 'MTGDB_AUDIO' in os.environ:
     # read value from environment variable
     MTGDB_AUDIO = os.environ['MTGDB_AUDIO']
 else:

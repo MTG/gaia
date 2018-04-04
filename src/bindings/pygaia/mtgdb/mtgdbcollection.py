@@ -20,10 +20,11 @@
 
 
 
+from __future__ import absolute_import
 import gaia2
 import gaia2.fastyaml as yaml
-import environment
-import collection
+from . import environment
+from . import collection
 from os.path import join
 
 COLLECTIONS_FILE = join(gaia2.filedir(), 'mtgdb_collections.yaml')
@@ -38,7 +39,7 @@ class MtgdbCollection(collection.Collection):
         try:
             collection = ALL_MTGDB_COLLECTIONS[name]
         except KeyError:
-            raise ValueError('Collection "%s" is not known by Gaia. Available collections are: %s' % (name, ALL_MTGDB_COLLECTIONS.keys()))
+            raise ValueError('Collection "%s" is not known by Gaia. Available collections are: %s' % (name, list(ALL_MTGDB_COLLECTIONS.keys())))
 
         super(MtgdbCollection, self).__init__(join(environment.MTGDB_AUDIO,collection['location']), groundTruth)
         self.name = name

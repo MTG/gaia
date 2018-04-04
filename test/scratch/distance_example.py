@@ -76,7 +76,7 @@ def plot_matrix(dist_matrix):
 
 
 dataset = DataSet()
-dataset.load('unittest/dataset_small.db')
+dataset.load('../unittest/dataset_small.db')
 dataset = addVarFromCov(dataset, 'mfcc')
 
 list_names = [

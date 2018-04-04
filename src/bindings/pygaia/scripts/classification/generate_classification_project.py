@@ -54,8 +54,8 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
 
     fl = yaml.load(open(filelist_file, 'r'))
 
-    gt_trackids = groundTruth.keys()
-    fl_trackids = fl.keys()
+    gt_trackids = list(groundTruth.keys())
+    fl_trackids = list(fl.keys())
 
     # check that there are no dublicate ids
     if len(gt_trackids) != len(set(gt_trackids)):

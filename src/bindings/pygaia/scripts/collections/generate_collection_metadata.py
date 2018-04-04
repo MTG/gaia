@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import str
 import sys, yaml, glob, os
 from optparse import OptionParser
 from os.path import join, exists, basename

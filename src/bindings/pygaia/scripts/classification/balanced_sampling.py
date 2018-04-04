@@ -35,7 +35,7 @@ except:
 input_gt = yaml.load(open(input_gt, 'r'))
 
 gt = {}
-for t, l in input_gt['groundTruth'].items():
+for t, l in list(input_gt['groundTruth'].items()):
     gt.setdefault(l, [])
     gt[l] += [t]
 

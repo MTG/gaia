@@ -33,6 +33,7 @@
 #
 # </copyright>
 
+from builtins import str
 from __future__ import with_statement
 from gaia2 import RealDescriptor, transform
 import gaia2.fastyaml as yaml
@@ -112,7 +113,7 @@ def getGroundTruthFromLabel(ds, labelName):
     groundTruth = GroundTruth(labelName)
 
     for p in ds.points():
-        groundTruth[p.name().decode('utf-8')] = unicode(p.label(labelName))
+        groundTruth[p.name().decode('utf-8')] = str(p.label(labelName))
 
     return groundTruth
 

@@ -34,7 +34,7 @@ gt = yaml.load(open(gt_file, 'r'))
 filelist = yaml.load(open(filelist_file, 'r'))
 
 result = {}
-for track, path in filelist.iteritems():
+for track, path in filelist.items():
     if track in gt['groundTruth']:
         result[track] = path
 

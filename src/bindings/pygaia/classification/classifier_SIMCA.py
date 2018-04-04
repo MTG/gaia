@@ -33,6 +33,8 @@
 # </copyright>
 
 from __future__ import print_function
+from __future__ import division
+from past.utils import old_div
 from gaia2 import *
 from numpy import array, dot, linalg
 import math
@@ -95,7 +97,7 @@ def model_SIMCA(ds, groundTruth, descriptorNames, exclude = [], coveredVariance 
         # compute OD (orthogonal distance) and its cutoff limit
         OD = [ euclideanDist(p, projds.point(p.name())) for p in centerds.points() ]
 
-        OD = array(OD)**(2./3)
+        OD = array(OD)**(old_div(2.,3))
         OD_cutoff = norminv(0.975, OD.mean(), OD.std()) ** 1.5
 
 
@@ -110,7 +112,7 @@ def model_SIMCA(ds, groundTruth, descriptorNames, exclude = [], coveredVariance 
                      'projHist': projds.history(),
                      'subHist': subds.history(),
                      'icov': linalg.inv(covarianceMatrix(subds)),
-                     'OD': lambda p1, p2: euclideanDist(p1, p2) / OD_cutoff,
+                     'OD': lambda p1, p2: old_div(euclideanDist(p1, p2), OD_cutoff),
                      'OD_cutoff': OD_cutoff,
                      # we can't do this here because otherwise strange things happen with the closure...
                      #'BD': lambda pt: mahal(pt, linalg.inv(covarianceMatrix(subds))) / BD_cutoff,
@@ -136,14 +138,14 @@ def train_SIMCA(ds, groundTruth, descriptorNames, exclude = [], alpha = 0.5, cov
         p = preprocess.mapPoint(p)
         #for p in ds.points():
         bestd = 1e100 # should be enough, right? ;-)
-        for c, cm in model.items():
+        for c, cm in list(model.items()):
             pp1 = cm['centerHist'].mapPoint(p)
             pp2 = cm['projHist'].mapPoint(p)
             #print 'distance to', c, '=', cm['OD'](pp1, pp2), '//', mahal(pp3, model[c]['icov']) / cm['BD_cutoff'] #cm['BD'](pp3)
             dist = cm['OD'](pp1, pp2)
             if useBoundaryDistance:
                 pp3 = cm['subHist'].mapPoint(p)
-                bdist = mahal(pp3, cm['icov']) / cm['BD_cutoff']
+                bdist = old_div(mahal(pp3, cm['icov']), cm['BD_cutoff'])
                 # looks like it works slightly better than α·OD² + (1-α)·BD²
                 dist = alpha*dist + (1-alpha)*bdist
 

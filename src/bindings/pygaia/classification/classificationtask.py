@@ -33,9 +33,13 @@
 #
 # </copyright>
 
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from __future__ import with_statement
 
-import cPickle
+import pickle
 import os, sys
 import gaia2.fastyaml as yaml
 from gaia2 import DataSet, cvar
@@ -137,7 +141,7 @@ def getTrainer(classifier, param, ds):
         alpha = param['alpha']
         func1 = param['func1']
         func2 = param['func2']
-        print ('\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2)
+        print(('\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2))
         trainer = train_1NN_segments
         trainingparam = { 'alpha': alpha, 'func1': func1, 'func2': func2, 'dropBestResult': False }
         newds = addRCA(ds, rcadim)
@@ -201,7 +205,7 @@ class ClassificationTask(object):
 
 
 if __name__ == '__main__':
-    className, outfilename, param, dsname, gtname, evalconfig = cPickle.load(sys.stdin)
+    className, outfilename, param, dsname, gtname, evalconfig = pickle.load(sys.stdin)
 
     cvar.verbose = False
     task = ClassificationTask()

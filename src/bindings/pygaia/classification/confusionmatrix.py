@@ -33,11 +33,12 @@
 #
 # </copyright>
 
+from builtins import object
 from __future__ import with_statement
 from collections import defaultdict
 import gaia2.fastyaml as yaml
 
-class ConfusionMatrix:
+class ConfusionMatrix(object):
 
     def __init__(self):
         self.matrix = defaultdict(lambda: defaultdict(list))
@@ -48,12 +49,12 @@ class ConfusionMatrix:
 
         # convert to a defaultdict the data we just loaded
         self.matrix = defaultdict(lambda: defaultdict(list))
-        for k, v in data.items():
+        for k, v in list(data.items()):
             self.matrix[k] = defaultdict(list, v)
 
     def save(self, filename):
         # convert to "normal" dicts before saving
-        data = dict((k, dict(v)) for k, v in self.matrix.items())
+        data = dict((k, dict(v)) for k, v in list(self.matrix.items()))
         with open(filename, 'w') as f:
             yaml.dump(data, f)
 
@@ -132,7 +133,7 @@ class ConfusionMatrix:
             html += '<th>' + actual + '</th>'
 
             classInstances = 0
-            for predicted in self.matrix[actual].values():
+            for predicted in list(self.matrix[actual].values()):
                 classInstances += len(predicted)
 
             proportion = 100.0 * classInstances / self.total()

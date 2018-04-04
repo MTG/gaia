@@ -34,6 +34,7 @@
 # </copyright>
 
 from __future__ import print_function
+from builtins import range
 import gaia2
 from gaia2 import *
 from gaia2.mtgdb import Collection
@@ -94,21 +95,21 @@ def generateFolds(collections, nfolds):
     """creates a list of n folds which have uniform distribution of points amongst classes."""
     collectionFolds = {}
 
-    for cname in collections.keys():
+    for cname in list(collections.keys()):
         groundTruth = collections[cname].groundTruth
         classes = set(groundTruth.values())
 
         # get map from class to point names
         iclasses = {}
         for c in classes:
-            iclasses[c] = [ p for p in groundTruth.keys() if groundTruth[p] == c ]
+            iclasses[c] = [ p for p in list(groundTruth.keys()) if groundTruth[p] == c ]
             random.shuffle(iclasses[c])
 
         # get folds
         folds = []
         for i in range(nfolds):
             folds.append([])
-            for c in iclasses.values():
+            for c in list(iclasses.values()):
                 foldsize = len(c)//nfolds + 1 # +1 so we take all instances into account, last fold might have fewer instances
                 folds[i] += c[ foldsize * i : foldsize * (i+1) ]
 
@@ -121,7 +122,7 @@ def generateFolds(collections, nfolds):
 def trainSVMfolds(collections, folds):
     gaia2.verbose = False
 
-    for cname in collections.keys():
+    for cname in list(collections.keys()):
         collec = collections[cname]
 
         print ('Training models for all folds for collection', cname)
@@ -166,7 +167,7 @@ def trainSVMfolds(collections, folds):
 def addSVMModels(collections, ds_orig, i):
     ds_result = ds_orig.copy()
 
-    for cname in collections.keys():
+    for cname in list(collections.keys()):
         className = CN(collections[cname])
         print ('Adding descriptor', className)
 
@@ -180,7 +181,7 @@ def addSVMModels(collections, ds_orig, i):
 
 
 def generateEvaluationDatasets(collections, folds):
-    for cname in collections.keys():
+    for cname in list(collections.keys()):
         print ('-'*100)
         print ('For collection', cname)
         collec = collections[cname]
@@ -210,7 +211,7 @@ def generateEvaluationDatasets(collections, folds):
 
 
 def harmonizeDatasets(collections):
-    for cname in collections.keys():
+    for cname in list(collections.keys()):
         collec = collections[cname]
 
         ds_orig = DataSet()

@@ -64,7 +64,7 @@ ALL_DBS = { # GENRE DATABASES
             'danceability': ('')
             }
 
-for name, (classType, location) in ALL_DBS.items():
+for name, (classType, location) in list(ALL_DBS.items()):
     location = location % ESSENTIA_VERSION
     gencmd = GENERATE_PROJECT % (classType, location, name)
     runcmd = RUN_PROJECT % name
