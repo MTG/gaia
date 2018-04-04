@@ -26,7 +26,13 @@ INSTALL
 
 ## Linux
 
-- All features work except `project_file.py`.  Build with `--with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before.  
+- All features work except `project_file.py`.  Build with `--with-cyclops`(for `qt4) `works as before.  Testing `--with-cyclops --with-gaia-qt5`but it seems to function as before. 
+
+- With `python3` running `python3  tests.py`
+
+   `Ran 91 tests in 61.252s`
+
+   `FAILED (failures=1, errors=48)` so still some unresolved `python3` issues.
 
    ​
 
