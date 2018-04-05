@@ -45,7 +45,7 @@ Cyclops-*
 Makefile
 build-*
 .ipynb*
-
+*.py.bak
 
 # Qt Creator prorject files for Cyclops
 
