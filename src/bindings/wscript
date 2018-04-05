@@ -77,7 +77,21 @@ def configure(conf):
             #conf.env.uselib = 'QTCORE QTCONCURRENT YAML'
             conf.env['CXXFLAGS_BINDINGS'] = [ '-Wno-parentheses', '-Wno-uninitialized' ]  
 
+def line_prepender(filename, line):
+    with open(filename, 'r+') as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(line.rstrip('\r\n') + '\n' + content)
+
 def build_swig_qt5(bld):
+    #python_version = sys.version_info.major
+    #if python_version == 3:
+    #    print("is python 3")
+    #    flags = '-c++ -py3 -w451'
+    #else:
+    #    print("not python 3")
+    #    flags = '-c++ -python -w451'
+    
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
@@ -89,6 +103,7 @@ def build_swig_qt5(bld):
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
     )
+
 def build_swig_qt4(bld):
     bld(features = 'cxx cxxshlib pyext',
         source = 'gaia.swig',
@@ -96,6 +111,18 @@ def build_swig_qt4(bld):
         swig_flags = '-c++ -python -w451',
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
         uselib = 'QTCORE YAML',
+        #defines = bld.env['SWIG_DEFINES'], 
+        includes = bld.env['CPPPATH_BINDINGS'],
+        install_path = '${PYTHONDIR}'
+    )
+
+def build_swig_R(bld):
+    bld(features = 'cxx cxxshlib pyext',
+        source = 'gaia.swig',
+        target = '_gaia2',
+        swig_flags = '-c++ -r -w451',
+        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
+        uselib = 'QT5CORE QT5CONCURRENT YAML',
         #defines = bld.env['SWIG_DEFINES'], 
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}'
@@ -113,7 +140,8 @@ def build(bld):
     else:
         build_swig_qt4(bld)
 
-
+    # concat encoding to prevent error
+    line_prepender('build/src/bindings/gaia2.py', "# -*- coding: utf-8 -*-")
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
     bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
 
