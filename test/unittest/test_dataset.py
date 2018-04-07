@@ -19,19 +19,23 @@
 
 
 
+import os, tempfile
 from builtins import zip
 from builtins import range
-from gaia2 import *
-import unittest
+from gaia2 import transform
+from gaia2 import DataSet
+from gaia2 import Point
+from gaia2 import EnumType
+from gaia2 import cvar
+import unittest2
 import testdata
-import os, tempfile
+cvar.verbose = True
 
-
-class TestDataSet(unittest.TestCase):
+class TestDataSet(unittest2.TestCase):
 
     def setUp(self):
-        cvar.verbose = False
-
+        verbose = cvar.verbose
+        
     def tearDown(self):
         testdata.resetSettings()
 
@@ -68,23 +72,14 @@ class TestDataSet(unittest.TestCase):
 
     def testDeleteLinkedDataSets(self):
         ds = testdata.createSimpleDataSet()
+        ds.save('ds.db')
         ds2 = transform(ds, 'select', { 'descriptorNames': [ 'a*', 'b*' ] })
-
+        ds2.save('ds2.db')
         ds2.setReferenceDataSet(ds)
 
         del ds2
         del ds
-
-        ds = testdata.createSimpleDataSet()
-        ds2 = transform(ds, 'select', { 'descriptorNames': [ 'a*', 'b*' ] })
-
-        ds2.setReferenceDataSet(ds)
-
-        del ds
-        del ds2
-
-
-
+        
     def testLinkedViews(self):
         ds = testdata.createSimpleDataSet()
         ds.point('p')['a.1'] = 23.0
@@ -302,8 +297,6 @@ class TestDataSet(unittest.TestCase):
         testdata.useEnumerate = True
         self.testFixLength()
 
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestDataSet)
-
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestDataSet)
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

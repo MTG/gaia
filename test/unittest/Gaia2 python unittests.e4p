@@ -1,54 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Project SYSTEM "Project-4.6.dtd">
-<!-- eric4 project file for project Gaia2 python unittests -->
-<!-- Saved: 2010-03-03, 16:51:09 -->
-<!-- Copyright (C) 2010 Nicolas Wack, nicolas.wack@upf.edu -->
-<Project version="4.6">
+<!DOCTYPE Project SYSTEM "Project-5.1.dtd">
+<!-- eric project file for project Gaia2 python unittests -->
+<!-- Saved: 2018-04-06, 10:49:07 -->
+<!-- Copyright (C) 2018 Nicolas Wack, nicolas.wack@upf.edu -->
+<Project version="5.1">
   <Language>en</Language>
-  <ProgLanguage mixed="0">Python</ProgLanguage>
+  <Hash>5ab5ea100d5c430d14a3aac37e3f7dd2d169a6f7</Hash>
+  <ProgLanguage mixed="0">Python2</ProgLanguage>
   <ProjectType>Qt4C</ProjectType>
   <Description>The unittests for gaia2, smartly written in python instead of C++.</Description>
   <Version>0.1</Version>
   <Author>Nicolas Wack</Author>
   <Email>nicolas.wack@upf.edu</Email>
   <Sources>
-    <Source>tests.py</Source>
     <Source>data/svm/regenerate_histories.py</Source>
-    <Source>test_dataset.py</Source>
-    <Source>test_parser.py</Source>
     <Source>test_algorithms.py</Source>
+    <Source>test_backwardscompat.py</Source>
+    <Source>test_bindings.py</Source>
+    <Source>test_dataset.py</Source>
+    <Source>test_layout.py</Source>
+    <Source>test_merge.py</Source>
+    <Source>test_metrics.py</Source>
+    <Source>test_parser.py</Source>
     <Source>test_serialization.py</Source>
     <Source>test_transfo.py</Source>
     <Source>test_view.py</Source>
-    <Source>test_backwardscompat.py</Source>
-    <Source>test_bindings.py</Source>
     <Source>testdata.py</Source>
-    <Source>test_metrics.py</Source>
-    <Source>test_layout.py</Source>
-    <Source>test_merge.py</Source>
-    <Source>__init__.py</Source>
+    <Source>tests.py</Source>
   </Sources>
-  <Forms>
-  </Forms>
-  <Translations>
-  </Translations>
-  <Resources>
-  </Resources>
-  <Interfaces>
-  </Interfaces>
-  <Others>
-  </Others>
+  <Forms/>
+  <Translations/>
+  <Resources/>
+  <Interfaces/>
+  <Others/>
   <MainScript>tests.py</MainScript>
   <Vcs>
     <VcsType>None</VcsType>
   </Vcs>
   <FiletypeAssociations>
-    <FiletypeAssociation pattern="*.idl" type="INTERFACES" />
-    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS" />
-    <FiletypeAssociation pattern="*.qrc" type="RESOURCES" />
-    <FiletypeAssociation pattern="*.pyw" type="SOURCES" />
-    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS" />
-    <FiletypeAssociation pattern="*.py" type="SOURCES" />
-    <FiletypeAssociation pattern="*.ptl" type="SOURCES" />
+    <FiletypeAssociation pattern="*.idl" type="INTERFACES"/>
+    <FiletypeAssociation pattern="*.ptl" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.py" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.pyw" type="SOURCES"/>
+    <FiletypeAssociation pattern="*.qm" type="TRANSLATIONS"/>
+    <FiletypeAssociation pattern="*.qrc" type="RESOURCES"/>
+    <FiletypeAssociation pattern="*.ts" type="TRANSLATIONS"/>
   </FiletypeAssociations>
 </Project>

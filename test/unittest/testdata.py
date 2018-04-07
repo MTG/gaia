@@ -20,8 +20,15 @@
 
 
 from builtins import range
-from gaia2 import *
 from os.path import join
+from gaia2 import DataSet
+from gaia2 import transform
+from gaia2 import RealType
+from gaia2 import StringType
+from gaia2 import PointLayout
+from gaia2 import RealDescriptor
+from gaia2 import Point
+from gaia2 import FixedLength
 
 TEST_DATABASE_FILES = 'data/dataset_small.dbfiles.yaml'
 TEST_DATABASE = 'data/dataset_small.db'
@@ -72,6 +79,7 @@ def createSimpleLayout():
 
 # create simple artificial dataset
 def createSimpleDataSet():
+    global useFixedLength,  useEnumerate
     l = createSimpleLayout()
     ds = DataSet()
     p = Point()
@@ -91,6 +99,7 @@ def createSimpleDataSet():
 
 # load real-world dataset
 def loadTestDB():
+    global useFixedLength,  useEnumerate
     ds = DataSet()
     ds.load(TEST_DATABASE)
 
@@ -104,6 +113,7 @@ def loadTestDB():
 
 
 def loadSmallDB():
+    global useFixedLength,  useEnumerate
     ds = DataSet()
     ds.load(TEST_SMALLDB)
 
@@ -117,6 +127,7 @@ def loadSmallDB():
     
     
 def loadGaia20DB():
+    global useFixedLength,  useEnumerate
     ds = DataSet()
     ds.load(GAIA20_DB)
 
