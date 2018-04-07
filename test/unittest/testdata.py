@@ -95,8 +95,6 @@ def createSimpleDataSet():
 
     return ds
 
-
-
 # load real-world dataset
 def loadTestDB():
     global useFixedLength,  useEnumerate
@@ -111,7 +109,6 @@ def loadTestDB():
 
     return ds
 
-
 def loadSmallDB():
     global useFixedLength,  useEnumerate
     ds = DataSet()
@@ -125,7 +122,6 @@ def loadSmallDB():
 
     return ds
     
-    
 def loadGaia20DB():
     global useFixedLength,  useEnumerate
     ds = DataSet()
@@ -138,7 +134,6 @@ def loadGaia20DB():
         ds = enumerateStrings(ds)
 
     return ds
-
 
 SVM_TRAINING_SET = 'data/train.1'
 SVM_TESTING_SET = 'data/test.1'

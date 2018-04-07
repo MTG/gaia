@@ -17,18 +17,18 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-
-
 import os, tempfile
 from builtins import zip
 from builtins import range
+import unittest2
+import testdata
 from gaia2 import transform
 from gaia2 import DataSet
 from gaia2 import Point
 from gaia2 import EnumType
 from gaia2 import cvar
-import unittest2
-import testdata
+from gaia2 import MetricFactory
+from gaia2 import View
 cvar.verbose = True
 
 class TestDataSet(unittest2.TestCase):
@@ -98,16 +98,16 @@ class TestDataSet(unittest2.TestCase):
         query = Point(ds.point('p'))
         query['a.1'] = 23.0
 
-        self.assertEqual((('p', 0.), ('p4', 19.), ('p3', 20.), ('p2', 21.)),
-                         v.nnSearch(query, dist).get(4))
+        self.assertEqual((('p', 0.), ('p4', 19.),('p3', 20.), ('p2', 21.)), \
+            v.nnSearch(query, dist).get(4))
 
         ds.removePoint('p')
         self.assertEqual((('p4', 19.), ('p3', 20.), ('p2', 21.), ('p1', 22.)),
-                         v.nnSearch(query, dist).get(4))
+            v.nnSearch(query, dist).get(4))
 
         ds.removePoint('p3')
         self.assertEqual((('p4', 19.), ('p2', 21.), ('p1', 22.), ('p0', 23.)),
-                         v.nnSearch(query, dist).get(4))
+            v.nnSearch(query, dist).get(4))
 
         # get original query point to add in dataset
         testdata.resetSettings()
