@@ -33,8 +33,8 @@ cvar.verbose = True
 
 class TestDataSet(unittest2.TestCase):
 
-    def setUp(self):
-        verbose = cvar.verbose
+#    def setUp(self):
+#       verbose = cvar.verbose
         
     def tearDown(self):
         testdata.resetSettings()

@@ -17,14 +17,14 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-
-
-from gaia2 import *
-import unittest
+from gaia2 import DataSet
+from gaia2 import RealDescriptor
+from gaia2 import Point
+import unittest2
 import testdata
 
 
-class TestBindings(unittest.TestCase):
+class TestBindings(unittest2.TestCase):
 
     def testPointLayoutCorrectlyWrapped(self):
         ds = DataSet()
@@ -48,7 +48,7 @@ class TestBindings(unittest.TestCase):
         p.name()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestBindings)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestBindings)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

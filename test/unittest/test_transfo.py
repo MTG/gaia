@@ -20,8 +20,12 @@
 
 
 from builtins import range
-from gaia2 import *
-import unittest
+from gaia2 import transform
+from gaia2 import Point
+from gaia2 import cvar
+from gaia2 import MetricFactory
+from gaia2 import View
+import unittest2
 import testdata
 
 
@@ -30,7 +34,7 @@ def search(dataset, id, n):
     dist = MetricFactory.create('euclidean', dataset.layout())
     return v.nnSearch(id, dist).get(n)
 
-class TestTransfo(unittest.TestCase):
+class TestTransfo(unittest2.TestCase):
 
     def compareResults(self, r1, r2):
         self.assertEqual(len(r1), len(r2))
@@ -218,7 +222,7 @@ class TestTransfo(unittest.TestCase):
         self.testFixLength()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestTransfo)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestTransfo)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

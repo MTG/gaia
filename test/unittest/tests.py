@@ -21,7 +21,7 @@
 
 import os
 import sys
-import unittest
+import unittest2
 
 
 # make sure the databases are ready
@@ -59,7 +59,7 @@ for test in testsList:
 
 testObjectsList = [ getattr(sys.modules[__name__], name) for name in testsList ]
 
-all = unittest.TestSuite(testObjectsList)
+all = unittest2.TestSuite(testObjectsList)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(all)
+    unittest2.TextTestRunner(verbosity=2).run(all)

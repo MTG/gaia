@@ -8,9 +8,6 @@
 %ignore lock;
 
 %pythonbegin %{
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
 #
 # This file is part of Gaia
@@ -51,6 +48,22 @@ from builtins import range
 from past.builtins import basestring
 from past.utils import old_div
 from builtins import object
+import types
+try:
+    unicode = unicode
+except NameError:
+    # 'unicode' is undefined, must be Python 3
+    str = str
+    unicode = str
+    bytes = bytes
+    basestring = (str,bytes)
+else:
+    # 'unicode' exists, must be Python 2
+    str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
+
 %} //# %pythonbegin
 
 

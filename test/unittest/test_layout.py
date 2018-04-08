@@ -19,11 +19,20 @@
 
 
 
-from gaia2 import *
-import unittest
+from gaia2 import cvar
+from gaia2 import RealType
+from gaia2 import StringType
+from gaia2 import VariableLength
+from gaia2 import PointLayout
+from gaia2 import UndefinedType
+from gaia2 import DataSet
+from gaia2 import Point
+from gaia2 import mergeLayouts 
+from gaia2 import transform
+import unittest2
 import testdata
 
-class TestLayout(unittest.TestCase):
+class TestLayout(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -240,7 +249,7 @@ class TestLayout(unittest.TestCase):
     def tearDown(self):
         del self.l1
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestLayout)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestLayout)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

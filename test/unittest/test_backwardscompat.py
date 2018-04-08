@@ -20,11 +20,16 @@
 
 
 from builtins import range
-from gaia2 import *
-import unittest
+from gaia2 import cvar
+from gaia2 import DataSet
+from gaia2 import TransfoChain
+from gaia2 import MetricFactory
+from gaia2 import View
+from gaia2 import transform
+import unittest2
 import testdata
 
-class TestBackwardsCompatibility(unittest.TestCase):
+class TestBackwardsCompatibility(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -43,10 +48,10 @@ class TestBackwardsCompatibility(unittest.TestCase):
         ds.load(testdata.GAIA_20_BACKWARDS_COMPAT_DATASET)
 
         self.assertAlmostEqual(ds.point('01 Message - Grandmaster Flash.mp3').value('tempotap_bpm'),
-                               101.05792999)
+            101.05792999)
 
         self.assertEqual(ds.point('04 Blue Skies.mp3').label('key_key'),
-                         'G#')
+            'G#')
 
     def testHistory(self):
         # load 2.0 history, check some transfos are correct
@@ -131,12 +136,7 @@ class TestBackwardsCompatibility(unittest.TestCase):
         self.compareResults(search(ds, p),
                             search(ds21, p))
 
-
-
-
-
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestBackwardsCompatibility)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestBackwardsCompatibility)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

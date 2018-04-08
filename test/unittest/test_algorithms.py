@@ -35,12 +35,25 @@
 from __future__ import print_function
 from builtins import zip
 from builtins import range
-from gaia2 import *
-import unittest
+from gaia2 import PointLayout
+from gaia2 import RealType
+from gaia2 import DataSet
+from gaia2 import Point
+from gaia2 import cvar
+from gaia2 import transform
+from gaia2 import checkIsomorphDataSets
+from gaia2 import mergeDataSets
+from gaia2 import AnalyzerFactory
+from gaia2 import View
+from gaia2 import TransfoChain
+from gaia2 import VariableLength
+from gaia2 import MetricFactory
+
+import unittest2
 import testdata
 
-
 def createDataSet():
+ 
     l = PointLayout()
     l.add('a', RealType)
 
@@ -69,7 +82,7 @@ def createDataSet():
     return ds
 
 
-class TestAlgorithms(unittest.TestCase):
+class TestAlgorithms(unittest2.TestCase):
 
     def compareResults(self, r1, r2):
         self.assertEqual(len(r1), len(r2))
@@ -357,7 +370,7 @@ class TestAlgorithms(unittest.TestCase):
         self.testFixLength()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestAlgorithms)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestAlgorithms)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

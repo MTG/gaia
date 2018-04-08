@@ -17,10 +17,11 @@
 # You should have received a copy of the Affero GNU General Public License     
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+from gaia2 import cvar
+from gaia2 import MetricFactory
+from gaia2 import View
 
-
-from gaia2 import *
-import unittest
+import unittest2
 import testdata
 
 def testValidPoint(dataset, clause, fromList = None):
@@ -43,7 +44,7 @@ def testClause(clause):
     return testValidPoint(ds, clause)
 
 
-class TestParser(unittest.TestCase):
+class TestParser(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -157,7 +158,7 @@ class TestParser(unittest.TestCase):
         self.testFixLength()
         
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestParser)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestParser)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

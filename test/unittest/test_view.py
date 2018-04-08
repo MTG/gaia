@@ -21,13 +21,25 @@
 
 from builtins import zip
 from builtins import range
-from gaia2 import *
 import math
-import unittest
+from gaia2 import transform
+from gaia2 import Point
+from gaia2 import cvar
+from gaia2 import MetricFactory
+from gaia2 import FrozenDataSet
+from gaia2 import FrozenDistanceFactory
+from gaia2 import FrozenView
+from gaia2 import RealType
+from gaia2 import View
+from gaia2 import Filter
+from gaia2 import AndFilter
+from gaia2 import OrFilter
+from gaia2 import InputSpace
+import unittest2
 import testdata
 
 
-class TestView(unittest.TestCase):
+class TestView(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -283,7 +295,7 @@ class TestView(unittest.TestCase):
         self.testCreatedInputSpace()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestView)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestView)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

@@ -18,14 +18,17 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
+from gaia2 import transform
+from gaia2 import DataSet
+from gaia2 import Point
+from gaia2 import cvar
 
-from gaia2 import *
-import unittest
+import unittest2
 import testdata
 import tempfile
 import os
 
-class TestSerialization(unittest.TestCase):
+class TestSerialization(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -171,7 +174,7 @@ class TestSerialization(unittest.TestCase):
 
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestSerialization)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestSerialization)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

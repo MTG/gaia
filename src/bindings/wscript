@@ -84,14 +84,6 @@ def line_prepender(filename, line):
         f.write(line.rstrip('\r\n') + '\n' + content)
 
 def build_swig_qt5(bld):
-    #python_version = sys.version_info.major
-    #if python_version == 3:
-    #    print("is python 3")
-    #    flags = '-c++ -py3 -w451'
-    #else:
-    #    print("not python 3")
-    #    flags = '-c++ -python -w451'
-    
     bld(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
@@ -116,18 +108,6 @@ def build_swig_qt4(bld):
         install_path = '${PYTHONDIR}'
     )
 
-def build_swig_R(bld):
-    bld(features = 'cxx cxxshlib pyext',
-        source = 'gaia.swig',
-        target = '_gaia2',
-        swig_flags = '-c++ -r -w451',
-        use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
-        uselib = 'QT5CORE QT5CONCURRENT YAML',
-        #defines = bld.env['SWIG_DEFINES'], 
-        includes = bld.env['CPPPATH_BINDINGS'],
-        install_path = '${PYTHONDIR}'
-    )
-
 from waflib import Utils, Build
 def build(bld):
     global gaia_qt5
@@ -137,11 +117,19 @@ def build(bld):
         
     if gaia_qt5:
         build_swig_qt5(bld)
+        # concat encoding to prevent error
+        #line_prepender('build/src/bindings/gaia2.py', \
+        #    "#!/usr/bin/env python\n# -*- coding: utf-8 -*-")
     else:
         build_swig_qt4(bld)
+        # concat encoding to prevent error
+        #line_prepender('build/src/bindings/gaia2.py',\
+        #    "#!/usr/bin/env python\n# -*- coding: utf-8 -*-")    
 
     # concat encoding to prevent error
-    line_prepender('build/src/bindings/gaia2.py', "# -*- coding: utf-8 -*-")
+    if bld.cmd == 'install':
+        line_prepender('build/src/bindings/gaia2.py', \
+            "#!/usr/bin/env python\n# -*- coding: utf-8 -*-")
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
     bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
 

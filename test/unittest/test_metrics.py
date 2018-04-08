@@ -22,8 +22,16 @@
 
 from builtins import zip
 from builtins import range
-from gaia2 import *
-import unittest
+from gaia2 import transform
+from gaia2 import DataSet
+from gaia2 import Point
+from gaia2 import PointLayout
+from gaia2 import cvar
+from gaia2 import MetricFactory
+from gaia2 import View
+from gaia2 import RealType
+from gaia2 import FixedLength
+import unittest2
 import testdata
 
 def newPoint(name):
@@ -75,7 +83,7 @@ def createDataSet():
     return ds
 
 
-class TestMetrics(unittest.TestCase):
+class TestMetrics(unittest2.TestCase):
 
     def setUp(self):
         cvar.verbose = False
@@ -212,7 +220,7 @@ class TestMetrics(unittest.TestCase):
         self.testFixLength()
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestMetrics)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestMetrics)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)

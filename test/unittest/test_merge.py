@@ -33,14 +33,16 @@
 # </copyright>
 
 from __future__ import print_function
-from gaia2 import *
-import unittest
+from gaia2 import cvar
+from gaia2 import DataSet
+from gaia2 import Point
+import unittest2
 import testdata
 import gaia2.fastyaml as yaml
 import os, glob, subprocess
 
 
-class TestMerge(unittest.TestCase):
+class TestMerge(unittest2.TestCase):
 
     def testValues(self):
         collection = yaml.load(open(testdata.TEST_DATABASE_FILES, 'r').read())
@@ -93,7 +95,7 @@ class TestMerge(unittest.TestCase):
         p.load('data/namespace_clash.sig')
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestMerge)
+suite = unittest2.TestLoader().loadTestsFromTestCase(TestMerge)
 
 if __name__ == '__main__':
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest2.TextTestRunner(verbosity=2).run(suite)
