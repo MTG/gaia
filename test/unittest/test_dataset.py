@@ -65,7 +65,7 @@ class TestDataSet(unittest2.TestCase):
         d.addPoint(p)
 
         self.assertEqual(d2.point('ptest').value('a.1'), 23)
-        self.assertRaises(Exception, d2.point('ptest').value, 'c')
+        self.assertRaises(Exception, d2.point('ptest').value( 'c'))
 
         d2.removePoint('ptest')
         self.assertRaises(Exception, d.point, 'ptest')
