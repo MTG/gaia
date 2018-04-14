@@ -127,9 +127,12 @@ def build(bld):
         #    "#!/usr/bin/env python\n# -*- coding: utf-8 -*-")    
 
     # concat encoding to prevent error
-    if bld.cmd == 'install':
+    if bld.cmd == 'clean':
+        bld.env['GAIA_PREPEND'] = False
+    if bld.cmd == 'install' and bld.env['GAIA_PREPEND'] == False:
         line_prepender('build/src/bindings/gaia2.py', \
             "#!/usr/bin/env python\n# -*- coding: utf-8 -*-")
+        bld.env['GAIA_PREPEND'] = True
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
     bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
 

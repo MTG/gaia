@@ -6,34 +6,63 @@
 
 import sys
 import os.path
+#from ast import literal_eval
+from past.builtins import unicode as old_unicode
+from past.builtins import basestring as old_basestring
 
 __version__ = _gaia2.cvar.version
 
 #### ParameterMap and Factories adjustments ###################################
+#
+""" 
+def param_map_verify(param_map):
+    assert len(param_map) % 2 == 0
+    for k, v in zip(param_map[0::2], param_map[1::2]):
+      key_list = k.split('.')
+      d = __C
+      for subkey in key_list[:-1]:
+        assert subkey in d
+        d = d[subkey]
+      subkey = key_list[-1]
+      assert subkey in d
+      try:
+        value = literal_eval(v)
+      except:
+        # handle the case when v is a string literal
+        value = v
+      assert type(value) == type(d[subkey]), \
+        'type {} does not match original type {}'.format(
+          type(value), type(d[subkey]))
+      d[subkey] = value 
+    return d	
+"""
 
 # shortcut for easily creating ParameterMap given a python map
 def pmap(param_map):
     if isinstance(param_map, ParameterMap):
         return param_map
 
+    #param_map = param_map_verify(param_map)
+
     if not isinstance(param_map, dict):
         raise TypeError('Argument is not a map, it is a %s' % type(param_map))
 
     pm = ParameterMap()
     for key, value in param_map.items():
-        if not isinstance(key, basestring):
+        if not isinstance(key, old_basestring):
             raise TypeError('A key in the map is not a string; can not convert it')
 
         # until python 3, everything should always be utf-8 encoded bytestrings
-        if isinstance(key, unicode):
+        if isinstance(key, old_unicode):
             key = key.encode('utf-8')
-        if isinstance(value, unicode):
+        if isinstance(value, old_unicode):
             value = value.encode('utf-8')
 
         if isinstance(value, (dict, ParameterMap)): # if value is a python map, convert it to ParameterMap
             pm.setParameterMap(key, pmap(value))
         else: # all other types just go inside the map directly
-            pm[key] = value
+            #pm[key] = value
+            pass
 
     return pm
 

@@ -183,7 +183,7 @@ class TestLayout(unittest2.TestCase):
 
 
     def testMergePointsWithDifferentEnumerationMaps(self):
-        '''ticket #74: when changing the layout of a point, we must also make sure that the enum maps are correctly mapped'''
+        #'''ticket #74: when changing the layout of a point, we must also make sure that the enum maps are correctly mapped'''
 
         p1 = Point()
         p1.setName('p1')
@@ -210,7 +210,7 @@ class TestLayout(unittest2.TestCase):
         self.assertEqual(ds.point('p2').label('d'), 'world')
 
     def testChronoIndependence(self):
-        '''Layouts built using the same descriptors but in a different order should still be equal'''
+        #'''Layouts built using the same descriptors but in a different order should still be equal'''
         l = PointLayout()
         l.add('a', RealType)
         l.add('b', RealType)

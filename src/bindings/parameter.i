@@ -175,18 +175,17 @@ PyObject* pmapToPython(const ParameterMap* pm) {
 
   // EVIL FUNCTION: I have no idea why, but defining this function makes SWIG
   // go completely crazy and spit out weird errors in weird places...
-  /*
+  
   void __setitem__(const std::string& key, const ParameterMap* pm) {
     self->insert(QString::fromUtf8(key.c_str(), key.size()),
                  pm);
   }
-  */
-
+  /*
   // this function replaces the previous evil one
   void setParameterMap(const std::string& key, const ParameterMap& m) {
     self->insert(QString::fromUtf8(key.c_str(), key.size()), m);
   }
-
+  */
   const gaia2::Parameter& __getitem__(const std::string& key) const {
     return self->value(QString::fromUtf8(key.c_str(), key.size()));
   }

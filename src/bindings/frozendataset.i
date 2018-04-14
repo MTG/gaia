@@ -14,7 +14,7 @@ import fnmatch
 import collections
 import struct
 import base64
-import gaia2.fastyaml as yaml
+from gaia2 import fastyaml as yaml
 
 class FrozenLayout(object):
     def __init__(self, dataset):

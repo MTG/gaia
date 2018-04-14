@@ -45,24 +45,9 @@ from builtins import str
 from builtins import zip
 from builtins import map
 from builtins import range
-from past.builtins import basestring
-from past.utils import old_div
+from past.builtins import basestring as old_basestring
+from past.builtins import unicode as old_unicode
 from builtins import object
-import types
-try:
-    unicode = unicode
-except NameError:
-    # 'unicode' is undefined, must be Python 3
-    str = str
-    unicode = str
-    bytes = bytes
-    basestring = (str,bytes)
-else:
-    # 'unicode' exists, must be Python 2
-    str = str
-    unicode = unicode
-    bytes = str
-    basestring = basestring
 
 %} //# %pythonbegin
 
@@ -166,6 +151,7 @@ PyObject* parameterToPython(const QVariant* p);
 PyObject* pmapToPython(const ParameterMap* pm);
 
 %}
+
 
 %include "../gaia.h"
 %include "../debugging.h"

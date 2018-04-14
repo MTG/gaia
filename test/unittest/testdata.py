@@ -61,9 +61,11 @@ def fixLength(dataset, exclude = []):
     return transform(dataset, 'fixlength')
 
 def enumerateStrings(dataset, exclude = []):
-    return transform(dataset, 'enumerate', { 'descriptorNames': dataset.layout().descriptorNames(StringType),
-                                             'except': exclude })
-
+    exclude += (dataset.layout().descriptorNames(RealType))
+    return transform(dataset, \
+        'enumerate',
+        { 'descriptorNames': dataset.layout().descriptorNames(StringType), \
+        'except': exclude })
 
 # create simple artificial layout
 def createSimpleLayout():

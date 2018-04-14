@@ -102,6 +102,7 @@ def check_tbb(conf):
 def configure(conf):
     global gaia_qt5,  VERSION, GIT_SHA 
     gaia_qt5 = conf.options.gaia_qt5
+    conf.env['GAIA_PREPEND'] = False
     
     if sys.platform.startswith('linux') != True   and sys.platform != 'darwin':
         print ('Please use the QtCreator project for building Gaia in Windows...')
