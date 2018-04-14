@@ -32,7 +32,7 @@ INSTALL
 
    `Ran 91 tests in 61.252s`
 
-   `FAILED (failures=5, errors=36)` Unresolved `python3` issues with numerics and enumerate.
+   `FAILED (failures=5, errors=36)` Unresolved `python3` issues with `select`,`enumerate`and filtering.  Once implemented most `failures` and `errors` will disappear.  None of these `c++` code changes will be present in the `gaia`until they work.
 
    After building documentation `build/src/bindings/gaia2.py` must have `# -*- coding: utf-8 -*-` as first or second line.  This is automatically handled.  Switching from `python2` to `python3`may require  `build` folder to be removed.
 
