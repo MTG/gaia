@@ -32,13 +32,15 @@ INSTALL
 
    `Ran 91 tests in 61.252s`
 
-   `FAILED (failures=1, errors=48)` so still some unresolved `python3` issues.
+   `FAILED (failures=5, errors=36)` Unresolved `python3` issues with numerics and enumerate.
 
-   Check `build/src/bindings/gaia2.py` to ensure `# -*- coding: utf-8 -*-` is very first line.
+   After building documentation `build/src/bindings/gaia2.py` must have `# -*- coding: utf-8 -*-` as first or second line.  This is automatically handled.  Switching from `python2` to `python3`may require  `build` folder to be removed.
 
-   Plan to modify `build_swig` to be `python3` specific when the project is built for `python3` and
+- With `python2` running `python2  tests.py`
 
-   therefore `build` folder needs to be removed before building for `python2`.
+   `Ran 91 tests in 61.252s`
+
+   `FAILED (failures=5, errors=37)` Unresolved `python2` issues.
 
 - Install dependencies (Ubuntu/Debian)
 
