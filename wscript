@@ -48,6 +48,11 @@ def options(opt):
                    dest='MODE', default="release",
                    help='debug or release')
 
+    opt.add_option('--cross-compile-mingw32', action='store_true',
+                   dest='CROSS_COMPILE_MINGW32', default=False,
+                   help='cross-compile for windows using mingw32 on linux')
+
+
 
 def debian_version():
     try:
@@ -146,6 +151,20 @@ def configure(conf):
         # add /usr/local/include as the brew formula for yaml doesn't have
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
+
+    if conf.options.CROSS_COMPILE_MINGW32:
+        #print("→ Cross-compiling for Windows with MinGW: search for pre-built dependencies in 'packaging/win32_3rdparty'")
+        #os.environ["PKG_CONFIG_PATH"] = 'packaging/win32_3rdparty/lib/pkgconfig'
+        #os.environ["PKG_CONFIG_LIBDIR"] = os.environ["PKG_CONFIG_PATH"]
+
+        # locate MinGW compilers and use them
+        conf.find_program('i686-w64-mingw32-gcc', var='CC')
+        conf.find_program('i686-w64-mingw32-g++', var='CXX')
+        conf.find_program('i686-w64-mingw32-ar', var='AR')
+
+        # compile libgcc and libstd statically when using MinGW
+        conf.env.CXXFLAGS = ['-static-libgcc', '-static-libstdc++']
+
 
     conf.load('compiler_cxx compiler_c qt4')
 
