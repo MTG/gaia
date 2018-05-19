@@ -4,18 +4,18 @@
 #QT -= gui
 #TARGET = Gaia2lib
 #TEMPLATE = lib
-#CONFIG += c++03
+CONFIG += c++03
 #CONFIG += staticlib
 QMAKE_CXX = g++
-CONFIG += c++11
+#CONFIG += c++11
 QT -= gui
 QT += concurrent core
 TARGET = Gaia2lib
 TEMPLATE = lib
 
 DEFINES += YAML_DECLARE_STATIC \
-           GAIA_VERSION=\\\"2.4.4\\\" \
-           GAIA_GIT_SHA=\\\"v2.4.4-43-g1d593b8-dirty\\\"
+           GAIA_QT5=1 \
+           GAIA_VERSION=\\\"2.4.5\\\" 
 
 win32:INCLUDEPATH = $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/include) \
                     $$quote(C:/Documents and Settings/Build Bot/build-space/gaia2-thirdparty/yaml-0.1.3/include) \

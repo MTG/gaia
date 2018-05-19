@@ -172,6 +172,22 @@ def configure(conf):
     #conf.env['SWIG_DEFINES'] = 'GAIA_VERSION=\"%s\" GAIA_GIT_SHA=\"%s\"' % (VERSION,  GIT_SHA)
     #print ('conf.env[SWIG_DEFINES] = ', conf.env['SWIG_DEFINES'])
 
+    if conf.options.CROSS_COMPILE_MINGW32:
+        #print("→ Cross-compiling for Windows with MinGW: search for pre-built dependencies in 'packaging/win32_3rdparty'")
+        #os.environ["PKG_CONFIG_PATH"] = 'packaging/win32_3rdparty/lib/pkgconfig'
+        #os.environ["PKG_CONFIG_LIBDIR"] = os.environ["PKG_CONFIG_PATH"]
+
+        # locate MinGW compilers and use them
+        conf.find_program('i686-w64-mingw32-gcc', var='CC')
+        conf.find_program('i686-w64-mingw32-g++', var='CXX')
+        conf.find_program('i686-w64-mingw32-ar', var='AR')
+
+        # compile libgcc and libstd statically when using MinGW
+        conf.env.CXXFLAGS = ['-static-libgcc', '-static-libstdc++']
+
+
+        #conf.load('compiler_cxx compiler_
+
     if sys.platform == 'darwin':
         # force the use of clang as compiler, we don't want gcc anymore on mac
         conf.env.CC = 'clang'
@@ -185,7 +201,7 @@ def configure(conf):
         # add /usr/local/include as the brew formula for yaml doesn't have
         # the cflags properly set
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
-    
+
     elif sys.platform.startswith('linux') and gaia_qt5:
         conf.env.CXXFLAGS += [ '-std=c++11', '-msse2','-Wall', \
             '-DGAIA_VERSION=\"%s\"' % VERSION, \
@@ -207,20 +223,6 @@ def configure(conf):
             '-fno-strict-aliasing',\
             '-fPIC', '-fvisibility=hidden']
 
-    #print ('CXXFLAGS = ',  conf.env.CXXFLAGS)
-    #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
-
-    # add this key otherwise gcc 4.8 will complain
-    # conf.env['CXXFLAGS'] += [ '-Wno-unused-local-typedefs' ] #  --- outdated?
-
-    # commented below as we don't care about centos for now:
-
-    # big fat hack for centos, which is still in stone age...
-    #if sys.version_info[1] > 4:
-    #    # option not available in centos' gcc...
-    #    conf.env['CXXFLAGS'] += [  '-Wno-unused-result' ]
-    #conf.load('compiler_cxx compiler_c')
-    
     if sys.platform.startswith('linux') and gaia_qt5: 
         conf.load('compiler_cxx compiler_c qt5')
     else:
