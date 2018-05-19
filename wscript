@@ -71,6 +71,10 @@ def options(opt):
                    dest='gaia_qt5', default=False,
                    help='whether to use Qt5 and c++11 or not')
 
+    opt.add_option('--cross-compile-mingw32', action='store_true',
+                   dest='CROSS_COMPILE_MINGW32', default=False,
+                   help='cross-compile for windows using mingw32 on linux')
+
 
 def debian_version():
     try:
