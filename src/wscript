@@ -103,9 +103,8 @@ def build_install(bld):
     os.chdir('src')
     install_tree(bld, '${PREFIX}/include/gaia2/3rdparty/Eigen', '3rdparty/Eigen')
 
-    #bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
+    bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')
-
 
 def is_dev_version(bld):
     return '-dev' in bld.env.APP_VERSION
