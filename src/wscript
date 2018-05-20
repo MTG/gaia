@@ -89,9 +89,9 @@ def build_install(bld):
     else:
         # we shouldn't redistribute these headers (they contain Qt code)
         bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('*.h'))
-        bld.install_files('${PREFIX}/include/gaia2', [ 'algorithms/analyzer.h',
+        bld.install_files('${PREFIX}/include/gaia2/algorithms', [ 'algorithms/analyzer.h',
                                                        'algorithms/applier.h' ])
-        bld.install_files('${PREFIX}/include/gaia2', [ 'metrics/distancefunction.h',
+        bld.install_files('${PREFIX}/include/gaia2/metrics', [ 'metrics/distancefunction.h',
                                                        'metrics/layoutawarefactory.h',
                                                        'metrics/frozendistance.h' ])
         bld.install_files('${PREFIX}/include/gaia2/parser', [ 'parser/filter.h',
