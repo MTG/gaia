@@ -42,8 +42,8 @@
 #include <queue>
 #include "dataset.h"
 #include "searchspacepool.h"
-#include <metrics/distancefunction.h>
-#include <metrics/frozendistance.h>
+#include "metrics/distancefunction.h"
+#include "metrics/frozendistance.h"
 
 namespace gaia2 {
 
