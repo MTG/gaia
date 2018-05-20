@@ -265,7 +265,7 @@ def configure(conf):
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
         Libs: -L${libdir} -L${qtlibdir} %(tbblib)s
-        Cflags: -I${includedir} -I{includedir}/gaia2 ${qtincludes}
+        Cflags: -I${includedir} ${qtincludes}
         ''' % opts
         
     elif sys.platform.startswith('linux'):
