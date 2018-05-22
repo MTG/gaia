@@ -61,6 +61,8 @@ def write_pcfile(bld):
     open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
 
 def build_library(bld):
+    global gaia_qt5
+    gaia_qt5 = bld.env['WITH_GAIA_QT5']
     sources =  bld.path.ant_glob('*.cpp')   
     sources += bld.path.ant_glob('algorithms/*.cpp')
     sources += bld.path.ant_glob('metrics/*.cpp')
@@ -71,13 +73,24 @@ def build_library(bld):
     if bld.env['WITH_STLFACADE']:
         sources += bld.path.ant_glob('stlfacade/*.cpp')
 
-    gaialib = bld.stlib(
-        source   = sources,
-        target   = 'gaia2',
-        use      = bld.env['USELIB'],
-        install_path = '${PREFIX}/lib',
-        includes = [ '.', 'metrics', '3rdparty' ]
-    )
+    if gaia_qt5:
+        gaialib = bld.stlib(
+            source   = sources,
+            target   = 'gaia2',
+            use      = bld.env['USELIB'],
+            uselib = 'QT5CORE QT5CONCURRENT YAML',
+            install_path = '${PREFIX}/lib',
+            includes = [ '.', 'metrics', '3rdparty' ]
+        )
+    else:
+         gaialib = bld.stlib(
+            source   = sources,
+            target   = 'gaia2',
+            use      = bld.env['USELIB'],
+            uselib = 'QTCORE QTCONCURRENT YAML',
+            install_path = '${PREFIX}/lib',
+            includes = [ '.', 'metrics', '3rdparty' ]
+        )
     
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
     
