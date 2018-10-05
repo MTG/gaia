@@ -54,7 +54,7 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True)
             found = classifier(dataset.point(pointId))
             confusion.add(expected, found, pointId)
 
-        except Exception, e:
+        except Exception as e:
             log.warning('Could not classify point "%s" because %s' % (pointId, str(e)))
             raise
 

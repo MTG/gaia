@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, os, logging
 import yaml
 from gaia2 import *
@@ -52,7 +52,7 @@ class ClassificationTaskManager:
         try:
             conf = yaml.load(open(yamlfile).read())
         except Exception, e:
-            print 'Unable to open project file:', e
+            print('Unable to open project file:', e)
             raise
 
         self.conf = conf

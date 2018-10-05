@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 from gaia2.fusion import transformDataSet, mergeChunk, mergeAll, mergeDirectory
 from optparse import OptionParser, OptionGroup
 from os.path import isdir, isfile
@@ -125,7 +125,7 @@ def fusion():
             mergeAll(options.yamllist, options.outputFile, int(options.chunkSize), options.transfoFile, select, exclude)
         elif options.directory:
             if not isdir(options.directory):
-                print 'ERROR: %s is not a valid directory' % options.directory
+                print('ERROR: %s is not a valid directory' % options.directory)
                 sys.exit(1)
 
             mergeDirectory(options.directory, options.outputFile, int(options.chunkSize), options.transfoFile, select, exclude)
