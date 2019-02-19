@@ -25,7 +25,7 @@ from generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
 from optparse import OptionParser
 
-def selectBestModel(project_file, results_model_file):
+def selectBestModel(project_file, results_model_file, n_ranking=10):
     f = open(results_model_file + '.results.html', 'w')
 
     project = yaml.load(open(project_file, 'r'))
@@ -39,7 +39,9 @@ def selectBestModel(project_file, results_model_file):
         print 'Loading all results...'
         cr.readResults(results_dir)
 
-        accuracy, filename, params = cr.best(1, classifierType)[0]
+        topResults = cr.best(min(len(cr.results), n_ranking), classifierType)
+
+        accuracy, filename, params = topResults[0]
         print "RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename
 
         f.write('<h1>%s (%s)</h1>\nAccuracy: %s\n' % (className, project_file, accuracy))
@@ -52,6 +54,11 @@ def selectBestModel(project_file, results_model_file):
 
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
+
+        topResultsDict = {idx: {'accuracy': entry[0], 'config': entry[2],
+                                'results_file': entry[1]} for idx, entry in enumerate(topResults)}
+        yaml.dump(topResultsDict, open(
+            results_model_file + '.results.ranking', 'w'))
 
     else:
         print "RESULT " + "No results found for ", project_file, ": cannot build a model"
