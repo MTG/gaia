@@ -38,12 +38,15 @@ preprocessing:
                                                     '*.min', '*.max', '*cov',
                                                     'tonal.thpcp', # because of division by zero
                                                     'lowlevel.spectral_energyband_high.*', # 0 for low samplerate
-                                                    'lowlevel.silence_rate*' # funky behavior in general
+                                                    'lowlevel.silence_rate*', # funky behavior in general
+                                                    'rhythm.bpm_histogram',
+                                                    'lowlevel.melbands128.*'
                                                     ] }
         - transfo: enumerate
           params: { descriptorNames: &stringDescs [ # 'rhythm.perceptual_tempo', # removed from new extractor
                                                     'tonal.chords_key', 'tonal.chords_scale',
-                                                    'tonal.key_key', 'tonal.key_scale' ] }
+                                                    'tonal.key_krumhansl.key', 'tonal.key_edma.key', 'tonal.key_temperley.key',
+                                                    'tonal.key_krumhansl.scale', 'tonal.key_edma.scale', 'tonal.key_temperley.scale'] }
 
 
     lowlevel:
