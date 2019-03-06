@@ -21,16 +21,13 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 
-def main(input_directory, output_directory, force=False, project_name=None):
+def main(input_directory, output_directory, project_name, force=False):
     print("looking for data in dir", input_directory)
     print("storing results in dir", output_directory)
 
     project_dir = os.path.abspath(input_directory)
 
-    if not project_name:
-        projname = os.path.basename(input_directory)
-    else:
-        projname = project_name
+    projname = project_name
 
     output_dir = os.path.abspath(output_directory)
 
@@ -101,12 +98,12 @@ if __name__ == "__main__":
                         help='directory with the json/sig files.')
     parser.add_argument('output_directory',
                         help='directory with the output files.')
-    parser.add_argument('--force', '-f',  action='store_true',
-                        help='directory with the output files.')
-    parser.add_argument('--project_name', '-n',
+    parser.add_argument('project_name',
                         help='the project name.')
+    parser.add_argument('--force', '-f', action='store_true',
+                        help='directory with the output files.')
 
     args = parser.parse_args()
 
     main(args.input_directory, args.output_directory,
-         args.force, args.project_name)
+         args.project_name, args.force)
