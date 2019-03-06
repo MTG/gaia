@@ -20,8 +20,8 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 def main(input_directory, output_directory, force=False, project_name=None):
-    print "looking for data in dir", input_directory
-    print "storing results in dir", output_directory
+    print("looking for data in dir", input_directory)
+    print("storing results in dir", output_directory)
 
 
     project_dir = os.path.abspath(input_directory)
@@ -45,7 +45,7 @@ def main(input_directory, output_directory, force=False, project_name=None):
 
     classes = [d for d in os.listdir(project_dir) \
             if os.path.isdir(os.path.join(project_dir, d))]
-    print classes
+    print(classes)
 
     groundtruth_name = os.path.join(resultsdir, "groundtruth.yaml")
     json_name = os.path.join(resultsdir, "filelist-to-convert.yaml")
@@ -64,7 +64,7 @@ def main(input_directory, output_directory, force=False, project_name=None):
             filesToConvert = {os.path.splitext(os.path.basename(f))[0]: os.path.join(
                 project_dir, c, f) for f in jsonfiles if f.rstrip('.json') not in yamlfilesNoExt}
 
-            print "{} json files have to be converted into yamls. {} already exist.".format(len(filesToConvert), len(yamlfiles))
+            print("{} json files have to be converted into yamls. {} already exist.".format(len(filesToConvert), len(yamlfiles)))
 
 
             yaml.dump(filesToConvert, open(json_name, "w"))
@@ -72,7 +72,7 @@ def main(input_directory, output_directory, force=False, project_name=None):
 
         yamlfiles = get_files_in_dir(os.path.join(project_dir, c), "sig")
 
-        print "got", len(yamlfiles), "files in", c
+        print("got", len(yamlfiles), "files in", c)
         for f in yamlfiles:
             id = os.path.splitext(os.path.basename(f))[0]
             groundtruth["groundTruth"][id] = c
