@@ -14,15 +14,16 @@ template = {"type": "singleClass",
             "version": 1.0,
             "className": "",
             "groundTruth": {}
-    }
+            }
+
 
 def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
+
 def main(input_directory, output_directory, force=False, project_name=None):
     print("looking for data in dir", input_directory)
     print("storing results in dir", output_directory)
-
 
     project_dir = os.path.abspath(input_directory)
 
@@ -37,14 +38,12 @@ def main(input_directory, output_directory, force=False, project_name=None):
     project_file = os.path.join(output_dir, "%s.project" % projname)
     results_model_file = os.path.join(output_dir, "%s.history" % projname)
     resultsdir = os.path.join(output_dir, "results")
-    datasetsdir = os.path.join(project_dir, "datasets")
 
     if not os.path.exists(resultsdir):
         os.makedirs(resultsdir)
 
-
-    classes = [d for d in os.listdir(project_dir) \
-            if os.path.isdir(os.path.join(project_dir, d))]
+    classes = [d for d in os.listdir(project_dir)
+               if os.path.isdir(os.path.join(project_dir, d))]
     print(classes)
 
     groundtruth_name = os.path.join(resultsdir, "groundtruth.yaml")
@@ -61,11 +60,15 @@ def main(input_directory, output_directory, force=False, project_name=None):
         yamlfilesNoExt = [f.rstrip('.sig') for f in yamlfiles]
 
         if (len(jsonfiles) > 0):
-            filesToConvert = {os.path.splitext(os.path.basename(f))[0]: os.path.join(
-                project_dir, c, f) for f in jsonfiles if f.rstrip('.json') not in yamlfilesNoExt}
+            filesToConvert = {
+                os.path.splitext(os.path.basename(f))[0]:
+                os.path.join(project_dir, c, f)
+                for f in jsonfiles if f.rstrip('.json') not in yamlfilesNoExt
+            }
 
-            print("{} json files have to be converted into yamls. {} already exist.".format(len(filesToConvert), len(yamlfiles)))
-
+            print("{} json files have to be converted into yamls. "
+                  "{} already exist.".format(len(filesToConvert),
+                                             len(yamlfiles)))
 
             yaml.dump(filesToConvert, open(json_name, "w"))
             json_to_sig.convertJsonToSig(json_name, yaml_name)
@@ -78,7 +81,6 @@ def main(input_directory, output_directory, force=False, project_name=None):
             groundtruth["groundTruth"][id] = c
             filelist[id] = os.path.join(project_dir, c, f)
 
-
     # check directories for sig and convert
     groundtruth["className"] = projname
     yaml.dump(filelist, open(yaml_name, "w"))
@@ -87,19 +89,24 @@ def main(input_directory, output_directory, force=False, project_name=None):
     if os.path.exists(json_name):
         os.remove(json_name)
 
-    train_model.trainModel(groundtruth_name, yaml_name, project_file, resultsdir, results_model_file)
+    train_model.trainModel(groundtruth_name, yaml_name,
+                           project_file, resultsdir, results_model_file)
+
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    # parser.description("Generates a model of the sig files in `directory`. Converts to yaml if needed.")
-    parser.add_argument('input_directory', help='directory with the json/sig files.')
-    parser.add_argument('output_directory', help='directory with the output files.')
-    parser.add_argument('--force', '-f', help='directory with the output files.', action='store_true')
-    parser.add_argument('--project_name', '-n', help='the project name.')
+    parser = ArgumentParser(description="Generates a model of the sig files "
+                                        "in `directory`. Converts to yaml if "
+                                        "needed.")
+    parser.add_argument('input_directory',
+                        help='directory with the json/sig files.')
+    parser.add_argument('output_directory',
+                        help='directory with the output files.')
+    parser.add_argument('--force', '-f',  action='store_true',
+                        help='directory with the output files.')
+    parser.add_argument('--project_name', '-n',
+                        help='the project name.')
 
     args = parser.parse_args()
-    input_directory = args.input_directory
-    output_directoty = args.output_directory
-    force = args.force
-    project_name = args.project_name
-    main(input_directory, output_directoty, force, project_name)
+
+    main(args.input_directory, args.output_directory,
+         args.force, args.project_name)
