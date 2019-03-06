@@ -21,7 +21,7 @@ def get_files_in_dir(dirname, extension):
 
 def main(input_directory, output_directory, force=False, project_name=None):
     print "looking for data in dir", input_directory
-    print "storing resutls in dir", output_directory
+    print "storing results in dir", output_directory
 
 
     project_dir = os.path.abspath(input_directory)
