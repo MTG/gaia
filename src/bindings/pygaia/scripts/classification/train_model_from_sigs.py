@@ -8,6 +8,7 @@ import os
 import shutil
 import json
 import glob
+import shutil
 from argparse import ArgumentParser
 
 template = {"type": "singleClass",
@@ -35,6 +36,9 @@ def main(input_directory, output_directory, project_name, force=False):
     project_file = os.path.join(output_dir, "%s.project" % projname)
     results_model_file = os.path.join(output_dir, "%s.history" % projname)
     resultsdir = os.path.join(output_dir, "results")
+
+    if force:
+        shutil.rmtree(output_directory, ignore_errors=True)
 
     if not os.path.exists(resultsdir):
         os.makedirs(resultsdir)
@@ -91,9 +95,13 @@ def main(input_directory, output_directory, project_name, force=False):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser(description="Generates a model of the sig files "
-                                        "in `directory`. Converts to yaml if "
-                                        "needed.")
+    parser = ArgumentParser(description="Generates a model trained using "
+                                        "descriptor files (*.sig, *.json) "
+                                        "in a directory. Each subdirectory "
+                                        "is considered a class with the "
+                                        "descriptor files therein being its "
+                                        "training examples. JSON files are "
+                                        "converted to YAML if needed.")
     parser.add_argument('input_directory',
                         help='directory with the json/sig files.')
     parser.add_argument('output_directory',
@@ -101,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument('project_name',
                         help='the project name.')
     parser.add_argument('--force', '-f', action='store_true',
-                        help='directory with the output files.')
+                        help='wheter to retrain an existing model.')
 
     args = parser.parse_args()
 
