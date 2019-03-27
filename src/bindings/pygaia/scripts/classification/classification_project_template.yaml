@@ -91,12 +91,20 @@ preprocessing:
         - transfo: gaussianize
           params: { descriptorNames: 'lowlevel.*' }
 
+    mfcc:
+        # an MFCC only baseline
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: select
+          params: { descriptorNames: 'lowlevel.mfcc*' }
 
 # List of classifiers to be trained
 classifiers:
     svm:
         # first svm test combinations
-        - preprocessing: [ 'basic', 'lowlevel', 'nobands', 'normalized', 'gaussianized' ] # 'nosfx'
+        - preprocessing: [ 'basic', 'lowlevel', 'nobands', 'normalized', 'gaussianized', 'mfcc' ] # 'nosfx'
           type: [ 'C-SVC' ]
           kernel: [ 'poly', 'RBF' ]
           C:     [ -5, -3, -1, 1, 3, 5, 7, 9, 11 ] # will actually be 2**x
