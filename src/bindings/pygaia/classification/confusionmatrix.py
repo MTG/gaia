@@ -23,11 +23,13 @@
 from __future__ import with_statement
 from collections import defaultdict
 import gaia2.fastyaml as yaml
+from math import sqrt
 
 class ConfusionMatrix:
 
     def __init__(self):
         self.matrix = defaultdict(lambda: defaultdict(list))
+        self.folds = dict()
 
     def load(self, filename):
         with open(filename) as f:
@@ -35,17 +37,50 @@ class ConfusionMatrix:
 
         # convert to a defaultdict the data we just loaded
         self.matrix = defaultdict(lambda: defaultdict(list))
-        for k, v in data.items():
+        for k, v in data['matrix'].items():
             self.matrix[k] = defaultdict(list, v)
+
+        self.folds = data['fold']
 
     def save(self, filename):
         # convert to "normal" dicts before saving
-        data = dict((k, dict(v)) for k, v in self.matrix.items())
+        data = {
+                'matrix': dict((k, dict(v)) for k, v in self.matrix.items()),
+                'fold': self.folds
+                }
         with open(filename, 'w') as f:
             yaml.dump(data, f)
 
     def add(self, expected, predicted, name = ''):
         self.matrix[expected][predicted] += [ name ]
+
+    def addNfold(self, expected, predicted, name, nfold):
+        self.matrix[expected][predicted] += [ name ]
+        self.folds[name] = nfold
+
+    def matrixNfold(self, nfold):
+        nfoldDict = defaultdict(lambda: defaultdict(list))
+        for c in self.matrix:
+            for d in self.matrix[c]:
+                for e in self.matrix[c][d]:
+                    if self.folds[e] == nfold:
+                        nfoldDict[c][d].append(e)
+        return nfoldDict
+
+    def stdNfold(self):
+        folds = set(self.folds.values())
+        if not bool(folds):
+            raise('This matrix does not contain information about folds')
+
+        nfolds = max(folds)
+
+        accuracies = [self.correctNfold(f) * 100. / self.totalNfold(f)
+                      for f in folds]
+        print(accuracies)
+        acc_mean = sum(accuracies) / len(accuracies)
+
+        return sqrt(sum([(x - acc_mean) * (x - acc_mean)
+                    for x in accuracies]) / len(accuracies))
 
     def classes(self):
         allClasses = set()
@@ -65,6 +100,15 @@ class ConfusionMatrix:
                 result += len(self.matrix[c][d])
         return result
 
+    def totalNfold(self, fold):
+        """Return the total number of classification instances for a given fold."""
+        matrix = self.matrixNfold(fold)
+        result = 0
+        for c in matrix:
+            for d in matrix[c]:
+                result += len(matrix[c][d])
+        return result
+
     def correct(self):
         """Return the number of correctly classified instances."""
         result = 0
@@ -72,6 +116,13 @@ class ConfusionMatrix:
             result += len(self.matrix[c][c])
         return result
 
+    def correctNfold(self, fold):
+        """Return the number of correctly classified instances for a given fold."""
+        matrix = self.matrixNfold(fold)
+        result = 0
+        for c in matrix:
+            result += len(matrix[c][c])
+        return result
 
     def toDict(self):
         """Format nicely the confusion matrix as normal dict, replace list of
