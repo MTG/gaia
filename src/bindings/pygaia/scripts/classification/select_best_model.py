@@ -36,15 +36,15 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
         classifierType = None # all types
 
         cr = ClassificationResults()
-        print 'Loading all results...'
+        print('Loading all results...')
         cr.readResults(results_dir)
 
         topResults = cr.best(min(len(cr.results), n_ranking), classifierType)
 
-        accuracy, filename, params = topResults[0]
-        print "RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename
+        accuracy, stdev, filename, params = topResults[0]
+        print('RESULT {}\tAcc:{:.3f}\tStd:{:.3f}\t{}'.format(project_file, accuracy, stdev, filename))
 
-        f.write('<h1>%s (%s)</h1>\nAccuracy: %s\n' % (className, project_file, accuracy))
+        f.write('<h1>%s (%s)</h1>\nAccuracy: %s. Std: %s.\n' % (className, project_file, accuracy, stdev))
 
         cm = ConfusionMatrix()
         cm.load(filename)
@@ -55,13 +55,13 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
 
-        topResultsDict = {idx: {'accuracy': entry[0], 'config': entry[2],
+        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'config': entry[3],
                                 'results_file': entry[1]} for idx, entry in enumerate(topResults)}
         yaml.dump(topResultsDict, open(
             results_model_file + '.results.ranking', 'w'))
 
     else:
-        print "RESULT " + "No results found for ", project_file, ": cannot build a model"
+        print("RESULT " + "No results found for ", project_file, ": cannot build a model")
         f.write('<h1>%s (%s) </h1>\nResults not found\n' % (collection, project_file))
 
 

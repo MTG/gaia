@@ -50,10 +50,10 @@ class ClassificationResults(object):
 
     def best(self, n = 10, classifierType = None):
         if classifierType is not None:
-            r = [ (cm.correct() * 100. / cm.total(), filename, param)
+            r = [ (cm.correct() * 100. / cm.total(), cm.stdNfold(),  filename, param)
                   for (filename, cm, param) in self.results if param['model']['classifier'] == classifierType ]
         else:
-            r = [ (cm.correct() * 100. / cm.total(), filename, param)
+            r = [ (cm.correct() * 100. / cm.total(), cm.stdNfold(), filename, param)
                   for (filename, cm, param) in self.results ]
 
         print "number of results ====", len(r)
