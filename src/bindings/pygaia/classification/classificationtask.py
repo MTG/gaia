@@ -137,7 +137,7 @@ def getTrainer(classifier, param, ds):
 
 
 class ClassificationTask(object):
-    def run(self, className, outfilename, param, dsname, gtname, evalconfig):
+    def run(self, className, outfilename, param, dsname, gtname, evalconfig, seed):
 
         try:
             classifier = param['classifier']
@@ -174,8 +174,7 @@ class ClassificationTask(object):
                 log.info('    PID: %d, parameters: %s' % (os.getpid(), json.dumps(param)))
 
                 # run evaluation
-                confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, **trainingparam)
-
+                confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, seed=seed, **trainingparam)
                 # write evaluation params & result
                 with open(outfilename + '_%d.param' % i, 'w') as f:
                     yaml.dump({ 'model': param, 'evaluation': evalparam }, f)
@@ -188,8 +187,8 @@ class ClassificationTask(object):
 
 
 if __name__ == '__main__':
-    className, outfilename, param, dsname, gtname, evalconfig = cPickle.load(sys.stdin)
+    config = cPickle.load(sys.stdin)
 
     cvar.verbose = False
     task = ClassificationTask()
-    task.run(className, outfilename, param, dsname, gtname, evalconfig)
+    task.run(*config)

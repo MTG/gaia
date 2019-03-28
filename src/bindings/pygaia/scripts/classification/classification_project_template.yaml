@@ -26,6 +26,11 @@ filelist: %(filelist)s
 groundtruth: %(groundtruth)s
 
 
+# Seed used to randomly assign tracks to folds. Use 'None' to use clock value. This will 
+# produce slightly different results on different trials)
+seed: %(seed)s
+
+
 # List of preprocessed datasets to build
 preprocessing:
     # it is possible to not apply any processing, although this is of

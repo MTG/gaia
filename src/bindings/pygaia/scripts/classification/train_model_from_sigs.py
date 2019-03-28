@@ -22,7 +22,7 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 
-def main(input_directory, output_directory, project_name, force=False):
+def main(input_directory, output_directory, project_name, force=False, seed=None):
     print("looking for data in dir", input_directory)
     print("storing results in dir", output_directory)
 
@@ -91,7 +91,8 @@ def main(input_directory, output_directory, project_name, force=False):
         os.remove(json_name)
 
     train_model.trainModel(groundtruth_name, yaml_name,
-                           project_file, resultsdir, results_model_file)
+                           project_file, resultsdir, results_model_file,
+                           seed=seed)
 
 
 if __name__ == "__main__":
@@ -110,8 +111,17 @@ if __name__ == "__main__":
                         help='the project name.')
     parser.add_argument('--force', '-f', action='store_true',
                         help='wheter to retrain an existing model.')
+    parser.add_argument('--seed', '-s', type=float, default=1,
+                        help='seed used to generate the random folds.'
+                             'Use 0 to use computer time (will vary on each trial)')
 
     args = parser.parse_args()
 
+    seed = args.seed
+    if args.seed == 0:
+        seed = None
+
+    print(seed)
+    sys.exit()
     main(args.input_directory, args.output_directory,
-         args.project_name, args.force)
+         args.project_name, args.force, seed=seed)

@@ -27,7 +27,7 @@ import generate_classification_project
 import run_tests
 import select_best_model
 
-def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file):
+def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None):
     if not os.path.isfile(project_file):
         print "Creating classification project", project_file
 
@@ -56,7 +56,7 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
 
         # generate classification project
         generate_classification_project.generateProject(
-                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir)
+                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=seed)
 
     else:
         print "Project file", project_file, "has been found. Skipping project generation step."

@@ -67,7 +67,7 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, nfold=None, ver
     return confusion
 
 
-def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
+def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, seed=None, *args, **kwargs):
     """Evaluate the classifier on the given dataset and returns the confusion matrix.
 
     The evaluation is performed using n-fold cross validation.
@@ -90,6 +90,7 @@ def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
     iclasses = {}
     for c in classes:
         iclasses[c] = [ p for p in groundTruth.keys() if groundTruth[p] == c ]
+        random.seed(a=seed)
         random.shuffle(iclasses[c])
 
     # get folds

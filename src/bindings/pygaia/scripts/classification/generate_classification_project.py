@@ -29,7 +29,7 @@ import gaia2.fastyaml as yaml
 
 PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml')).read()
 
-def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir):
+def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=None):
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
         className = gt['className']
@@ -57,13 +57,19 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
         print "track ids found in", groundtruth_file, "are inconsistent with", filelist_file
         sys.exit(4)
 
+    # If not seed specified, get the current clock value
+    if seed is None:
+        import time
+        seed = time.time()
+
     # write the project file
     with open(project_file, 'w') as pfile:
         pfile.write(PROJECT_TEMPLATE % { 'className': className,
                                          'datasetsDirectory': abspath(datasets_dir),
                                          'resultsDirectory': abspath(results_dir),
                                          'filelist': abspath(filelist_file),
-                                         'groundtruth': abspath(groundtruth_file) })
+                                         'groundtruth': abspath(groundtruth_file),
+                                         'seed': seed})
 
     print 'Successfully written', project_file
 
