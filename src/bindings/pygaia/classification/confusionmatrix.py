@@ -68,15 +68,18 @@ class ConfusionMatrix:
         return nfoldDict
 
     def stdNfold(self):
+        """Return standard deviation of the accuracies across folds."""
         folds = set(self.folds.values())
+
         if not bool(folds):
             raise('This matrix does not contain information about folds')
 
-        nfolds = max(folds)
-
         accuracies = [self.correctNfold(f) * 100. / self.totalNfold(f)
                       for f in folds]
-        print(accuracies)
+
+        # TODO the following lines compute standard deviation. In
+        # the future we can use stdev method from the statistics
+        # package, shipped by default since Python 3.4
         acc_mean = sum(accuracies) / len(accuracies)
 
         return sqrt(sum([(x - acc_mean) * (x - acc_mean)
