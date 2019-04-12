@@ -55,8 +55,8 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
 
-        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'config': entry[3],
-                                'results_file': entry[1]} for idx, entry in enumerate(topResults)}
+        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'config': entry[3]}
+                          for idx, entry in enumerate(topResults)}
         yaml.dump(topResultsDict, open(
             results_model_file + '.results.ranking', 'w'))
 
