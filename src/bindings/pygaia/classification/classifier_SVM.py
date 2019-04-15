@@ -22,7 +22,8 @@
 
 from gaia2 import DataSet, transform
 
-def train_SVM(dataset, groundTruth, descriptorNames, exclude = [], svmtype = 'c-svc', kernel = 'rbf', c = 1, gamma = 1):
+def train_SVM(dataset, groundTruth, descriptorNames, exclude=[], svmtype='c-svc',
+              kernel='rbf', c=1, gamma=1, balanceClasses=False):
     # recreate a copy of the given dataset without history
     ds = dataset.copy()
     ds.forgetHistory()
@@ -43,8 +44,8 @@ def train_SVM(dataset, groundTruth, descriptorNames, exclude = [], svmtype = 'c-
                                      'type': svmtype,
                                      'kernel': kernel,
                                      'c': c,
-                                     'gamma': gamma })
+                                     'gamma': gamma,
+                                     'balanceClasses': balanceClasses})
 
     h = ds.history()
     return lambda p: h.mapPoint(p)[groundTruth.className]
-

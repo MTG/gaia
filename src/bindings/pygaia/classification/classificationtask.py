@@ -53,6 +53,7 @@ def getTrainer(classifier, param, ds):
         svmtype = param['type']
         kernel = param['kernel']
         cexp = param['C']
+        balanceClasses = param['balanceClasses']
         gammaexp = param['gamma']
 
         descriptorNames = param.get('descriptorNames', '*')
@@ -63,7 +64,8 @@ def getTrainer(classifier, param, ds):
 
         trainingparam = { 'descriptorNames':  descriptorNames,
                           'exclude': exclude, 'svmtype': svmtype, 'kernel': kernel,
-                          'c': 2**cexp, 'gamma': 2**gammaexp}
+                          'c': 2**cexp, 'gamma': 2**gammaexp,
+                          'balanceClasses': balanceClasses}
         newds = ds
 
     elif classifier == 'NN':
