@@ -26,7 +26,8 @@ from gaia2 import DataSet, transform
 from gaia2.classification import GroundTruth
 
 
-def trainSVM(dataset, groundTruth, descriptorNames = ['*'], exclude = [], type = 'c-svc', kernel = 'rbf', C = 1, gamma = 1):
+def trainSVM(dataset, groundTruth, descriptorNames = ['*'], exclude = [], type = 'c-svc', 
+             kernel = 'rbf', C = 1, gamma = 1, balanceClasses = False):
     ds = dataset
 
     ds = transform(ds, 'select', { 'descriptorNames': descriptorNames,
@@ -46,7 +47,8 @@ def trainSVM(dataset, groundTruth, descriptorNames = ['*'], exclude = [], type =
                                      'kernel': kernel,
                                      'c': 2**C,
                                      'gamma': 2**gamma,
-                                     'probability': True })
+                                     'probability': True,
+                                     'balanceClasses': balanceClasses })
 
     ds = transform(ds, 'select', { 'descriptorNames': '%s*' % groundTruth.className })
 

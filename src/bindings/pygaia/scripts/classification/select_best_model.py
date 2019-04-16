@@ -41,10 +41,12 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
 
         topResults = cr.best(min(len(cr.results), n_ranking), classifierType)
 
-        accuracy, stdev, filename, params = topResults[0]
-        print('RESULT {}\tAcc:{:.3f}\tStd:{:.3f}\t{}'.format(project_file, accuracy, stdev, filename))
+        accuracy, stdev, normAccuracy, normStdev, filename, params = topResults[0]
+        print('RESULT {}\tAcc:{:.3f}\tStd:{:.3f}\tnormalized Acc:{:.3f}\tnormalized Std:{:.3f}\t{}'.format(
+            project_file, accuracy, stdev, normAccuracy, normStdev, filename))
 
-        f.write('<h1>%s (%s)</h1>\nAccuracy: %s. Std: %s.\n' % (className, project_file, accuracy, stdev))
+        f.write('<h1>%s (%s)</h1>\nAccuracy: %s. Std: %s.\nNormalized accuracy: %s. Normalized std: %s.\n' %
+                (className, project_file, accuracy, stdev, normAccuracy, normStdev))
 
         cm = ConfusionMatrix()
         cm.load(filename)
@@ -55,7 +57,8 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
 
-        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'config': entry[3]}
+        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'normAccuracy': entry[2],
+                                'normStd': entry[3], 'config': entry[4]}
                           for idx, entry in enumerate(topResults)}
         yaml.dump(topResultsDict, open(
             results_model_file + '.results.ranking', 'w'))
