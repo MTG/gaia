@@ -137,8 +137,8 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
             p = gaia2.Point()
             p.load(gaia2.fastyaml.loadfile(pointList).items()[0][1])
             excluded = p.layout().descriptorNames(exclude)
-        except:
-            raise
+        except Exception as e:
+            print(e)
 
     # merge each chunk separately
     # this includes removevl and fixlength, which should yield smaller files than just after

@@ -167,7 +167,9 @@ class ClassificationTaskManager:
         log.info('Merging original base dataset...')
 
         from gaia2.fusion import mergeAll
-        mergeAll(self.conf['filelist'], self.conf['datasetFilename'], 5000, transfoFile = None)
+        # exclude tags fields as they may not be consistent among tracks
+        # and they don't contain relevant information for classification
+        mergeAll(self.conf['filelist'], self.conf['datasetFilename'], 5000, transfoFile = None, exclude = '.metadata.tags*')
 
         log.info('Original dataset successfully created!')
 
