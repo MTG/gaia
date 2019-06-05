@@ -59,7 +59,8 @@ void SVMTrain::initParams() {
 SVMTrain::SVMTrain(const ParameterMap& params) : Analyzer(params) {
   G_DEBUG(GAlgorithms, "Initializing SVMTrain analyzer");
   validParams << "type" << "kernel" << "probability" << "degree" << "c"
-              << "nu" << "gamma" << "className" << "balanceClasses";
+              << "nu" << "gamma" << "className" << "balanceClasses"
+              << "maxIterations" << "maxToleranceUpdates";
   initParams();
 
   _className = _params.value("className").toString();
@@ -159,7 +160,8 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   param.C = _params.value("c", 1).toDouble();
   param.gamma = _params.value("gamma", 1.0/dimension).toDouble();
   param.probability = _params.value("probability", false).toBool() ? 1 : 0;
-
+  param.max_iterations = _params.value("maxIterations", 1e7).toInt();
+  param.max_tolerance_updates = _params.value("maxToleranceUpdates", 4).toInt();
 
   const char* error_msg = svm_check_parameter(&prob, &param);
 
