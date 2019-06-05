@@ -26,6 +26,8 @@ import json_to_sig
 import generate_classification_project
 import run_tests
 import select_best_model
+import generate_params_report
+
 
 def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None):
     if not os.path.isfile(project_file):
@@ -66,6 +68,9 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
 
     # analyze results and select best model
     select_best_model.selectBestModel(project_file, results_model_file)
+
+    # generate a csv containing statistics for each parameter
+    generate_params_report.generateParamsReport(project_file)
 
 
 if __name__ == '__main__':
