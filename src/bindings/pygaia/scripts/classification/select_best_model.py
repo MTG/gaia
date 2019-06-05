@@ -39,9 +39,8 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
         print('Loading all results...')
         cr.readResults(results_dir)
 
-        topResults = cr.best(min(len(cr.results), n_ranking), classifierType)
+        accuracy, stdev, normAccuracy, normStdev, filename, params = cr.best(1, classifierType)[0]
 
-        accuracy, stdev, normAccuracy, normStdev, filename, params = topResults[0]
         print('RESULT {}\tAcc:{:.3f}\tStd:{:.3f}\tnormalized Acc:{:.3f}\tnormalized Std:{:.3f}\t{}'.format(
             project_file, accuracy, stdev, normAccuracy, normStdev, filename))
 
@@ -56,12 +55,6 @@ def selectBestModel(project_file, results_model_file, n_ranking=10):
 
         trainSVMHistory(project_file, filename, results_model_file, className)
         shutil.copyfile(filename, results_model_file + '.param')
-
-        topResultsDict = {idx: {'accuracy': entry[0], 'std': entry[1], 'normAccuracy': entry[2],
-                                'normStd': entry[3], 'config': entry[4]}
-                          for idx, entry in enumerate(topResults)}
-        yaml.dump(topResultsDict, open(
-            results_model_file + '.results.ranking', 'w'))
 
     else:
         print("RESULT " + "No results found for ", project_file, ": cannot build a model")
