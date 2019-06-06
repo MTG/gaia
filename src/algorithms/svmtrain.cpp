@@ -98,6 +98,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   // of dimensions + 1 for the sentinel, and we're not in a sparse representation)
   int dimension = prob.x[1] - prob.x[0] - 1;
 
+  int nr_weight = 0;
   int *labels  = NULL;
   double *weights = NULL;
 
@@ -115,8 +116,10 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
       }
     }
 
-    labels = new int[counts.size()];
-    weights = new double[counts.size()];
+    nr_weight = counts.size();
+
+    labels = new int[nr_weight];
+    weights = new double[nr_weight];
 
     QMapIterator<int, int> iCounts(counts);
     int count = 0;
@@ -127,7 +130,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
       iCounts.next();
     
       labels[count] = iCounts.key();
-      weights[count] = (double)prob.l / (iCounts.value() * counts.size());
+      weights[count] = (double)prob.l / (iCounts.value() * nr_weight);
 
       count++;
     }
@@ -147,7 +150,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   param.p = 0.1;
   param.shrinking = 1;
   //param.probability = 0;
-  param.nr_weight = 0;
+  param.nr_weight = nr_weight;
   param.weight_label = labels;
   param.weight = weights;
 
