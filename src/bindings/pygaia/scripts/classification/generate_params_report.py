@@ -30,18 +30,18 @@ def generateParamsReport(project_file):
     csv_file = project_file.rstrip('project') + 'report.csv'
 
     if os.path.exists(results_dir):
-        classifierType = None # all types
+        classifier_type = None # all types
 
         cr = ClassificationResults()
         print('Loading all results...')
         cr.readResults(results_dir)
 
         n_results = len(cr.results)
-        results = cr.best(n_results, classifierType)
+        results = cr.best(n_results, classifier_type)
         # results is a list of tuples sorted by accuracy with these fields:
-        # (accuracy, std, normAccuracy, normStd, results, results_file)
+        # (accuracy, std, norm_Accuracy, norm_std, results, results_file)
 
-        # use position as index and sort by normAccuracy
+        # use position as index and sort by norm_accuracy
         r = [(v[2], i) for i, v in enumerate(results)]
         r = sorted(r)[::-1]
         _, idx = zip(*r)
@@ -69,18 +69,24 @@ def generateParamsReport(project_file):
 
         with open(csv_file, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
             writer.writeheader()
 
             for i in results:
                 writer.writerow(i)
 
+    else:
+        print('No results found for {} in its "resultsDirectory" ({}).\n'
+              'If the project was moved you may want to manually update '
+              'this field on the project file.'.format(project_file, results_dir))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        'Generates a csv containing relevant information about all the '
-        'parameter combinations available in "resultsDirectory".')
+        description='Generates a csv containing accuracy information for all the '
+                    'parameter combinations found in "resultsDirectory" for a '
+                    'given project (.project file).')
+    
     parser.add_argument('project_file', help='project file')
 
-    args = parser.parse()
+    args = parser.parse_args()
     generateParamsReport(args.project_file)
