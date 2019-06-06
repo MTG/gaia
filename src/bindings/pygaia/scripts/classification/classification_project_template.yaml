@@ -31,6 +31,10 @@ groundtruth: %(groundtruth)s
 seed: %(seed)s
 
 
+# List of parameters that have to be excluded before creating applying the prepocessings
+excludedDescriptors: [ 'metadata.tags*' ]
+
+
 # List of preprocessed datasets to build
 preprocessing:
     # it is possible to not apply any processing, although this is of
