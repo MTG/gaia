@@ -185,6 +185,9 @@ class ClassificationTaskManager:
         datasetdir = self.conf['datasetsDirectory']
         seed = self.conf['seed']
 
+        jobidx = 1
+        jobcount = len(self.allconfigs)
+
         while len(self.allconfigs) > 0:
             trainingparam = self.allconfigs.pop()
             taskid = taskhash(trainingparam)
@@ -192,7 +195,10 @@ class ClassificationTaskManager:
             dsname = join(datasetdir, '%s-%s.db' % (className, trainingparam['preprocessing']))
             gtname = self.conf['groundtruth'] #join(self.datasetdir, self.className + '.gt')
 
-            alljobs += [ (className, outfilename, trainingparam, dsname, gtname, self.evalconfigs, seed) ]
+            alljobs += [ (className, outfilename, trainingparam, dsname, gtname,
+                          self.evalconfigs, seed, jobidx, jobcount) ]
+
+            jobidx += 1
 
         log.info('-'*80)
         log.info('Setup finished, starting classification tasks.')

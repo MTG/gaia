@@ -30,6 +30,7 @@ from gaia2.classification import GroundTruth, evaluate, evaluateNfold, utils
 from os.path import exists
 import logging
 import json
+from math import log10
 
 log = logging.getLogger('gaia2.classification.ClassificationTask')
 
@@ -139,7 +140,7 @@ def getTrainer(classifier, param, ds):
 
 
 class ClassificationTask(object):
-    def run(self, className, outfilename, param, dsname, gtname, evalconfig, seed):
+    def run(self, className, outfilename, param, dsname, gtname, evalconfig, seed, jobidx=None, jobcount=None):
 
         try:
             classifier = param['classifier']
@@ -160,6 +161,10 @@ class ClassificationTask(object):
                     log.warning('Removing %s from GroundTruth as it could not be found in the merged dataset' % pid)
                     del gt[pid]
 
+            # get the number of digits of jobcount to format the log
+            if jobidx and jobcount:
+                jobdigits =  1 + int(log10(jobcount))
+
             trainerFun, trainingparam, newds = getTrainer(classifier, param, ds)
 
             # run all the evaluations specified in the evaluation config
@@ -174,6 +179,9 @@ class ClassificationTask(object):
                                                                                               param['classifier'],
                                                                                               param['preprocessing']))
                 log.info('    PID: %d, parameters: %s' % (os.getpid(), json.dumps(param)))
+                
+                if jobidx and jobcount:
+                    log.info('    Job: %.*d/%d' % (jobdigits, jobidx, jobcount))
 
                 # run evaluation
                 confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, seed=seed, **trainingparam)
