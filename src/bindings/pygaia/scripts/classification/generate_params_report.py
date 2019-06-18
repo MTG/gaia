@@ -54,17 +54,31 @@ def generateParamsReport(project_file):
                       'normalized_std',
                       'results_file',
                       'param_file',
-                      'parameters']
+                      'kernel',
+                      'C',
+                      'preprocessing',
+                      'balance_classes',
+                      'type',
+                      'classifier',
+                      'gamma',
+                      'evaluation']
 
-        results = [{fieldnames[0]: k + 1,
-                    fieldnames[1]: v[0],
-                    fieldnames[2]: v[1],
-                    fieldnames[3]: idx.index(k) + 1,
-                    fieldnames[4]: v[2],
-                    fieldnames[5]: v[3],
-                    fieldnames[6]: v[4],
-                    fieldnames[7]: v[4].rstrip('results') + 'params',
-                    fieldnames[8]: v[5]}
+        results = [{fieldnames[0]: k + 1,  # accuracy_rank
+                    fieldnames[1]: v[0],  # accuracy
+                    fieldnames[2]: v[1],  # std
+                    fieldnames[3]: idx.index(k) + 1,   # normalized_accuracy_rank
+                    fieldnames[4]: v[2],  # normalized_accuracy
+                    fieldnames[5]: v[3],  # normalized_std
+                    fieldnames[6]: v[4],  # results_file
+                    fieldnames[7]: v[4].rstrip('results') + 'params',  # param_file
+                    fieldnames[8]: v[5]['model']['kernel'],  # kernel
+                    fieldnames[9]: v[5]['model']['C'],  # C
+                    fieldnames[10]: v[5]['model']['preprocessing'],  # preprocessing
+                    fieldnames[11]: v[5]['model']['balanceClasses'],  # balance_classes
+                    fieldnames[12]: v[5]['model']['type'],  # type
+                    fieldnames[13]: v[5]['model']['classifier'],  # classifier
+                    fieldnames[14]: v[5]['model']['gamma'],  # gamma
+                    fieldnames[15]: v[5]['evaluation']}  # evaluation
                    for k, v in enumerate(results)]
 
         with open(csv_file, 'w') as csvfile:
