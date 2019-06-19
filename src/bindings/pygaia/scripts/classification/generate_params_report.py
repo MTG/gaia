@@ -27,7 +27,7 @@ from optparse import OptionParser
 def generateParamsReport(project_file):
     project = yaml.load(open(project_file, 'r'))
     results_dir = project['resultsDirectory']
-    csv_file = project_file.rstrip('project') + 'report.csv'
+    csv_file = project_file.rstrip('project') + 'report.tsv'
 
     if os.path.exists(results_dir):
         classifier_type = None # all types
@@ -48,10 +48,10 @@ def generateParamsReport(project_file):
 
         fieldnames = ['accuracy_rank',
                       'accuracy',
-                      'std',
+                      'accuracy_std',
                       'normalized_accuracy_rank',
                       'normalized_accuracy',
-                      'normalized_std',
+                      'normalized_accuracy_std',
                       'results_file',
                       'param_file',
                       'kernel',
@@ -82,7 +82,7 @@ def generateParamsReport(project_file):
                    for k, v in enumerate(results)]
 
         with open(csv_file, 'w') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter='\t')
             writer.writeheader()
 
             for i in results:
