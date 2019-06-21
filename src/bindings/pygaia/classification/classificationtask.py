@@ -163,7 +163,7 @@ class ClassificationTask(object):
 
             # get the number of digits of jobcount to format the log
             if jobidx and jobcount:
-                jobdigits =  1 + int(log10(jobcount))
+                jobdigits = len(str(jobcount))
 
             trainerFun, trainingparam, newds = getTrainer(classifier, param, ds)
 
@@ -179,7 +179,7 @@ class ClassificationTask(object):
                                                                                               param['classifier'],
                                                                                               param['preprocessing']))
                 log.info('    PID: %d, parameters: %s' % (os.getpid(), json.dumps(param)))
-                
+
                 if jobidx and jobcount:
                     log.info('    Job: %.*d/%d' % (jobdigits, jobidx, jobcount))
 
