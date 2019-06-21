@@ -21,13 +21,14 @@
 import os.path, csv, argparse
 from gaia2.fastyaml import yaml
 from get_classification_results import ClassificationResults
-from optparse import OptionParser
 
 
 def generateParamsReport(project_file):
     project = yaml.load(open(project_file, 'r'))
+    project_file_dir = os.path.dirname(project_file)
     results_dir = project['resultsDirectory']
-    csv_file = project_file.rstrip('project') + 'report.tsv'
+
+    tsv_file = os.path.join(project_file_dir, 'report.tsv')
 
     if os.path.exists(results_dir):
         classifier_type = None # all types
@@ -81,7 +82,7 @@ def generateParamsReport(project_file):
                     fieldnames[15]: v[5]['evaluation']}  # evaluation
                    for k, v in enumerate(results)]
 
-        with open(csv_file, 'w') as csvfile:
+        with open(tsv_file, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter='\t')
             writer.writeheader()
 
@@ -99,7 +100,7 @@ if __name__ == '__main__':
         description='Generates a csv containing accuracy information for all the '
                     'parameter combinations found in "resultsDirectory" for a '
                     'given project (.project file).')
-    
+
     parser.add_argument('project_file', help='project file')
 
     args = parser.parse_args()
