@@ -410,7 +410,7 @@ public:
 	void Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		   double *alpha_, double Cp, double Cn, double eps,
 		   SolutionInfo* si, int shrinking, int max_iters=1e7,
-           int max_tolerance_updates=4);
+		   int max_tolerance_updates=4);
 protected:
 	int active_size;
 	schar *y;
@@ -509,7 +509,7 @@ void Solver::reconstruct_gradient()
 void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		   double *alpha_, double Cp, double Cn, double eps,
 		   SolutionInfo* si, int shrinking, int max_iters,
-           int max_tolerance_updates)
+		   int max_tolerance_updates)
 {
 	this->l = l;
 	this->Q = &Q;
@@ -565,7 +565,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 
 	int iter = 0;
 	int update_tolerance = 0;
-    int counter = min(l,1000)+1;
+	int counter = min(l,1000)+1;
 
 	while(1)
 	{
@@ -733,22 +733,26 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			}
 		}
 
-        // try a looser stop tolerance if the maximum
-        // number of iterations is reached
-        if (iter >= max_iters) {
-            // do this a limeted number of times so we
-            // do not get stuck even if the problem is
-            // ill defined
-            if (update_tolerance >= max_tolerance_updates) {
-                print_string_stdout("Solver: Maximum number of tolerance updates reached\n");
-                break;
-            } else {
-                print_string_stdout("Solver: Increasing stop tolerance\n");
-                this->eps *= 10;
-                iter = 0;
-                update_tolerance++;
-            }
-        }
+		// try a looser stop tolerance if the maximum
+		// number of iterations is reached
+		if(iter >= max_iters)
+		{
+			// do this a limited number of times so we
+			// do not get stuck even if the problem is
+			// ill defined
+			if(update_tolerance >= max_tolerance_updates)
+			{
+				print_string_stdout("Solver: Maximum number of tolerance updates reached\n");
+				break;
+			}
+			else
+			{
+				print_string_stdout("Solver: Increasing stop tolerance\n");
+				this->eps *= 10;
+				iter = 0;
+				update_tolerance++;
+			}
+		}
 	}
 
 	// calculate rho
@@ -1468,7 +1472,7 @@ static void solve_c_svc(
 	Solver s;
 	s.Solve(l, SVC_Q(*prob,*param,y), minus_ones, y,
 		alpha, Cp, Cn, param->eps, si, param->shrinking,
-        param->max_iterations, param->max_tolerance_updates);
+		param->max_iterations, param->max_tolerance_updates);
 
 	double sum_alpha=0;
 	for(i=0;i<l;i++)
@@ -2125,7 +2129,7 @@ svm_model *svm_train(const svm_problem *prob, const svm_parameter *param)
 
 		if(param->probability &&
 		   (param->svm_type == EPSILON_SVR ||
-		    param->svm_type == NU_SVR))
+			param->svm_type == NU_SVR))
 		{
 			model->probA = Malloc(double,1);
 			model->probA[0] = svm_svr_probability(prob,param);
@@ -2354,7 +2358,7 @@ void svm_cross_validation(const svm_problem *prob, const svm_parameter *param, i
 	// stratified cv may not give leave-one-out rate
 	// Each class to l folds -> some folds may have zero elements
 	if((param->svm_type == C_SVC ||
-	    param->svm_type == NU_SVC) && nr_fold < l)
+		param->svm_type == NU_SVC) && nr_fold < l)
 	{
 		int *start = NULL;
 		int *label = NULL;
@@ -2479,7 +2483,7 @@ void svm_get_labels(const svm_model *model, int* label)
 double svm_get_svr_probability(const svm_model *model)
 {
 	if ((model->param.svm_type == EPSILON_SVR || model->param.svm_type == NU_SVR) &&
-	    model->probA!=NULL)
+		model->probA!=NULL)
 		return model->probA[0];
 	else
 	{
@@ -2591,7 +2595,7 @@ double svm_predict_probability(
 	const svm_model *model, const svm_node *x, double *prob_estimates)
 {
 	if ((model->param.svm_type == C_SVC || model->param.svm_type == NU_SVC) &&
-	    model->probA!=NULL && model->probB!=NULL)
+		model->probA!=NULL && model->probB!=NULL)
 	{
 		int i;
 		int nr_class = model->nr_class;
