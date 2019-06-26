@@ -23,13 +23,14 @@
 import sys, os, logging
 import yaml
 from gaia2 import *
-import cPickle
-import subprocess
-import multiprocessing
+from multiprocessing import cpu_count
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import cStringIO
 from os.path import join, split, exists
 from gaia2.utils import makedir, tuplify, dictcombinations
 from gaia2.classification import GroundTruth
+from time import time
+
 
 log = logging.getLogger('gaia2.classification.ClassificationTaskManager')
 
@@ -48,7 +49,7 @@ class ClassificationTaskManager:
     When the run() method is called, it will spawn a single process for each configuration to be run,
     in order to be more fault-tolerant."""
 
-    def __init__(self, yamlfile):
+    def __init__(self, yamlfile, callback=None):
         try:
             conf = yaml.load(open(yamlfile).read())
         except Exception, e:
@@ -56,6 +57,7 @@ class ClassificationTaskManager:
             raise
 
         self.conf = conf
+        self.callback = callback
 
         # make sure that these directories exist
         makedir(conf['datasetsDirectory'])
@@ -173,6 +175,16 @@ class ClassificationTaskManager:
 
         log.info('Original dataset successfully created!')
 
+    def estimateETA(self, durationEMA, duration, jobcount, jobidx, concurrentJobs):
+        # use a moving average to estimate the duration of a job.
+        if not durationEMA:
+            durationEMA = duration
+        else:
+            durationEMA = (durationEMA + duration) / 2.0
+
+        # Estimated Time of Arrival is computed considering remaining
+        # number of jobs and the amount of parallel workers.
+        return durationEMA * (jobcount - jobidx) / concurrentJobs
 
     def run(self):
         """Run all the evaluations in separate processes."""
@@ -200,20 +212,63 @@ class ClassificationTaskManager:
 
             jobidx += 1
 
+        concurrentJobs = cpu_count()
+
         log.info('-'*80)
         log.info('Setup finished, starting classification tasks.')
-        log.info('Will use %d concurrent jobs.' % multiprocessing.cpu_count())
+        log.info('Will use %d concurrent jobs.' % concurrentJobs)
 
-        pool = multiprocessing.Pool()
-        pool.map(runSingleTest, alljobs, chunksize = 1) # use chunksize=1 to minimize the effect of memory leaks
+        with ProcessPoolExecutor() as executor:
+            futures = [executor.submit(runSingleTest, job,
+                                       cluster_mode=self.conf['clusterMode']) for job in alljobs]
+
+            jobidx = 1
+            elapsedTime = 0
+            durationEMA = None
+
+            for job_result in as_completed(futures):
+                if self.callback is not None:
+                    duration, params = job_result.result()
+                    elapsedTime += duration
+                    eta = self.estimateETA(durationEMA, duration, jobcount,
+                                           jobidx, concurrentJobs)
+
+                    self.callback(jobidx, jobcount, elapsedTime, eta, params)
+
+                    jobidx += 1
+
+    @staticmethod
+    def classificationTaskCallback(jobidx, jobcount, elapsed_time, eta, params):
+        """ ClassificationTaskManager example callback function.
+
+        This callback prints the results of each job to the
+        classificationTaskManager logger.
+
+        Arguments:
+
+        jobidx: Current job index.
+        jobcount: Total number of jobs.
+        elapsed_time: Elapsed time in seconds.
+        eta: Estimated Time of Arrival in seconds.
+        params: Combination of parameters for the last job.
+        """
+        jobdigits = len(str(jobcount))
+
+        log.info('Job: %.*d/%d. Elapsed time: %.3fs. ETA: %.3fs' % (jobdigits, jobidx,
+                                                                    jobcount, elapsed_time,
+                                                                    eta))
+        log.info('Params: %s' % (params))
 
 
-def runSingleTest(args):
+def runSingleTest(args, cluster_mode=False):
     #className, outfilename, trainingparam, dsname, gtname, evalconfig = args
 
-    CLUSTER_MODE = True
+    start_time = time()
 
-    if CLUSTER_MODE:
+    if cluster_mode:
+        import cPickle
+        import subprocess
+
         singleTaskFile = join(split(__file__)[0], 'classificationtask.py')
         proc = subprocess.Popen([ 'python', singleTaskFile ],
                                 stdin  = subprocess.PIPE)
@@ -240,3 +295,7 @@ def runSingleTest(args):
         except Exception, e:
             log.error('Running task failed: %s' % e)
 
+    end_time = time()
+
+    # test duration, params
+    return end_time - start_time, args[2]
