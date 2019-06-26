@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 import sys, os, shutil
-from optparse import OptionParser
+from argparse import ArgumentParser
 from os.path import basename, splitext, join
 
 import json_to_sig
@@ -29,7 +29,7 @@ import select_best_model
 import generate_params_report
 
 
-def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None):
+def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None, cluster_mode=False):
     if not os.path.isfile(project_file):
         print "Creating classification project", project_file
 
@@ -58,7 +58,7 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
 
         # generate classification project
         generate_classification_project.generateProject(
-                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=seed)
+                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=seed, cluster_mode=cluster_mode)
 
     else:
         print "Project file", project_file, "has been found. Skipping project generation step."
@@ -74,24 +74,39 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
 
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file project_dir results_model_file\n' +
-"""
-Project generation and related data preprocessing will be skipped if 'project_file'
-already exists. Specify a non-existent 'project_file' or remove it if you want to
-recreate the project. The filelist is expected to have "*.sig" files (yaml format)
-"""
-                         )
+    parser = ArgumentParser(
+        description="Project generation and related data preprocessing will be skipped if 'project_file'"
+                    "already exists. Specify a non-existent 'project_file' or remove it if you want to"
+                    "recreate the project. The filelist is expected to have '*.sig' files (yaml format)")
 
-    options, args = parser.parse_args()
+    parser.add_argument('groundtruth_file',
+                        help='yaml file containing a relation between keys and labels.')
+    parser.add_argument('filelist_file',
+                        help='yaml file containing a relation between keys and features file paths.')
+    parser.add_argument('project_file',
+                        help=' is path where the project configuration file will be stored.')
+    parser.add_argument('project_dir',
+                        help='is the path to the file where the best model ranking the best performance will be stored.')
+    parser.add_argument('results_model_file')
+    parser.add_argument('--seed', '-s', type=float, default=1,
+                        help='seed used to generate the random folds.'
+                             'Use 0 to use computer time (will vary on each trial).')
+    parser.add_argument('--cluster_mode', '-cm', action='store_true',
+                        help='Flag to explicitly use the subprocess '
+                             'module to open a new python process for each subtask.')
 
-    try:
-        groundtruth_file = args[0]
-        filelist_file = args[1]
-        project_file = args[2]
-        project_dir = args[3]
-        results_model_file = args[4]
-    except:
-        parser.print_help()
-        sys.exit(1)
 
-    trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file)
+    args = parser.parse_args()
+
+    groundtruth_file = args.groundtruth_file
+    filelist_file = args.filelist_file
+    project_file = args.project_file
+    project_dir = args.project_dir
+    results_model_file = args.results_model_file
+    cluster_mode = args.cluster_mode
+
+    seed = args.seed
+    if args.seed == 0:
+        seed = None
+
+    trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=seed, cluster_mode=cluster_mode)

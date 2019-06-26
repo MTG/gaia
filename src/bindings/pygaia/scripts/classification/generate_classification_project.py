@@ -29,7 +29,7 @@ import gaia2.fastyaml as yaml
 
 PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml')).read()
 
-def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=None):
+def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=None, cluster_mode=False):
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
         className = gt['className']
@@ -69,7 +69,8 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
                                          'resultsDirectory': abspath(results_dir),
                                          'filelist': abspath(filelist_file),
                                          'groundtruth': abspath(groundtruth_file),
-                                         'seed': seed})
+                                         'seed': seed,
+                                         'clusterMode': cluster_mode})
 
     print 'Successfully written', project_file
 

@@ -30,6 +30,10 @@ groundtruth: %(groundtruth)s
 # produce slightly different results on different trials)
 seed: %(seed)s
 
+# Cluster mode controls how subprocesses are called. Set it to True to explicitly use the subprocess
+# module to open a new python process and call each classificationTask as a script. Otherwise, this
+# call will be performed as a function.
+clusterMode: %(clusterMode)s
 
 # List of parameters that have to be excluded before creating applying the prepocessings
 excludedDescriptors: [ 'metadata.tags*' ]

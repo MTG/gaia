@@ -22,7 +22,8 @@ def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
 
-def main(input_directory, output_directory, project_name, force=False, seed=None):
+def main(input_directory, output_directory, project_name, force=False,
+         seed=None, cluster_mode=False):
     print("looking for data in dir", input_directory)
     print("storing results in dir", output_directory)
 
@@ -92,7 +93,7 @@ def main(input_directory, output_directory, project_name, force=False, seed=None
 
     train_model.trainModel(groundtruth_name, yaml_name,
                            project_file, resultsdir, results_model_file,
-                           seed=seed)
+                           seed=seed, cluster_mode=cluster_mode)
 
 
 if __name__ == "__main__":
@@ -112,8 +113,11 @@ if __name__ == "__main__":
     parser.add_argument('--force', '-f', action='store_true',
                         help='wheter to retrain an existing model.')
     parser.add_argument('--seed', '-s', type=float, default=1,
-                        help='seed used to generate the random folds.'
-                             'Use 0 to use computer time (will vary on each trial)')
+                        help='seed used to generate the random folds. '
+                             'Use 0 to use computer time (will vary on each trial).')
+    parser.add_argument('--cluster_mode', '-cm', action='store_true',
+                        help='Flag to explicitly use the subprocess '
+                             'module to open a new python process for each subtask.')
 
     args = parser.parse_args()
 
@@ -124,4 +128,5 @@ if __name__ == "__main__":
     print(seed)
     sys.exit()
     main(args.input_directory, args.output_directory,
-         args.project_name, args.force, seed=seed)
+         args.project_name, args.force, seed=seed,
+         cluster_mode=args.cluster_mode)
