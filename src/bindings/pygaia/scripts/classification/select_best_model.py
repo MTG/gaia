@@ -25,7 +25,7 @@ from generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
 from optparse import OptionParser
 
-def selectBestModel(project_file, results_model_file, n_ranking=10):
+def selectBestModel(project_file, results_model_file):
     f = open(results_model_file + '.results.html', 'w')
 
     project = yaml.load(open(project_file, 'r'))
