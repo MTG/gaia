@@ -17,7 +17,7 @@ Dependencies:
   * libYAML >= 0.1.1
   * Python >= 2.4
   * SWIG >= 1.3.31
-  * Eigen >= 3.3.4-4
+  * Eigen >= 3.3.4
 
 
 INSTALL

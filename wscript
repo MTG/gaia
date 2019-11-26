@@ -125,7 +125,7 @@ def configure(conf):
                       args=['--cflags', '--libs'])
 
     conf.check_cfg(package='eigen3', uselib_store='EIGEN3',
-                   args=['--cflags'])
+                   args=['eigen3 >= 3.3.4', '--cflags'])
 
     conf.env['USELIB'] = [ 'QTCORE', 'YAML', 'EIGEN3' ]
 
