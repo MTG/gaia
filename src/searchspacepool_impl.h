@@ -84,7 +84,7 @@ BaseSearchSpace<SearchPointType, DataSetType>* BaseSearchSpacePool<SearchPointTy
       SearchSpaceType tmp; // need a temp copy because we need to sort it before we merge it
       copySearchPoints(&tmp, sspace, steps[i], end);
       tmp.pointerSort();
-      typename Vector<SearchPointType>::iterator final = std::set_union(presorted->begin(), presorted->end(),
+      typename std::vector<SearchPointType>::iterator final = std::set_union(presorted->begin(), presorted->end(),
                                                                         tmp.begin(), tmp.end(),
                                                                         result->begin(), pointerOrderCompare<SearchPointType>);
       Q_ASSERT(final == result->end());
@@ -106,7 +106,7 @@ BaseSearchSpace<SearchPointType, DataSetType>* BaseSearchSpacePool<SearchPointTy
       SearchSpaceType tmp;
       copySearchPoints(&tmp, sspace, start, steps[i]);
       tmp.pointerSort();
-      typename Vector<SearchPointType>::iterator final = std::set_union(presorted->begin(), presorted->end(),
+      typename std::vector<SearchPointType>::iterator final = std::set_union(presorted->begin(), presorted->end(),
                                                                         tmp.begin(), tmp.end(),
                                                                         result->begin(), pointerOrderCompare<SearchPointType>);
       Q_ASSERT(final == result->end());
@@ -399,7 +399,7 @@ void BaseSearchSpacePool<SearchPointType, DataSetType>::indexOnLabel(const QStri
   // hashmap with the ranges
   const DataSet* rds = _dataset->referenceDataSet();
   int idx = rds->layout().descriptorLocation(descriptorName).index();
-  typename Vector<SearchPointType>::iterator start = index->begin(), end = index->begin();
+  typename std::vector<SearchPointType>::iterator start = index->begin(), end = index->begin();
   while (start != index->end()) {
     const QString& value = refPoint(*start, rds)->fstringData()[idx];
     while ((end != index->end()) && (refPoint(*end, rds)->fstringData()[idx] == value)) {
@@ -425,7 +425,7 @@ void BaseSearchSpacePool<SearchPointType, DataSetType>::indexOnEnum(const QStrin
   // hashmap with the ranges
   const DataSet* rds = _dataset->referenceDataSet();
   int idx = rds->layout().descriptorLocation(descriptorName).index();
-  typename Vector<SearchPointType>::iterator start = index->begin(), end = index->begin();
+  typename std::vector<SearchPointType>::iterator start = index->begin(), end = index->begin();
   while (start != index->end()) {
     Enum value = refPoint(*start, rds)->fenumData()[idx];
     while ((end != index->end()) && (refPoint(*end, rds)->fenumData()[idx] == value)) {

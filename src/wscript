@@ -69,11 +69,9 @@ def build_library(bld):
         bld.install_files('${PREFIX}/include/gaia2/parser', [ 'parser/filter.h',
                                                               'parser/parsertypes.h',
                                                               'parser/grammar.h' ])
-    
-        # also install all Eigen headers
-        import os
-        os.chdir('src')
-        install_tree(bld, '${PREFIX}/include/gaia2/Eigen', '3rdparty/Eigen')
+
+    import os
+    os.chdir('src')
 
     bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')

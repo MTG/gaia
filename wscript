@@ -124,7 +124,10 @@ def configure(conf):
         conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
                       args=['--cflags', '--libs'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML' ]
+    conf.check_cfg(package='eigen3', uselib_store='EIGEN3',
+                   args=['eigen3 >= 3.3.4', '--cflags'])
+
+    conf.env['USELIB'] = [ 'QTCORE', 'YAML', 'EIGEN3' ]
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
@@ -144,7 +147,7 @@ def configure(conf):
         conf.env.CXX = 'clang++'
 
         ###conf.env.DEFINES   += [ 'GTEST_HAS_TR1_TUPLE=0' ]
-        conf.env.CXXFLAGS += [ '-stdlib=libc++', '-Wno-gnu' ] # '-std=c++11' produces errors in Eigen
+        conf.env.CXXFLAGS += [ '-stdlib=libc++', '-Wno-gnu', '-std=c++11']
         conf.env.LINKFLAGS = [ '-stdlib=libc++' ]
         # for defining static const variables in header
         conf.env.CXXFLAGS += [ '-Wno-static-float-init' ]

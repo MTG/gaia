@@ -17,6 +17,7 @@ Dependencies:
   * libYAML >= 0.1.1
   * Python >= 2.4
   * SWIG >= 1.3.31
+  * Eigen >= 3.3.4
 
 
 INSTALL
@@ -26,7 +27,7 @@ INSTALL
 
 - Install dependencies (Ubuntu/Debian)
    ```
-   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config
+   $ apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config libeigen3-dev
    ```
 
    Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
@@ -152,9 +153,6 @@ is distributed under the BSD license.
 
 This library contains source code from the Alglib project (http://www.alglib.net),
 which is distributed under the 3-clause BSD license.
-
-This library contains source code from the Eigen project (http://eigen.tuxfamily.org/),
-which is distributed under the LGPLv3 license.
 
 This library contains source code from FrogLogic command line parser
 (http://www.froglogic.com/pg?id=PublicationsFreeware&category=getopt)
