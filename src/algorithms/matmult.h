@@ -21,7 +21,7 @@
 #define GAIA_MATMULT_H
 
 #include "applier.h"
-#include "Eigen/Core"
+#include <Eigen/Core>
 
 namespace gaia2 {
 

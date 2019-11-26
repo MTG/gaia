@@ -58,7 +58,7 @@ int BaseSearchSpace<SearchPointType, DataSetType>::size() const {
 
 template <typename SearchPointType, typename DataSetType>
 int BaseSearchSpace<SearchPointType, DataSetType>::unfilteredSize() const {
-  return (int)Vector<SearchPointType>::size();
+  return (int)std::vector<SearchPointType>::size();
 }
 
 template <typename SearchPointType, typename DataSetType>
@@ -135,7 +135,7 @@ void BaseSearchSpace<SearchPointType, DataSetType>::sortAll() {
   // make sure you only call this function with all your points previously filtered
   Q_ASSERT(_filteredUpTo == unfilteredSize());
   gaia2::sort(this->begin() + _sortedUpTo, this->end());
-  _sortedUpTo = (int)Vector<SearchPointType>::size();
+  _sortedUpTo = (int)std::vector<SearchPointType>::size();
 }
 
 
@@ -145,14 +145,14 @@ void BaseSearchSpace<SearchPointType, DataSetType>::limit(int n) {
   Q_ASSERT(_filteredUpTo <= unfilteredSize());
   Q_ASSERT(_sortedUpTo <= unfilteredSize());
   filterAndSort(n);
-  Vector<SearchPointType>::resize(qMin(n, unfilteredSize()));
+  std::vector<SearchPointType>::resize(qMin(n, unfilteredSize()));
 }
 
 
 template <typename SearchPointType, typename DataSetType>
 void BaseSearchSpace<SearchPointType, DataSetType>::clear() {
   invalidate();
-  Vector<SearchPointType>::clear();
+  std::vector<SearchPointType>::clear();
 }
 
 template <typename SearchPointType, typename DataSetType>
@@ -277,7 +277,7 @@ void BaseSearchSpace<SearchPointType, DataSetType>::setIntersection(const BaseSe
   Q_ASSERT(_filteredUpTo == 0);
   Q_ASSERT(_sortedUpTo == 0);
 
-  typename Vector<SearchPointType>::iterator end = std::set_intersection(range(*this),
+  typename std::vector<SearchPointType>::iterator end = std::set_intersection(range(*this),
                                                                          range(*other),
                                                                          this->begin(), pointerOrderCompare<SearchPointType>);
   this->resize(end - this->begin());
@@ -288,7 +288,7 @@ void BaseSearchSpace<SearchPointType, DataSetType>::setDifference(const BaseSear
   Q_ASSERT(_filteredUpTo == 0);
   Q_ASSERT(_sortedUpTo == 0);
 
-  typename Vector<SearchPointType>::iterator end = std::set_difference(range(*this),
+  typename std::vector<SearchPointType>::iterator end = std::set_difference(range(*this),
                                                                        range(*other),
                                                                        this->begin(), pointerOrderCompare<SearchPointType>);
   this->resize(end - this->begin());
@@ -299,14 +299,14 @@ void BaseSearchSpace<SearchPointType, DataSetType>::setUnion(const BaseSearchSpa
   Q_ASSERT(_filteredUpTo == 0);
   Q_ASSERT(_sortedUpTo == 0);
 
-  Vector<SearchPointType> tmp;
+  std::vector<SearchPointType> tmp;
   int size = unfilteredSize();
 
   tmp.resize(size);
   memcpy(&tmp[0], &(*this)[0], size * sizeof(SearchPointType));
 
-  this->resize(size + static_cast<const Vector<SearchPointType>*>(other)->size());
-  typename Vector<SearchPointType>::iterator end = std::set_union(range(tmp),
+  this->resize(size + static_cast<const std::vector<SearchPointType>*>(other)->size());
+  typename std::vector<SearchPointType>::iterator end = std::set_union(range(tmp),
                                                                   range(*other),
                                                                   this->begin(), pointerOrderCompare<SearchPointType>);
   this->resize(end - this->begin());

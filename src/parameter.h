@@ -25,7 +25,7 @@
 #include "gaia.h"
 #include "descriptor.h"
 #include "yamlcpp.h"
-#include "Eigen/Core"
+#include <Eigen/Core>
 
 namespace gaia2 {
 
