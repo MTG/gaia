@@ -54,7 +54,7 @@ def build(bld):
         swig_flags = '-c++ -python -w451',
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
         includes = bld.env['CPPPATH_BINDINGS'],
-        install_path = '${PYTHONDIR}'
+        install_path = '${PYTHONDIR}/gaia2'
         )
 
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
