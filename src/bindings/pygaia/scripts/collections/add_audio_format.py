@@ -18,6 +18,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
+from __future__ import print_function
 import sys, glob, os
 from os.path import *
 
@@ -35,15 +36,15 @@ def move_sub(basedir, subdir, dry_run = True):
 
     if dry_run:
         for cmd in cmds:
-            print cmd
+            print(cmd)
     else:
         for cmd in cmds:
             os.system(cmd)
 
 
 def usage():
-    print 'add_audio_format.py basedir audioFormat [--yes]'
-    print 'specifying --yes will actually make the changes, otherwise the commands are just printed on screen'
+    print('add_audio_format.py basedir audioFormat [--yes]')
+    print('specifying --yes will actually make the changes, otherwise the commands are just printed on screen')
     sys.exit(1)
 
 

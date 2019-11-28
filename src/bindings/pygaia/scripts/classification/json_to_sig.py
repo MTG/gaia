@@ -18,6 +18,7 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+from __future__ import print_function
 import sys, os.path, json
 import gaia2.fastyaml as yaml
 from optparse import OptionParser
@@ -50,9 +51,9 @@ def convertJsonToSig(filelist_file, result_filelist_file):
 
     yaml.dump(result_fl, open(result_filelist_file, 'w'))
 
-    print "Failed to convert", len(errors), "files:"
+    print("Failed to convert", len(errors), "files:")
     for e in errors:
-        print e
+        print(e)
 
     return len(errors) == 0
 

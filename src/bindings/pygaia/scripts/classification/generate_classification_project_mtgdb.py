@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 from __future__ import with_statement
 import os, sys
 from os.path import join, abspath, splitext, exists
@@ -93,7 +93,7 @@ def generateProjectFromCollection():
                                          'filelist': filelistFilename,
                                          'groundtruth': abspath(collec._groundTruthFile) })
 
-    print 'Successfully written', project_file
+    print('Successfully written', project_file)
 
 
 

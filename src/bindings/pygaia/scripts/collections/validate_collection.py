@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, yaml, glob
 from os.path import join, exists, basename
 from gaia2.classification import GroundTruth
@@ -69,7 +69,7 @@ def validate(basedir):
             raise Exception('Audio format "%s" does not define a filelist' % format)
 
         filelist = yaml.load(open(join(basedir, 'metadata', desc['filelist'])).read())
-        print '  filelist OK, lists %d files' % len(filelist)
+        print('  filelist OK, lists %d files' % len(filelist))
 
         for pid, filename in filelist.items():
             fullpath = join(basedir, 'audio', format, filename)

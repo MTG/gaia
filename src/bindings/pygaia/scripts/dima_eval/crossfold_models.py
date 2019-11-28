@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import gaia2
 from gaia2 import *
 from gaia2.mtgdb import Collection
@@ -67,11 +67,11 @@ def CN(collection):
 def loadCollections():
     collections = {}
     for cname in COLLECTIONS:
-        print 'Loading collection %s...' % cname
+        print('Loading collection %s...' % cname)
         collections[cname] = Collection(cname)
 
     for mname in MOODS_COLLECTIONS:
-        print 'Loading mood collection %s...' % mname
+        print('Loading mood collection %s...' % mname)
         collections['mood_%s' % mname] = Collection('CyrilMoods', groundTruth = 'mood_%s' % mname)
 
     return collections
@@ -110,7 +110,7 @@ def trainSVMfolds(collections, folds):
     for cname in collections.keys():
         collec = collections[cname]
 
-        print 'Training models for all folds for collection', cname
+        print('Training models for all folds for collection', cname)
         # load best parameters
         filename = glob.glob('test/evaldata/essentia_svm_models/%s*.param' % CN(collec))[0]
 
@@ -129,12 +129,12 @@ def trainSVMfolds(collections, folds):
         gt.className = 'highlevel.' + CN(collec)
 
         # create and train datasets for all folds
-        print 'Training for model:', gt.className
+        print('Training for model:', gt.className)
         for i, fold in enumerate(folds[cname]):
-            print ' - fold', i
+            print(' - fold', i)
             model_filename = '%s/%s_%d.model' % (WORK_DIR, CN(collec), i)
             if os.path.exists(model_filename):
-                print 'already computed'
+                print('already computed')
                 continue
 
             # remove points from the fold to have a training dataset
@@ -154,7 +154,7 @@ def addSVMModels(collections, ds_orig, i):
 
     for cname in collections.keys():
         className = CN(collections[cname])
-        print 'Adding descriptor', className
+        print('Adding descriptor', className)
 
         h = TransfoChain()
         h.load('%s/%s_%d.model' % (WORK_DIR, className, i))
@@ -167,18 +167,18 @@ def addSVMModels(collections, ds_orig, i):
 
 def generateEvaluationDatasets(collections, folds):
     for cname in collections.keys():
-        print '-'*100
-        print 'For collection', cname
+        print('-' * 100)
+        print('For collection', cname)
         collec = collections[cname]
 
         ds_orig = DataSet()
         ds_orig.load('%s/%s-harm.db' % (WORK_DIR, CN(collec)))
 
         for i, fold in enumerate(folds[cname]):
-            print '\n  ---- fold', i
+            print('\n  ---- fold', i)
             testDS = '%s/%s_%d_test.db' % (WORK_DIR, CN(collec), i)
             if os.path.exists(testDS):
-                print 'test DS already computed:', testDS
+                print('test DS already computed:', testDS)
                 continue
 
             ds = addSVMModels(collections, ds_orig, i)
@@ -221,7 +221,7 @@ def harmonizeDatasets(collections):
             ds_proc_filename = '%s/%s-%s.db' % (DATASETS_DIR, CN(collec), proc)
             ds_harm_filename = '%s/%s-harm-%s.db' % (WORK_DIR, CN(collec), proc)
             if os.path.exists(ds_harm_filename):
-                print 'dataset already harmonized:', ds_proc_filename
+                print('dataset already harmonized:', ds_proc_filename)
                 continue
 
             ds_proc.load(ds_proc_filename)
@@ -248,12 +248,12 @@ if __name__ == '__main__':
     if os.path.exists(foldsFile):
         folds = yaml.loadfile(foldsFile)
     else:
-        print 'Generating folds for all collections...'
+        print('Generating folds for all collections...')
         folds = generateFolds(c, NFOLDS)
         yaml.dump(folds, open(foldsFile, 'w'))
 
-    print 'Training SVM models for their corresponding folds...'
+    print('Training SVM models for their corresponding folds...')
     trainSVMfolds(c, folds)
 
-    print 'Generating the evaluation datasets from the models...'
+    print('Generating the evaluation datasets from the models...')
     generateEvaluationDatasets(c, folds)

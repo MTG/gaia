@@ -17,6 +17,7 @@
 #                    to launching the master node.
 ### END INIT INFO
 
+from __future__ import print_function
 import sys, yaml, subprocess, pwd, os
 
 #PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -32,14 +33,14 @@ PIDFILE='/var/run/cyclopsslaves.pid'
 USER='cyclops'
 
 def usage():
-    print "Usage: /etc/init.d/%s {start|stop|restart|reload|force-reload|status}" % NAME
+    print("Usage: /etc/init.d/%s {start|stop|restart|reload|force-reload|status}" % NAME)
 
 def read_config():
     # read config file and get list of slaves
     try:
         slaves = yaml.load(open(CONFIG_FILE).read())['slaves']
     except:
-        print 'Could not read slave configuration from config file:', CONFIG_FILE
+        print('Could not read slave configuration from config file:', CONFIG_FILE)
         sys.exit(1)
 
     return slaves
@@ -60,7 +61,7 @@ def start_slaves():
     snum = 1
     for sc in slaves:
         if sc['host'] in [ 'localhost', '127.0.0.1' ]:
-            print "Starting Cyclops slave %d on port %d" % (snum, sc['port'])
+            print("Starting Cyclops slave %d on port %d" % (snum, sc['port']))
             #ret = subprocess.call([ 'start-stop-daemon', '--start', '--quiet',
             #                        '--pidfile', PIDFILE % snum,
             #                        '--make-pid-file', '--background',
@@ -124,15 +125,15 @@ if __name__ == '__main__':
         stop_slaves()
 
     elif cmd == 'reload':
-        print "Reloading %s daemon: not implemented, as the daemon" % NAME
-        print "cannot re-read the config file (use restart)."
+        print("Reloading %s daemon: not implemented, as the daemon" % NAME)
+        print("cannot re-read the config file (use restart).")
 
     elif cmd == 'restart' or cmd == 'force-reload':
         subprocess.call([ sys.argv[0], 'stop' ])
         subprocess.call([ sys.argv[0], 'start' ])
 
     elif cmd == 'status':
-        print 'unknown status. (TODO: implement me)'
+        print('unknown status. (TODO: implement me)')
 
     else:
         usage()

@@ -18,6 +18,7 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
+from __future__ import print_function
 import sys, os.path, shutil
 from gaia2.fastyaml import yaml
 from get_classification_results import ClassificationResults
@@ -36,11 +37,11 @@ def selectBestModel(project_file, results_model_file):
         classifierType = None # all types
 
         cr = ClassificationResults()
-        print 'Loading all results...'
+        print('Loading all results...')
         cr.readResults(results_dir)
 
         accuracy, filename, params = cr.best(1, classifierType)[0]
-        print "RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename
+        print("RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename)
 
         f.write('<h1>%s (%s)</h1>\nAccuracy: %s\n' % (className, project_file, accuracy))
 
@@ -54,7 +55,7 @@ def selectBestModel(project_file, results_model_file):
         shutil.copyfile(filename, results_model_file + '.param')
 
     else:
-        print "RESULT " + "No results found for ", project_file, ": cannot build a model"
+        print("RESULT " + "No results found for ", project_file, ": cannot build a model")
         f.write('<h1>%s (%s) </h1>\nResults not found\n' % (collection, project_file))
 
 

@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import httplib, urllib, time
 import gaia2.fastyaml as yaml
 
@@ -46,7 +46,7 @@ class YamlRPCMethod(object):
 
         if VERBOSE:
             responseTime = time.time() - serializeStart
-            print 'serialized request in %f seconds' % responseTime
+            print('serialized request in %f seconds' % responseTime)
 
 
         # we don't want the '+'-quoting
