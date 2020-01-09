@@ -15,7 +15,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -28,9 +28,9 @@ def toMatrix(vec):
     result = []
     dim1 = vec[0]
     dim2 = vec[1]
-    for i in xrange(int(dim1)):
+    for i in range(int(dim1)):
         row = []
-        for j in xrange(int(dim2)):
+        for j in range(int(dim2)):
             row.append(vec[i*int(dim2)+j+2])
         result.append(row)
     return result
@@ -82,8 +82,9 @@ class TextProgress:
 
     def update(self, current):
         percentage = current*100 // self.total
-        print self.format % { 'current': current, 'total': self.total, 'percent': percentage },
-        if current == self.total: print
+        print(self.format % {'current': current, 'total': self.total, 'percent': percentage}, end=' ')
+        if current == self.total:
+            print()
         sys.stdout.flush()
 
 
@@ -113,7 +114,7 @@ def generateMergeFilelist(basedir,
     # make sure we don't have 2 files that didn't accidentally end up with the same ID
     #assert len(result) == len(filenames)
     if len(result) != len(filenames):
-        print '\nERROR: there are some which end up being duplicates when taking their ID:'
+        print('\nERROR: there are some which end up being duplicates when taking their ID:')
         # need to find which are duplicates and print them
         from collections import defaultdict
         d = defaultdict(list)
@@ -122,9 +123,9 @@ def generateMergeFilelist(basedir,
 
         for pid, filenames in d.items():
             if len(filenames) > 1:
-                print '\n%s:' % pid
+                print('\n%s:' % pid)
                 for f in filenames:
-                    print ' -', f
+                    print(' -', f)
 
         assert False
 
@@ -133,6 +134,6 @@ def generateMergeFilelist(basedir,
 
 def printHistory(history):
     for t in history.toPython():
-        print 'Transformation:', t['Analyzer name']
-        print 'Parameters:', t['Analyzer parameters']
-        print
+        print('Transformation:', t['Analyzer name'])
+        print('Parameters:', t['Analyzer parameters'])
+        print()
