@@ -67,7 +67,3 @@ def build(bld):
     for folder in subfolders:
         bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.py' % folder))
         bld.install_files('${PYTHONDIR}/gaia2/%s' % folder, bld.path.ant_glob('pygaia/%s/*.yaml' % folder))
-
-    if bld.env['WITH_CYCLOPS']:
-        bld.install_as('${PYTHONDIR}/gaia2/cyclops/__init__.py', '../tools/cyclops_client/cyclops.py')
-

@@ -33,7 +33,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	-$(WAF) configure --with-python-bindings --with-cyclops --prefix=/usr $(WAF_EXTRA_FLAGS)
+	-$(WAF) configure --with-python-bindings --prefix=/usr $(WAF_EXTRA_FLAGS)
 	touch configure-stamp
 
 #Architecture

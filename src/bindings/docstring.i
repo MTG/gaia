@@ -69,12 +69,6 @@ Optimized version so that we don't have to recompute the index
 mappings for each point. ";
 
 
-// File: classstd_1_1allocator.xml
-%feature("docstring") std::allocator "
-
-STL class. ";
-
-
 // File: classgaia2_1_1Analyzer.xml
 %feature("docstring") gaia2::Analyzer "
 
@@ -157,9 +151,9 @@ const ";
 // File: classgaia2_1_1filter_1_1AndFilter.xml
 %feature("docstring") gaia2::filter::AndFilter "";
 
-%feature("docstring")  gaia2::filter::AndFilter::AndFilter "gaia2::filter::AndFilter::AndFilter(const QList< Filter * > &preds) ";
+%feature("docstring")  gaia2::filter::AndFilter::AndFilter "gaia2::filter::AndFilter::AndFilter(const QList< Filter *> &preds) ";
 
-%feature("docstring")  gaia2::filter::AndFilter::AndFilter "gaia2::filter::AndFilter::AndFilter(const std::vector< Filter * >
+%feature("docstring")  gaia2::filter::AndFilter::AndFilter "gaia2::filter::AndFilter::AndFilter(const std::vector< Filter *>
 &preds) ";
 
 
@@ -268,36 +262,6 @@ T >::constEnd() const ";
 ";
 
 
-// File: classstd_1_1auto__ptr.xml
-%feature("docstring") std::auto_ptr "
-
-STL class. ";
-
-
-// File: classstd_1_1bad__alloc.xml
-%feature("docstring") std::bad_alloc "
-
-STL class. ";
-
-
-// File: classstd_1_1bad__cast.xml
-%feature("docstring") std::bad_cast "
-
-STL class. ";
-
-
-// File: classstd_1_1bad__exception.xml
-%feature("docstring") std::bad_exception "
-
-STL class. ";
-
-
-// File: classstd_1_1bad__typeid.xml
-%feature("docstring") std::bad_typeid "
-
-STL class. ";
-
-
 // File: classgaia2_1_1BaseQueryOptimizer.xml
 %feature("docstring") gaia2::BaseQueryOptimizer "
 
@@ -341,8 +305,7 @@ C++ includes: searchspace.h ";
 DataSetType > *sspace) ";
 
 %feature("docstring")  gaia2::BaseResultSet::get "SearchResults
-gaia2::BaseResultSet< SearchPointType, DataSetType >::get(int n, int
-offset=0)
+BaseResultSet::get(int n, int offset=0)
 
 Returns the list of search results, which are pairs of (pointName,
 distance).
@@ -436,7 +399,7 @@ WARNING: this does not copy the filter nor any other member variables,
 only the points contained in the SearchSpace. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::size "int
-gaia2::BaseSearchSpace< SearchPointType, DataSetType >::size() const
+BaseSearchSpace::size() const
 
 Returns the total number of points contained in this SearchSpace. ";
 
@@ -449,13 +412,12 @@ WARNING: use with care, this value might not be consistent with what
 you expect. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::clear "void
-gaia2::BaseSearchSpace< SearchPointType, DataSetType >::clear()
+BaseSearchSpace::clear()
 
 Clears the whole SearchSpace. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::get "SearchResults
-gaia2::BaseSearchSpace< SearchPointType, DataSetType >::get(int n, int
-offset=0)
+BaseSearchSpace::get(int n, int offset=0)
 
 Returns the list of search results, which are pairs of (pointName,
 distance).
@@ -468,7 +430,7 @@ n:  the number of desired results
 offset:  the start offset ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::limit "void
-gaia2::BaseSearchSpace< SearchPointType, DataSetType >::limit(int n)
+BaseSearchSpace::limit(int n)
 
 This method limits the number of results contained in this
 SearchSpace.
@@ -478,8 +440,7 @@ SearchSpace is left untouched, otherwise it will have a maximum of n
 points after the call. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::thresholdLimit "void
-gaia2::BaseSearchSpace< SearchPointType, DataSetType
->::thresholdLimit(float maxDist)
+BaseSearchSpace::thresholdLimit(float maxDist)
 
 This method limits the bymber of results contained in this
 SearchSpace.
@@ -512,15 +473,14 @@ Sorts the SearchPoints contained into this SearchSpace by order of
 their pointer address. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::addPoints "void
-gaia2::BaseSearchSpace< SearchPointType, DataSetType
->::addPoints(const DataSetType *dataset, const QList< QString > &ids)
+BaseSearchSpace::addPoints(const DataSetType *dataset, const QList<
+QString > &ids)
 
 Add the points from the dataset with the given IDs to this
 SearchSpace. ";
 
 %feature("docstring")  gaia2::BaseSearchSpace::removePoints "void
-gaia2::BaseSearchSpace< SearchPointType, DataSetType
->::removePoints(const QList< QString > &ids)
+BaseSearchSpace::removePoints(const QList< QString > &ids)
 
 Remove the points with the given IDs from this SearchSpace. ";
 
@@ -636,8 +596,7 @@ FIXME: implementation needs to get a space from ::acquire() instead of
 creating a new one each time ";
 
 %feature("docstring")  gaia2::BaseSearchSpacePool::indexOn "void
-gaia2::BaseSearchSpacePool< SearchPointType, DataSetType
->::indexOn(const QString &descriptorName)
+BaseSearchSpacePool::indexOn(const QString &descriptorName)
 
 Indexes on the given descriptorName.
 
@@ -699,14 +658,17 @@ PointType, SearchPointType, DistanceType >::nnSearch(const PointType
 &p, ResultSetType inputSpace, const DistanceType *dist, const QString
 &filter) ";
 
-%feature("docstring")  gaia2::BaseView::nnSearch "FrozenResultSet
-gaia2::FrozenView::nnSearch(const QString &id, T x) ";
+%feature("docstring")  gaia2::BaseView::nnSearch "ResultSetType
+gaia2::BaseView< DataSetType, PointType, SearchPointType, DistanceType
+>::nnSearch(const QString &id, T x) ";
 
-%feature("docstring")  gaia2::BaseView::nnSearch "FrozenResultSet
-gaia2::FrozenView::nnSearch(const QString &id, T x, U y) ";
+%feature("docstring")  gaia2::BaseView::nnSearch "ResultSetType
+gaia2::BaseView< DataSetType, PointType, SearchPointType, DistanceType
+>::nnSearch(const QString &id, T x, U y) ";
 
-%feature("docstring")  gaia2::BaseView::nnSearch "FrozenResultSet
-gaia2::FrozenView::nnSearch(const QString &id, T x, U y, V z) ";
+%feature("docstring")  gaia2::BaseView::nnSearch "ResultSetType
+gaia2::BaseView< DataSetType, PointType, SearchPointType, DistanceType
+>::nnSearch(const QString &id, T x, U y, V z) ";
 
 %feature("docstring")  gaia2::BaseView::invalidate "void
 gaia2::BaseView< DataSetType, PointType, SearchPointType, DistanceType
@@ -730,84 +692,6 @@ gaia2::BaseView< DataSetType, PointType, SearchPointType, DistanceType
 This methods creates an index on the given descriptor name, in the
 hope that future queries using this descriptor in a filter will be
 faster. ";
-
-
-// File: classstd_1_1basic__fstream.xml
-%feature("docstring") std::basic_fstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__ifstream.xml
-%feature("docstring") std::basic_ifstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__ios.xml
-%feature("docstring") std::basic_ios "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__iostream.xml
-%feature("docstring") std::basic_iostream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__istream.xml
-%feature("docstring") std::basic_istream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__istringstream.xml
-%feature("docstring") std::basic_istringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__ofstream.xml
-%feature("docstring") std::basic_ofstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__ostream.xml
-%feature("docstring") std::basic_ostream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__ostringstream.xml
-%feature("docstring") std::basic_ostringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__string.xml
-%feature("docstring") std::basic_string "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__stringstream.xml
-%feature("docstring") std::basic_stringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1bitset.xml
-%feature("docstring") std::bitset "
-
-STL class. ";
-
-
-// File: classgaia2_1_1BmatDistance.xml
-%feature("docstring") gaia2::BmatDistance "";
-
-%feature("docstring")  gaia2::BmatDistance::BmatDistance "gaia2::BmatDistance::BmatDistance(float a1, float a2, float a3) ";
 
 
 // File: classgaia2_1_1parser_1_1BooleanConstant.xml
@@ -916,132 +800,6 @@ gaia2::Cleaner::~Cleaner() ";
 %feature("docstring")  gaia2::Cleaner::analyze "Transformation
 gaia2::Cleaner::analyze(const DataSet *data, const Region &region)
 const ";
-
-
-// File: classstd_1_1complex.xml
-%feature("docstring") std::complex "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__string_1_1const__iterator.xml
-%feature("docstring") std::basic_string::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1string_1_1const__iterator.xml
-%feature("docstring") std::string::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1wstring_1_1const__iterator.xml
-%feature("docstring") std::wstring::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1deque_1_1const__iterator.xml
-%feature("docstring") std::deque::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1list_1_1const__iterator.xml
-%feature("docstring") std::list::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1map_1_1const__iterator.xml
-%feature("docstring") std::map::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multimap_1_1const__iterator.xml
-%feature("docstring") std::multimap::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1set_1_1const__iterator.xml
-%feature("docstring") std::set::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multiset_1_1const__iterator.xml
-%feature("docstring") std::multiset::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1vector_1_1const__iterator.xml
-%feature("docstring") std::vector::const_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1basic__string_1_1const__reverse__iterator.xml
-%feature("docstring") std::basic_string::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1string_1_1const__reverse__iterator.xml
-%feature("docstring") std::string::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1wstring_1_1const__reverse__iterator.xml
-%feature("docstring") std::wstring::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1deque_1_1const__reverse__iterator.xml
-%feature("docstring") std::deque::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1list_1_1const__reverse__iterator.xml
-%feature("docstring") std::list::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1map_1_1const__reverse__iterator.xml
-%feature("docstring") std::map::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multimap_1_1const__reverse__iterator.xml
-%feature("docstring") std::multimap::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1set_1_1const__reverse__iterator.xml
-%feature("docstring") std::set::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multiset_1_1const__reverse__iterator.xml
-%feature("docstring") std::multiset::const_reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1vector_1_1const__reverse__iterator.xml
-%feature("docstring") std::vector::const_reverse_iterator "
-
-STL iterator class. ";
 
 
 // File: classgaia2_1_1CosineAngleDistance.xml
@@ -1184,275 +942,6 @@ const ParameterMap &params) ";
 gaia2::CrossSegmentDistance::~CrossSegmentDistance "CrossSegmentDistance::~CrossSegmentDistance() ";
 
 
-// File: classcyclops_1_1Cyclops.xml
-%feature("docstring") cyclops::Cyclops "";
-
-%feature("docstring")  cyclops::Cyclops::__init__ "def
-cyclops::Cyclops::__init__";
-
-%feature("docstring")  cyclops::Cyclops::__getattr__ "def
-cyclops::Cyclops::__getattr__";
-
-
-// File: classCyclops.xml
-%feature("docstring") Cyclops "";
-
-%feature("docstring")  Cyclops::Cyclops "Cyclops::Cyclops() ";
-
-%feature("docstring")  Cyclops::~Cyclops "Cyclops::~Cyclops() ";
-
-%feature("docstring")  Cyclops::load "void Cyclops::load(const
-QString &datasetName, const QString &filename, int start=0, int
-offset=-1)
-
-Load a dataset into memory and use the given name as identifier.
-
-If there was already a dataset with the same name, it will be
-overwritten.
-
-Parameters:
------------
-
-datasetName:  the identifier to be used for the loaded dataset
-
-filename:  the filename where the dataset is stored ";
-
-%feature("docstring")  Cyclops::loadNthPart "void
-Cyclops::loadNthPart(const QString &datasetName, const QString
-&filename, int idx, int total)
-
-Load the n-th part of a dataset. ";
-
-%feature("docstring")  Cyclops::unload "void Cyclops::unload(const
-QString &datasetName)
-
-Unload a dataset from memory, and frees the associated memory.
-
-Parameters:
------------
-
-datasetName:  the dataset identifier ";
-
-%feature("docstring")  Cyclops::datasetNames "QStringList
-Cyclops::datasetNames() const
-
-Return the list of datasets currently loaded in memory. ";
-
-%feature("docstring")  Cyclops::layout "QString Cyclops::layout(const
-QString &datasetName) const
-
-Return the layout of the specified dataset.
-
-Parameters:
------------
-
-datasetName:  the dataset identifier ";
-
-%feature("docstring")  Cyclops::size "int Cyclops::size(const QString
-&datasetName) const
-
-Return the size (number of points) of the specified dataset.
-
-Parameters:
------------
-
-datasetName:  the dataset identifier ";
-
-%feature("docstring")  Cyclops::setReferenceDataSet "void
-Cyclops::setReferenceDataSet(const QString &dataset, const QString
-&referenceDataset)
-
-Set the second dataset as a reference for the first one.
-
-Parameters:
------------
-
-dataset:  the dataset for which you want to set a reference
-
-referenceDataset:  the dataset which will serve as reference for the
-other one ";
-
-%feature("docstring")  Cyclops::createDistance "void
-Cyclops::createDistance(const QString &distanceName, const QString
-&datasetName, const QString &distance, const gaia2::ParameterMap
-&params=gaia2::ParameterMap())
-
-Create a distance to be used for nn-queries.
-
-If there was already a distance with the same name, it will be
-overwritten.
-
-Parameters:
------------
-
-distanceName:  the identifier to be used for this distance
-
-datasetName:  the dataset on which this distance will operate
-
-distance:  the name of the distance to create (its ID in the factory)
-
-params:  the parameters used to create the distance ";
-
-%feature("docstring")  Cyclops::deleteDistance "void
-Cyclops::deleteDistance(const QString &distanceName)
-
-Delete the distance identified by the given name.
-
-Parameters:
------------
-
-distanceName:  the distance identifier ";
-
-%feature("docstring")  Cyclops::distanceNames "QStringList
-Cyclops::distanceNames() const
-
-Return a list of distances currently created in memory. ";
-
-%feature("docstring")  Cyclops::indexOn "void Cyclops::indexOn(const
-QString &datasetName, const QString &descriptorName)
-
-Indexes a dataset/view on the given descriptor name. ";
-
-%feature("docstring")  Cyclops::chainedSearch "CyclopsResults
-Cyclops::chainedSearch(const gaia2::yaml::Sequence &queries, const
-gaia2::yaml::Sequence &header, int numberResults, int offset=0)
-
-Perform a chain of searches, where each result of a query is used as
-inputSpace for the next one.
-
-WARNING: you should not be calling this method directly, rather use
-the facilities provided by the python client which will make all this
-machinery transparent and have everything work the same as if using
-directly the standard python bindings. ";
-
-%feature("docstring")  Cyclops::nnSearchById "SearchResults
-Cyclops::nnSearchById(const QString &queryID, const QString
-&datasetName, const QString &distanceName, int numberResults, int
-offset=0)
-
-Perform a query-by-id on the given ID.
-
-Parameters:
------------
-
-queryID:  the ID of the point to query
-
-datasetName:  the identifier of the dataset in which to perform the
-query
-
-distanceName:  the identifier of the distance to be used for the query
-
-numberResults:  the number of results to be returned
-
-offset:  the offset in the list of results ";
-
-%feature("docstring")  Cyclops::nnSearchByIdWithFilter "SearchResults
-Cyclops::nnSearchByIdWithFilter(const QString &queryID, const QString
-&datasetName, const QString &distanceName, const QString &filter, int
-numberResults, int offset=0)
-
-Perform a query-by-id on the given ID and using a filter.
-
-Parameters:
------------
-
-queryID:  the ID of the point to query
-
-datasetName:  the identifier of the dataset in which to perform the
-query
-
-distanceName:  the identifier of the distance to be used for the query
-
-filter:  a string representing the filter to be used
-
-numberResults:  the number of results to be returned
-
-offset:  the offset in the list of results ";
-
-%feature("docstring")  Cyclops::nnSearchByExample "SearchResults
-Cyclops::nnSearchByExample(const gaia2::Point &query, const QString
-&datasetName, const QString &distanceName, int numberResults, int
-offset=0) ";
-
-%feature("docstring")  Cyclops::nnSearchByExampleWithFilter "SearchResults Cyclops::nnSearchByExampleWithFilter(const gaia2::Point
-&query, const QString &datasetName, const QString &distanceName, const
-QString &filter, int numberResults, int offset=0) ";
-
-%feature("docstring")  Cyclops::getPoint "const Point *
-Cyclops::getPoint(const QString &datasetName, const QString
-&pointName) const
-
-Get the point with the given ID from the specified dataset. ";
-
-%feature("docstring")  Cyclops::getPoints "std::string
-Cyclops::getPoints(const QString &datasetName, const QStringList
-&pointNames, bool failOnError=true) const
-
-Get the list of points with the given IDs from the specified dataset
-as the base64 representation of a new DataSet containing them. ";
-
-%feature("docstring")  Cyclops::setup "void Cyclops::setup(const
-QString &filename)
-
-Read the yaml config file and sets up the specified datasets and
-distances. ";
-
-%feature("docstring")  Cyclops::setupFromYaml "void
-Cyclops::setupFromYaml(const gaia2::yaml::Mapping &config) ";
-
-
-// File: classCyclopsMaster.xml
-%feature("docstring") CyclopsMaster "";
-
-%feature("docstring")  CyclopsMaster::CyclopsMaster "CyclopsMaster::CyclopsMaster() ";
-
-%feature("docstring")  CyclopsMaster::~CyclopsMaster "CyclopsMaster::~CyclopsMaster() ";
-
-%feature("docstring")  CyclopsMaster::setupClients "void
-CyclopsMaster::setupClients(const QString &configFilename) ";
-
-
-// File: classCyclopsProxy.xml
-%feature("docstring") CyclopsProxy "";
-
-%feature("docstring")  CyclopsProxy::CyclopsProxy "CyclopsProxy::CyclopsProxy(Cyclops *cyclops)
-
-Create a CyclopsProxy instance that can translate a Yaml-RPC call to
-an actual method call on a Cyclops instance. ";
-
-%feature("docstring")  CyclopsProxy::process "yaml::Node
-CyclopsProxy::process(const gaia2::yaml::Mapping &query)
-
-Perform the given function call on the wrapped Cyclops instance and
-return the result as a seriealized Yaml object. ";
-
-
-// File: classCyclopsResults.xml
-%feature("docstring") CyclopsResults "";
-
-%feature("docstring")  CyclopsResults::append "void
-CyclopsResults::append(const gaia2::Result &r, const QList< QVariant >
-&values) ";
-
-%feature("docstring")  CyclopsResults::mid "void
-CyclopsResults::mid(int pos, int length)
-
-this works in place ";
-
-%feature("docstring")  CyclopsResults::size "int
-CyclopsResults::size() const ";
-
-%feature("docstring")  CyclopsResults::sort "void
-CyclopsResults::sort() ";
-
-
-// File: classcyclops_1_1CyclopsRPCMethod.xml
-%feature("docstring") cyclops::CyclopsRPCMethod "";
-
-%feature("docstring")  cyclops::CyclopsRPCMethod::__call__ "def
-cyclops::CyclopsRPCMethod::__call__";
-
-
 // File: classgaia2std_1_1DataSet.xml
 %feature("docstring") gaia2std::DataSet "";
 
@@ -1572,7 +1061,7 @@ PointLayout & DataSet::originalLayout() const
 
 Return the original layout of this dataset. ";
 
-%feature("docstring")  gaia2::DataSet::checkAllPointsShareSameLayout "void DataSet::checkAllPointsShareSameLayout(const QVector< Point * >
+%feature("docstring")  gaia2::DataSet::checkAllPointsShareSameLayout "void DataSet::checkAllPointsShareSameLayout(const QVector< Point *>
 *points=0) const
 
 Check that all given points have the same layout object as this
@@ -1657,7 +1146,7 @@ GaiaException if there was already a point with the same ID in this
 dataset. ";
 
 %feature("docstring")  gaia2::DataSet::addPoints "void
-DataSet::addPoints(const QVector< Point * > &points)
+DataSet::addPoints(const QVector< Point *> &points)
 
 Add the specified points to this dataset.
 
@@ -1780,19 +1269,14 @@ DataSet::toBase64() const
 Return a base64 representation for this DataSet. ";
 
 
-// File: classstd_1_1deque.xml
-%feature("docstring") std::deque "
-
-STL class. ";
-
-
 // File: classgaia2_1_1DescCompare.xml
 %feature("docstring") gaia2::DescCompare "
 
-Compare the descriptor names using the following criteria: 1.
+Compare the descriptor names using the following criteria:
 
-Fixed-Length come before Variable-Length 2. within the same length
-type, descriptors are sorted alphabetically
+Fixed-Length come before Variable-Length
+
+within the same length type, descriptors are sorted alphabetically
 
 C++ includes: algoutils.h ";
 
@@ -2103,12 +1587,6 @@ Distribute::mapPoint(const Point *p) const
 Ownership of resulting point is handed to caller of this function. ";
 
 
-// File: classstd_1_1domain__error.xml
-%feature("docstring") std::domain_error "
-
-STL class. ";
-
-
 // File: classgaia2_1_1DotProduct.xml
 %feature("docstring") gaia2::DotProduct "
 
@@ -2138,116 +1616,131 @@ feature(\"docstring\").  Once the data is parsed it is stored in
 self.pieces. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::__init__ "def
-doxy2swig::Doxy2SWIG::__init__ Initialize the instance given a source
-object.  `src` can be a file or filename.  If you do not want to
-include function definitions from doxygen then set
-`include_function_definition` to `False`.  This is handy since this
-allows you to use the swig generated function definition using
-%feature(\"autodoc\", [0,1]). ";
+doxy2swig.Doxy2SWIG.__init__(self, src,
+include_function_definition=True, quiet=False)
+
+Initialize the instance given a source object.  `src` can be a file or
+filename.  If you do not want to include function definitions from
+doxygen then set `include_function_definition` to `False`.  This is
+handy since this allows you to use the swig generated function
+definition using %feature(\"autodoc\", [0,1]). ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::generate "def
-doxy2swig::Doxy2SWIG::generate Parses the file set in the
-initialization.  The resulting data is stored in `self.pieces`. ";
+doxy2swig.Doxy2SWIG.generate(self)
+
+Parses the file set in the initialization.  The resulting data is
+stored in `self.pieces`. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::parse "def
-doxy2swig::Doxy2SWIG::parse Parse a given node.  This function in turn
-calls the `parse_<nodeType>` functions which handle the respective
-nodes. ";
+doxy2swig.Doxy2SWIG.parse(self, node)
+
+Parse a given node.  This function in turn calls the
+`parse_<nodeType>` functions which handle the respective nodes. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::parse_Document "def
-doxy2swig::Doxy2SWIG::parse_Document";
+doxy2swig.Doxy2SWIG.parse_Document(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::parse_Text "def
-doxy2swig::Doxy2SWIG::parse_Text";
+doxy2swig.Doxy2SWIG.parse_Text(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::parse_Element "def
-doxy2swig::Doxy2SWIG::parse_Element Parse an `ELEMENT_NODE`.  This
-calls specific `do_<tagName>` handers for different elements.  If no
-handler is available the `generic_parse` method is called.  All
-tagNames specified in `self.ignores` are simply ignored. ";
+doxy2swig.Doxy2SWIG.parse_Element(self, node)
+
+Parse an `ELEMENT_NODE`.  This calls specific `do_<tagName>` handers
+for different elements.  If no handler is available the
+`generic_parse` method is called.  All tagNames specified in
+`self.ignores` are simply ignored. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::parse_Comment "def
-doxy2swig::Doxy2SWIG::parse_Comment Parse a `COMMENT_NODE`.  This does
-nothing for now. ";
+doxy2swig.Doxy2SWIG.parse_Comment(self, node)
+
+Parse a `COMMENT_NODE`.  This does nothing for now. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::add_text "def
-doxy2swig::Doxy2SWIG::add_text Adds text corresponding to `value` into
-`self.pieces`. ";
+doxy2swig.Doxy2SWIG.add_text(self, value)
+
+Adds text corresponding to `value` into `self.pieces`. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::get_specific_nodes "def
-doxy2swig::Doxy2SWIG::get_specific_nodes Given a node and a sequence
-of strings in `names`, return a dictionary containing the names as
-keys and child `ELEMENT_NODEs`, that have a `tagName` equal to the
-name. ";
+doxy2swig.Doxy2SWIG.get_specific_nodes(self, node, names)
+
+Given a node and a sequence of strings in `names`, return a dictionary
+containing the names as keys and child `ELEMENT_NODEs`, that have a
+`tagName` equal to the name. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::generic_parse "def
-doxy2swig::Doxy2SWIG::generic_parse A Generic parser for arbitrary
-tags in a node.  Parameters:   - node: A node in the DOM.  - pad:
-`int` (default: 0)     If 0 the node data is not padded with newlines.
-If 1 it    appends a newline after parsing the childNodes.  If 2 it
-pads before and after the nodes are processed.  Defaults to    0. ";
+doxy2swig.Doxy2SWIG.generic_parse(self, node, pad=0)
+
+A Generic parser for arbitrary tags in a node.  Parameters:   - node:
+A node in the DOM.  - pad: `int` (default: 0)     If 0 the node data
+is not padded with newlines.  If 1 it    appends a newline after
+parsing the childNodes.  If 2 it    pads before and after the nodes
+are processed.  Defaults to    0. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::space_parse "def
-doxy2swig::Doxy2SWIG::space_parse";
+doxy2swig.Doxy2SWIG.space_parse(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_compoundname "def
-doxy2swig::Doxy2SWIG::do_compoundname";
+doxy2swig.Doxy2SWIG.do_compoundname(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_compounddef "def
-doxy2swig::Doxy2SWIG::do_compounddef";
+doxy2swig.Doxy2SWIG.do_compounddef(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_includes "def
-doxy2swig::Doxy2SWIG::do_includes";
+doxy2swig.Doxy2SWIG.do_includes(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_parameterlist "def
-doxy2swig::Doxy2SWIG::do_parameterlist";
+doxy2swig.Doxy2SWIG.do_parameterlist(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_para "def
-doxy2swig::Doxy2SWIG::do_para";
+doxy2swig.Doxy2SWIG.do_para(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_parametername "def
-doxy2swig::Doxy2SWIG::do_parametername";
+doxy2swig.Doxy2SWIG.do_parametername(self, node) ";
 
-%feature("docstring")  doxy2swig::Doxy2SWIG::do_parameterdefinition "def doxy2swig::Doxy2SWIG::do_parameterdefinition";
+%feature("docstring")  doxy2swig::Doxy2SWIG::do_parameterdefinition "def doxy2swig.Doxy2SWIG.do_parameterdefinition(self, node) ";
 
-%feature("docstring")  doxy2swig::Doxy2SWIG::do_detaileddescription "def doxy2swig::Doxy2SWIG::do_detaileddescription";
+%feature("docstring")  doxy2swig::Doxy2SWIG::do_detaileddescription "def doxy2swig.Doxy2SWIG.do_detaileddescription(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_briefdescription "def
-doxy2swig::Doxy2SWIG::do_briefdescription";
+doxy2swig.Doxy2SWIG.do_briefdescription(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_memberdef "def
-doxy2swig::Doxy2SWIG::do_memberdef";
+doxy2swig.Doxy2SWIG.do_memberdef(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_definition "def
-doxy2swig::Doxy2SWIG::do_definition";
+doxy2swig.Doxy2SWIG.do_definition(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_sectiondef "def
-doxy2swig::Doxy2SWIG::do_sectiondef";
+doxy2swig.Doxy2SWIG.do_sectiondef(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_header "def
-doxy2swig::Doxy2SWIG::do_header For a user defined section def a
-header field is present which should not be printed as such, so we
-comment it in the output. ";
+doxy2swig.Doxy2SWIG.do_header(self, node)
+
+For a user defined section def a header field is present which should
+not be printed as such, so we comment it in the output. ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_simplesect "def
-doxy2swig::Doxy2SWIG::do_simplesect";
+doxy2swig.Doxy2SWIG.do_simplesect(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_argsstring "def
-doxy2swig::Doxy2SWIG::do_argsstring";
+doxy2swig.Doxy2SWIG.do_argsstring(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_member "def
-doxy2swig::Doxy2SWIG::do_member";
+doxy2swig.Doxy2SWIG.do_member(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::do_doxygenindex "def
-doxy2swig::Doxy2SWIG::do_doxygenindex";
+doxy2swig.Doxy2SWIG.do_doxygenindex(self, node) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::write "def
-doxy2swig::Doxy2SWIG::write";
+doxy2swig.Doxy2SWIG.write(self, fname) ";
 
 %feature("docstring")  doxy2swig::Doxy2SWIG::clean_pieces "def
-doxy2swig::Doxy2SWIG::clean_pieces Cleans the list of strings given as
-`pieces`.  It replaces multiple newlines by a maximum of 2 and returns
-a new list. It also wraps the paragraphs nicely. ";
+doxy2swig.Doxy2SWIG.clean_pieces(self, pieces)
+
+Cleans the list of strings given as `pieces`.  It replaces multiple
+newlines by a maximum of 2 and returns a new list. It also wraps the
+paragraphs nicely. ";
 
 
 // File: classEmptyDataSet.xml
@@ -2333,12 +1826,6 @@ C++ includes: euclideandistance.h ";
 ParameterMap &params) ";
 
 %feature("docstring")  gaia2::EuclideanDistance::EuclideanDistance "gaia2::EuclideanDistance::EuclideanDistance(int dimension) ";
-
-
-// File: classstd_1_1exception.xml
-%feature("docstring") std::exception "
-
-STL class. ";
 
 
 // File: classgaia2_1_1ExponentialCompressDistance.xml
@@ -2432,12 +1919,6 @@ C++ includes: factory.h ";
 gaia2::Factory< IdentifierType, AbstractProduct, ArgumentType
 >::create_i(const IdentifierType &id, const ArgumentType &arg) const
 ";
-
-
-// File: classstd_1_1ios__base_1_1failure.xml
-%feature("docstring") std::ios_base::failure "
-
-STL class. ";
 
 
 // File: classgaia2_1_1Filter.xml
@@ -2626,16 +2107,6 @@ gaia2::ForceIdentityDistance::ForceIdentityDistance "ForceIdentityDistance::Forc
 
 %feature("docstring")
 gaia2::ForceIdentityDistance::~ForceIdentityDistance "ForceIdentityDistance::~ForceIdentityDistance() ";
-
-
-// File: classgaia2_1_1FrozenBmatDistance.xml
-%feature("docstring") gaia2::FrozenBmatDistance "";
-
-%feature("docstring")  gaia2::FrozenBmatDistance::FrozenBmatDistance "FrozenBmatDistance::FrozenBmatDistance(const FrozenDataSet &dataset,
-int offset=0, int size=175) ";
-
-%feature("docstring")  gaia2::FrozenBmatDistance::prepare "void
-FrozenBmatDistance::prepare(const Eigen::RowVectorXf &query) ";
 
 
 // File: classgaia2_1_1FrozenCosineAngleDistance.xml
@@ -2871,12 +2342,6 @@ FrozenPoint &query) ";
 %feature("docstring")  gaia2::FrozenSearchPoint::FrozenSearchPoint "gaia2::FrozenSearchPoint::FrozenSearchPoint(int iidx) ";
 
 
-// File: classstd_1_1fstream.xml
-%feature("docstring") std::fstream "
-
-STL class. ";
-
-
 // File: classgaia2_1_1GaiaException.xml
 %feature("docstring") gaia2::GaiaException "
 
@@ -3043,23 +2508,11 @@ GVarLengthArray< T, Prealloc >::data() const ";
 GVarLengthArray< T, Prealloc >::constData() const ";
 
 
-// File: classstd_1_1ifstream.xml
-%feature("docstring") std::ifstream "
-
-STL class. ";
-
-
 // File: classgaia2_1_1InnerDim.xml
 %feature("docstring") gaia2::InnerDim "";
 
 %feature("docstring")  gaia2::InnerDim::InnerDim "gaia2::InnerDim::InnerDim(DescriptorLengthType ltype_, int desc_, int
 dim_) ";
-
-
-// File: classstd_1_1invalid__argument.xml
-%feature("docstring") std::invalid_argument "
-
-STL class. ";
 
 
 // File: classgaia2_1_1InverseProjection.xml
@@ -3091,90 +2544,6 @@ C++ includes: inverseprojection.h ";
 
 %feature("docstring")  gaia2::InverseProjection::analyze "Transformation gaia2::InverseProjection::analyze(const DataSet
 *dataset) const ";
-
-
-// File: classstd_1_1ios.xml
-%feature("docstring") std::ios "
-
-STL class. ";
-
-
-// File: classstd_1_1ios__base.xml
-%feature("docstring") std::ios_base "
-
-STL class. ";
-
-
-// File: classstd_1_1istream.xml
-%feature("docstring") std::istream "
-
-STL class. ";
-
-
-// File: classstd_1_1istringstream.xml
-%feature("docstring") std::istringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1basic__string_1_1iterator.xml
-%feature("docstring") std::basic_string::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1string_1_1iterator.xml
-%feature("docstring") std::string::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1wstring_1_1iterator.xml
-%feature("docstring") std::wstring::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1deque_1_1iterator.xml
-%feature("docstring") std::deque::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1list_1_1iterator.xml
-%feature("docstring") std::list::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1vector_1_1iterator.xml
-%feature("docstring") std::vector::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1map_1_1iterator.xml
-%feature("docstring") std::map::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multimap_1_1iterator.xml
-%feature("docstring") std::multimap::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1set_1_1iterator.xml
-%feature("docstring") std::set::iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multiset_1_1iterator.xml
-%feature("docstring") std::multiset::iterator "
-
-STL iterator class. ";
 
 
 // File: classgaia2_1_1Key.xml
@@ -3320,12 +2689,6 @@ IdentifierType &id, const LayoutType &layout, const ArgumentType &arg)
 const ";
 
 
-// File: classstd_1_1length__error.xml
-%feature("docstring") std::length_error "
-
-STL class. ";
-
-
 // File: classgaia2_1_1LinearCombinationDistance.xml
 %feature("docstring") gaia2::LinearCombinationDistance "
 
@@ -3362,12 +2725,6 @@ gaia2::LinearCombinationDistance::~LinearCombinationDistance "LinearCombinationD
 
 %feature("docstring")  gaia2::LinearCombinationDistance::addDistance "void LinearCombinationDistance::addDistance(DistanceFunction *f, Real
 coeff) ";
-
-
-// File: classstd_1_1list.xml
-%feature("docstring") std::list "
-
-STL class. ";
 
 
 // File: classLoadPointJob.xml
@@ -3415,12 +2772,6 @@ gaia2::Logger::warning(const QString &msg) ";
 gaia2::Logger::error(const QString &msg) ";
 
 
-// File: classstd_1_1logic__error.xml
-%feature("docstring") std::logic_error "
-
-STL class. ";
-
-
 // File: classgaia2_1_1ManhattanDistance.xml
 %feature("docstring") gaia2::ManhattanDistance "
 
@@ -3440,12 +2791,6 @@ C++ includes: manhattandistance.h ";
 
 %feature("docstring")  gaia2::ManhattanDistance::ManhattanDistance "ManhattanDistance::ManhattanDistance(const PointLayout &layout, const
 ParameterMap &params) ";
-
-
-// File: classstd_1_1map.xml
-%feature("docstring") std::map "
-
-STL class. ";
 
 
 // File: classgaia2_1_1MatMult.xml
@@ -3605,18 +2950,6 @@ C++ includes: minkowskidistance.h ";
 ParameterMap &params) ";
 
 
-// File: classstd_1_1multimap.xml
-%feature("docstring") std::multimap "
-
-STL class. ";
-
-
-// File: classstd_1_1multiset.xml
-%feature("docstring") std::multiset "
-
-STL class. ";
-
-
 // File: classgaia2_1_1yaml_1_1Node.xml
 %feature("docstring") gaia2::yaml::Node "";
 
@@ -3731,43 +3064,13 @@ C++ includes: nulldistance.h ";
 ParameterMap &params) ";
 
 
-// File: classstd_1_1ofstream.xml
-%feature("docstring") std::ofstream "
-
-STL class. ";
-
-
 // File: classgaia2_1_1filter_1_1OrFilter.xml
 %feature("docstring") gaia2::filter::OrFilter "";
 
-%feature("docstring")  gaia2::filter::OrFilter::OrFilter "gaia2::filter::OrFilter::OrFilter(const QList< Filter * > &preds) ";
+%feature("docstring")  gaia2::filter::OrFilter::OrFilter "gaia2::filter::OrFilter::OrFilter(const QList< Filter *> &preds) ";
 
-%feature("docstring")  gaia2::filter::OrFilter::OrFilter "gaia2::filter::OrFilter::OrFilter(const std::vector< Filter * >
-&preds) ";
-
-
-// File: classstd_1_1ostream.xml
-%feature("docstring") std::ostream "
-
-STL class. ";
-
-
-// File: classstd_1_1ostringstream.xml
-%feature("docstring") std::ostringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1out__of__range.xml
-%feature("docstring") std::out_of_range "
-
-STL class. ";
-
-
-// File: classstd_1_1overflow__error.xml
-%feature("docstring") std::overflow_error "
-
-STL class. ";
+%feature("docstring")  gaia2::filter::OrFilter::OrFilter "gaia2::filter::OrFilter::OrFilter(const std::vector< Filter *> &preds)
+";
 
 
 // File: classgaia2_1_1ParamCheckingFactory.xml
@@ -3895,71 +3198,6 @@ gaia2::PCA::analyze(const DataSet *dataset, const Region &region)
 const ";
 
 
-// File: classPendingRequest.xml
-%feature("docstring") PendingRequest "";
-
-%feature("docstring")  PendingRequest::PendingRequest "PendingRequest::PendingRequest(const gaia2::yaml::Mapping
-&request=gaia2::yaml::Mapping()) ";
-
-
-// File: classgaia2std_1_1Point.xml
-%feature("docstring") gaia2std::Point "";
-
-%feature("docstring")  gaia2std::Point::Point "gaia2std::Point::Point() ";
-
-%feature("docstring")  gaia2std::Point::name "string
-gaia2std::Point::name() const ";
-
-%feature("docstring")  gaia2std::Point::setName "void
-gaia2std::Point::setName(const std::string &name) ";
-
-%feature("docstring")  gaia2std::Point::load "void
-gaia2std::Point::load(const std::string &name) ";
-
-%feature("docstring")  gaia2std::Point::value "vector< float >
-gaia2std::Point::value(const std::string &name) const ";
-
-%feature("docstring")  gaia2std::Point::label "vector< string >
-gaia2std::Point::label(const std::string &name) const ";
-
-%feature("docstring")  gaia2std::Point::value "vector< float >
-gaia2std::Point::value(int nsegment, const std::string &name) const ";
-
-%feature("docstring")  gaia2std::Point::label "vector< string >
-gaia2std::Point::label(int nsegment, const std::string &name) const ";
-
-%feature("docstring")  gaia2std::Point::setValue "void
-gaia2std::Point::setValue(const std::string &name, float value) ";
-
-%feature("docstring")  gaia2std::Point::setValue "void
-gaia2std::Point::setValue(const std::string &name, const std::vector<
-float > &value) ";
-
-%feature("docstring")  gaia2std::Point::setLabel "void
-gaia2std::Point::setLabel(const std::string &name, const std::string
-&label) ";
-
-%feature("docstring")  gaia2std::Point::setLabel "void
-gaia2std::Point::setLabel(const std::string &name, const std::vector<
-std::string > &label) ";
-
-%feature("docstring")  gaia2std::Point::setValue "void
-gaia2std::Point::setValue(int nsegment, const std::string &name, float
-value) ";
-
-%feature("docstring")  gaia2std::Point::setValue "void
-gaia2std::Point::setValue(int nsegment, const std::string &name, const
-std::vector< float > &value) ";
-
-%feature("docstring")  gaia2std::Point::setLabel "void
-gaia2std::Point::setLabel(int nsegment, const std::string &name, const
-std::string &label) ";
-
-%feature("docstring")  gaia2std::Point::setLabel "void
-gaia2std::Point::setLabel(int nsegment, const std::string &name, const
-std::vector< std::string > &label) ";
-
-
 // File: classgaia2_1_1Point.xml
 %feature("docstring") gaia2::Point "C++ includes: point.h ";
 
@@ -3973,10 +3211,9 @@ gaia2::Point::setName(const QString &name)
 
 Sets the point name, which also acts as its unique identifier. ";
 
-%feature("docstring")  gaia2::Point::load "void
-gaia2::Point::load(const QString &filename, const QStringList
-&select=QStringList()<< \"*\", const QStringList
-&exclude=QStringList())
+%feature("docstring")  gaia2::Point::load "void Point::load(const
+QString &filename, const QStringList &select=QStringList()<< \"*\",
+const QStringList &exclude=QStringList())
 
 Loads the given filename into this Point.
 
@@ -4142,6 +3379,64 @@ gaia2::Point::scope(int i=0) const ";
 
 %feature("docstring")  gaia2::Point::scope "Scope&
 gaia2::Point::scope(int i=0) ";
+
+
+// File: classgaia2std_1_1Point.xml
+%feature("docstring") gaia2std::Point "";
+
+%feature("docstring")  gaia2std::Point::Point "gaia2std::Point::Point() ";
+
+%feature("docstring")  gaia2std::Point::name "string
+gaia2std::Point::name() const ";
+
+%feature("docstring")  gaia2std::Point::setName "void
+gaia2std::Point::setName(const std::string &name) ";
+
+%feature("docstring")  gaia2std::Point::load "void
+gaia2std::Point::load(const std::string &name) ";
+
+%feature("docstring")  gaia2std::Point::value "vector< float >
+gaia2std::Point::value(const std::string &name) const ";
+
+%feature("docstring")  gaia2std::Point::label "vector< string >
+gaia2std::Point::label(const std::string &name) const ";
+
+%feature("docstring")  gaia2std::Point::value "vector< float >
+gaia2std::Point::value(int nsegment, const std::string &name) const ";
+
+%feature("docstring")  gaia2std::Point::label "vector< string >
+gaia2std::Point::label(int nsegment, const std::string &name) const ";
+
+%feature("docstring")  gaia2std::Point::setValue "void
+gaia2std::Point::setValue(const std::string &name, float value) ";
+
+%feature("docstring")  gaia2std::Point::setValue "void
+gaia2std::Point::setValue(const std::string &name, const std::vector<
+float > &value) ";
+
+%feature("docstring")  gaia2std::Point::setLabel "void
+gaia2std::Point::setLabel(const std::string &name, const std::string
+&label) ";
+
+%feature("docstring")  gaia2std::Point::setLabel "void
+gaia2std::Point::setLabel(const std::string &name, const std::vector<
+std::string > &label) ";
+
+%feature("docstring")  gaia2std::Point::setValue "void
+gaia2std::Point::setValue(int nsegment, const std::string &name, float
+value) ";
+
+%feature("docstring")  gaia2std::Point::setValue "void
+gaia2std::Point::setValue(int nsegment, const std::string &name, const
+std::vector< float > &value) ";
+
+%feature("docstring")  gaia2std::Point::setLabel "void
+gaia2std::Point::setLabel(int nsegment, const std::string &name, const
+std::string &label) ";
+
+%feature("docstring")  gaia2std::Point::setLabel "void
+gaia2std::Point::setLabel(int nsegment, const std::string &name, const
+std::vector< std::string > &label) ";
 
 
 // File: classgaia2_1_1PointArray.xml
@@ -4420,9 +3715,8 @@ PointLayout::debug() const ";
 %feature("docstring")  gaia2::PointLayout::toYaml "QString
 PointLayout::toYaml() const
 
-Returns a yaml string representing:
-
-the enumeration maps (\"enums\") that are being used by this layout
+Returns a yaml string representing: the enumeration maps (\"enums\")
+that are being used by this layout
 
 the hierachy of descriptors (\"descriptors\") that this layout
 contains. ";
@@ -4636,22 +3930,6 @@ bool gaia2::parser::PredValueRange::value() const ";
 %feature("docstring")  gaia2::parser::PredValueRange::toString "virtual QString gaia2::parser::PredValueRange::toString() const ";
 
 
-// File: classstd_1_1priority__queue.xml
-%feature("docstring") std::priority_queue "
-
-STL class. ";
-
-
-// File: classQMap.xml
-%feature("docstring") QMap "";
-
-
-// File: classstd_1_1queue.xml
-%feature("docstring") std::queue "
-
-STL class. ";
-
-
 // File: classgaia2_1_1RandomDistance.xml
 %feature("docstring") gaia2::RandomDistance "
 
@@ -4669,12 +3947,6 @@ C++ includes: randomdistance.h ";
 
 %feature("docstring")  gaia2::RandomDistance::RandomDistance "RandomDistance::RandomDistance(const PointLayout &, const ParameterMap
 &) ";
-
-
-// File: classstd_1_1range__error.xml
-%feature("docstring") std::range_error "
-
-STL class. ";
 
 
 // File: classgaia2_1_1RCA.xml
@@ -4894,6 +4166,14 @@ Tries to simplify segments if there are contiguous segments, ie:
 [0,10[ U [10,20[ = [0,20[. ";
 
 
+// File: classgaia2_1_1Factory_1_1Registrar.xml
+%feature("docstring") gaia2::Factory::Registrar "";
+
+%feature("docstring")  gaia2::Factory::Registrar::Registrar "gaia2::Factory< IdentifierType, AbstractProduct, ArgumentType
+>::Registrar< ConcreteProduct >::Registrar(const IdentifierType &id)
+";
+
+
 // File: classgaia2_1_1LayoutAwareFactory_1_1Registrar.xml
 %feature("docstring") gaia2::LayoutAwareFactory::Registrar "";
 
@@ -4901,14 +4181,6 @@ Tries to simplify segments if there are contiguous segments, ie:
 "gaia2::LayoutAwareFactory< IdentifierType, AbstractProduct,
 LayoutType, ArgumentType >::Registrar< ConcreteProduct
 >::Registrar(const IdentifierType &id) ";
-
-
-// File: classgaia2_1_1Factory_1_1Registrar.xml
-%feature("docstring") gaia2::Factory::Registrar "";
-
-%feature("docstring")  gaia2::Factory::Registrar::Registrar "gaia2::Factory< IdentifierType, AbstractProduct, ArgumentType
->::Registrar< ConcreteProduct >::Registrar(const IdentifierType &id)
-";
 
 
 // File: classgaia2_1_1Remove.xml
@@ -5048,85 +4320,6 @@ gaia2::ResistorAverageDistance::ResistorAverageDistance "ResistorAverageDistance
 &layout, const ParameterMap &params) ";
 
 
-// File: classcyclops_1_1ResultSet.xml
-%feature("docstring") cyclops::ResultSet "";
-
-%feature("docstring")  cyclops::ResultSet::__init__ "def
-cyclops::ResultSet::__init__";
-
-%feature("docstring")  cyclops::ResultSet::__call__ "def
-cyclops::ResultSet::__call__";
-
-%feature("docstring")  cyclops::ResultSet::get "SearchResults
-BaseResultSet::get";
-
-%feature("docstring")  cyclops::ResultSet::limit "void
-BaseSearchSpace::limit";
-
-%feature("docstring")  cyclops::ResultSet::thresholdLimit "void
-BaseSearchSpace::thresholdLimit";
-
-
-// File: classstd_1_1wstring_1_1reverse__iterator.xml
-%feature("docstring") std::wstring::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1basic__string_1_1reverse__iterator.xml
-%feature("docstring") std::basic_string::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1list_1_1reverse__iterator.xml
-%feature("docstring") std::list::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1set_1_1reverse__iterator.xml
-%feature("docstring") std::set::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1string_1_1reverse__iterator.xml
-%feature("docstring") std::string::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1deque_1_1reverse__iterator.xml
-%feature("docstring") std::deque::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multimap_1_1reverse__iterator.xml
-%feature("docstring") std::multimap::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1multiset_1_1reverse__iterator.xml
-%feature("docstring") std::multiset::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1vector_1_1reverse__iterator.xml
-%feature("docstring") std::vector::reverse_iterator "
-
-STL iterator class. ";
-
-
-// File: classstd_1_1map_1_1reverse__iterator.xml
-%feature("docstring") std::map::reverse_iterator "
-
-STL iterator class. ";
-
-
 // File: classgaia2_1_1RhythmDistance.xml
 %feature("docstring") gaia2::RhythmDistance "
 
@@ -5150,19 +4343,6 @@ C++ includes: rhythmdistance.h ";
 
 %feature("docstring")  gaia2::RhythmDistance::RhythmDistance "RhythmDistance::RhythmDistance(const PointLayout &layout, const
 ParameterMap &params) ";
-
-
-// File: classstd_1_1runtime__error.xml
-%feature("docstring") std::runtime_error "
-
-STL class. ";
-
-
-// File: classSchizoDataSet.xml
-%feature("docstring") SchizoDataSet "";
-
-%feature("docstring")  SchizoDataSet::load22NoHistory "void
-SchizoDataSet::load22NoHistory(const QString &filename) ";
 
 
 // File: classgaia2_1_1Scope.xml
@@ -5287,12 +4467,6 @@ C++ includes: semanticclassifierdistance.h ";
 %feature("docstring")
 gaia2::SemanticClassifierDistance::SemanticClassifierDistance "SemanticClassifierDistance::SemanticClassifierDistance(const
 PointLayout &layout, const ParameterMap &params) ";
-
-
-// File: classstd_1_1set.xml
-%feature("docstring") std::set "
-
-STL class. ";
 
 
 // File: classgaia2_1_1SingleValueMorphable.xml
@@ -5438,18 +4612,6 @@ DataSetType, DescType >::SortOn(const DataSetType *dataset, const
 QString &descriptorName) ";
 
 
-// File: classstd_1_1stack.xml
-%feature("docstring") std::stack "
-
-STL class. ";
-
-
-// File: classstd_1_1string.xml
-%feature("docstring") std::string "
-
-STL class. ";
-
-
 // File: classgaia2_1_1Stringifier.xml
 %feature("docstring") gaia2::Stringifier "";
 
@@ -5457,12 +4619,6 @@ STL class. ";
 
 %feature("docstring")  gaia2::Stringifier::str "const QString&
 gaia2::Stringifier::str() const ";
-
-
-// File: classstd_1_1stringstream.xml
-%feature("docstring") std::stringstream "
-
-STL class. ";
 
 
 // File: classgaia2_1_1SummedSegmentDistance.xml
@@ -5716,16 +4872,6 @@ gaia2::TransfoChain::save(const QString &filename) const ";
 gaia2::TransfoChain::contains(const QString &analyzerName) const ";
 
 
-// File: classgaia2std_1_1Transformation.xml
-%feature("docstring") gaia2std::Transformation "";
-
-%feature("docstring")  gaia2std::Transformation::applyToDataSet "proxy_ptr< DataSet > gaia2std::Transformation::applyToDataSet(const
-DataSet *dataset) const ";
-
-%feature("docstring")  gaia2std::Transformation::applyToPoint "proxy_ptr< Point > gaia2std::Transformation::applyToPoint(const Point
-*point) const ";
-
-
 // File: classgaia2_1_1Transformation.xml
 %feature("docstring") gaia2::Transformation "
 
@@ -5783,22 +4929,20 @@ Updates (if necessary) the parameters for this transformation from the
 specified original version to the current one. ";
 
 
-// File: classstd_1_1underflow__error.xml
-%feature("docstring") std::underflow_error "
+// File: classgaia2std_1_1Transformation.xml
+%feature("docstring") gaia2std::Transformation "";
 
-STL class. ";
+%feature("docstring")  gaia2std::Transformation::applyToDataSet "proxy_ptr< DataSet > gaia2std::Transformation::applyToDataSet(const
+DataSet *dataset) const ";
+
+%feature("docstring")  gaia2std::Transformation::applyToPoint "proxy_ptr< Point > gaia2std::Transformation::applyToPoint(const Point
+*point) const ";
 
 
 // File: classgaia2_1_1UnscopedData.xml
 %feature("docstring") gaia2::UnscopedData "";
 
 %feature("docstring")  gaia2::UnscopedData::UnscopedData "gaia2::UnscopedData::UnscopedData() ";
-
-
-// File: classstd_1_1valarray.xml
-%feature("docstring") std::valarray "
-
-STL class. ";
 
 
 // File: classgaia2_1_1parser_1_1Value.xml
@@ -5853,12 +4997,6 @@ gaia2::parser::ValueVariable::bind(const PointLayout &layout, const
 Point **pointLocation) ";
 
 %feature("docstring")  gaia2::parser::ValueVariable::toString "virtual QString gaia2::parser::ValueVariable::toString() const ";
-
-
-// File: classstd_1_1vector.xml
-%feature("docstring") std::vector "
-
-STL class. ";
 
 
 // File: classgaia2std_1_1View.xml
@@ -5919,101 +5057,6 @@ gaia2::WeightedPearsonDistance::WeightedPearsonDistance "WeightedPearsonDistance
 &layout, const ParameterMap &params) ";
 
 
-// File: classstd_1_1wfstream.xml
-%feature("docstring") std::wfstream "
-
-STL class. ";
-
-
-// File: classstd_1_1wifstream.xml
-%feature("docstring") std::wifstream "
-
-STL class. ";
-
-
-// File: classstd_1_1wios.xml
-%feature("docstring") std::wios "
-
-STL class. ";
-
-
-// File: classstd_1_1wistream.xml
-%feature("docstring") std::wistream "
-
-STL class. ";
-
-
-// File: classstd_1_1wistringstream.xml
-%feature("docstring") std::wistringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1wofstream.xml
-%feature("docstring") std::wofstream "
-
-STL class. ";
-
-
-// File: classstd_1_1wostream.xml
-%feature("docstring") std::wostream "
-
-STL class. ";
-
-
-// File: classstd_1_1wostringstream.xml
-%feature("docstring") std::wostringstream "
-
-STL class. ";
-
-
-// File: classstd_1_1wstring.xml
-%feature("docstring") std::wstring "
-
-STL class. ";
-
-
-// File: classstd_1_1wstringstream.xml
-%feature("docstring") std::wstringstream "
-
-STL class. ";
-
-
-// File: classYamlProxy.xml
-%feature("docstring") YamlProxy "";
-
-%feature("docstring")  YamlProxy::process "virtual gaia2::yaml::Node
-YamlProxy::process(const gaia2::yaml::Mapping &query)=0 ";
-
-%feature("docstring")  YamlProxy::~YamlProxy "virtual
-YamlProxy::~YamlProxy() ";
-
-
-// File: classcyclops_1_1YamlRPCMethod.xml
-%feature("docstring") cyclops::YamlRPCMethod "";
-
-%feature("docstring")  cyclops::YamlRPCMethod::__init__ "def
-cyclops::YamlRPCMethod::__init__";
-
-%feature("docstring")  cyclops::YamlRPCMethod::__call__ "def
-cyclops::YamlRPCMethod::__call__";
-
-
-// File: classYamlRPCServer.xml
-%feature("docstring") YamlRPCServer "";
-
-%feature("docstring")  YamlRPCServer::YamlRPCServer "YamlRPCServer::YamlRPCServer(quint16 port, YamlProxy *proxy) ";
-
-%feature("docstring")  YamlRPCServer::incomingConnection "void
-YamlRPCServer::incomingConnection(int socket) ";
-
-%feature("docstring")  YamlRPCServer::processRequest "yaml::Mapping
-YamlRPCServer::processRequest(QTcpSocket *socket) ";
-
-%feature("docstring")  YamlRPCServer::numberConnectedClients "int
-YamlRPCServer::numberConnectedClients() const ";
-
-
 // File: structyy__buffer__state.xml
 %feature("docstring") yy_buffer_state "";
 
@@ -6033,19 +5076,18 @@ YamlRPCServer::numberConnectedClients() const ";
 %feature("docstring") yyStackEntry "";
 
 
-// File: namespacecyclops.xml
-
-
 // File: namespacedoxy2swig.xml
 %feature("docstring")  doxy2swig::my_open_read "def
-doxy2swig::my_open_read";
+doxy2swig.my_open_read(source) ";
 
 %feature("docstring")  doxy2swig::my_open_write "def
-doxy2swig::my_open_write";
+doxy2swig.my_open_write(dest) ";
 
-%feature("docstring")  doxy2swig::convert "def doxy2swig::convert";
+%feature("docstring")  doxy2swig::convert "def
+doxy2swig.convert(input, output, include_function_definition=True,
+quiet=False) ";
 
-%feature("docstring")  doxy2swig::main "def doxy2swig::main";
+%feature("docstring")  doxy2swig::main "def doxy2swig.main() ";
 
 
 // File: namespaceEigen.xml
@@ -6420,7 +5462,7 @@ gaia2::deepFoldedFreeze(FrozenDataSet &frozenDS, const FrozenDistance
 
 %feature("docstring")  gaia2::convert::deepMultiFreeze "void
 gaia2::deepMultiFreeze(FrozenDataSet &frozenDS, const QList<
-FrozenDistance * > &dists, const QList< Eigen::RowVectorXf > queries,
+FrozenDistance *> &dists, const QList< Eigen::RowVectorXf > queries,
 int N) ";
 
 %feature("docstring")  gaia2::convert::transform "DataSet *
@@ -6774,60 +5816,28 @@ gaia2std::unsetDebugLevel(int levels) ";
 
 // File: namespacegaiafusion.xml
 %feature("docstring")  gaiafusion::createOptionParser "def
-gaiafusion::createOptionParser";
+gaiafusion.createOptionParser() ";
 
-%feature("docstring")  gaiafusion::usage "def gaiafusion::usage
+%feature("docstring")  gaiafusion::usage "def gaiafusion.usage()
+
 gaiafusion --yamllist=mylist.yaml --output=data/itunes.db gaiafusion
 -d essentia_1.0.6/sigfiles -o amazon.db gaiafusion --chunksize=10000
 ... ";
 
-%feature("docstring")  gaiafusion::fusion "def gaiafusion::fusion";
+%feature("docstring")  gaiafusion::fusion "def gaiafusion.fusion() ";
 
 
 // File: namespaceregenerate__docstring.xml
 %feature("docstring")  regenerate_docstring::currentPath "def
-regenerate_docstring::currentPath Returns the path in which the
-calling file is located. ";
+regenerate_docstring.currentPath()
+
+Returns the path in which the calling file is located. ";
 
 %feature("docstring")  regenerate_docstring::getDoc "def
-regenerate_docstring::getDoc";
+regenerate_docstring.getDoc(className) ";
 
 
 // File: namespacestd.xml
-
-
-// File: namespacetest__client.xml
-
-
-// File: namespaceunittest__cyclops.xml
-%feature("docstring")  unittest_cyclops::prepareDataSet "def
-unittest_cyclops::prepareDataSet";
-
-%feature("docstring")  unittest_cyclops::launchMasterSlaves "def
-unittest_cyclops::launchMasterSlaves";
-
-%feature("docstring")  unittest_cyclops::setup "def
-unittest_cyclops::setup";
-
-%feature("docstring")  unittest_cyclops::testMemleak "def
-unittest_cyclops::testMemleak";
-
-%feature("docstring")  unittest_cyclops::testNoCrashInvalidArguments "def unittest_cyclops::testNoCrashInvalidArguments";
-
-%feature("docstring")  unittest_cyclops::cyc2py "def
-unittest_cyclops::cyc2py";
-
-%feature("docstring")  unittest_cyclops::assertEqual "def
-unittest_cyclops::assertEqual";
-
-%feature("docstring")  unittest_cyclops::testRegression "def
-unittest_cyclops::testRegression";
-
-%feature("docstring")  unittest_cyclops::testIdOrExample "def
-unittest_cyclops::testIdOrExample";
-
-%feature("docstring")  unittest_cyclops::testInputSpace "def
-unittest_cyclops::testInputSpace";
 
 
 // File: addfield_8cpp.xml
@@ -7080,7 +6090,7 @@ const Point *p2) ";
 
 // File: descriptortree_8cpp.xml
 %feature("docstring")  unconstifyList "QList<T*> unconstifyList(const
-QList< const T * > &clist) ";
+QList< const T *> &clist) ";
 
 %feature("docstring")  cmpNodes "bool cmpNodes(const DescriptorTree
 *n1, const DescriptorTree *n2) ";
@@ -7341,7 +6351,14 @@ covdet1, Real covdet2, int size) ";
 yy_scan_string(const char *) ";
 
 %feature("docstring")  gaia2::yy_delete_buffer "void
-yy_delete_buffer(YY_BUFFER_STATE) ";
+yy_delete_buffer(YY_BUFFER_STATE)
+
+Destroy the buffer.
+
+Parameters:
+-----------
+
+b:  a buffer created with yy_create_buffer() ";
 
 
 // File: filter_8h.xml
@@ -7396,23 +6413,58 @@ yy_syntax_error(yyParser *yypParser, int yymajor, YYMINORTYPE yyminor)
 ";
 
 %feature("docstring")  Parse "void Parse(void *yyp, int yymajor,
-ParseTOKENTYPE yyminorParseARG_PDECL) ";
+ParseTOKENTYPE yyminor ParseARG_PDECL) ";
 
 
 // File: grammar_8h.xml
 
 
 // File: lex_8yy_8cpp.xml
-%feature("docstring")  yyrestart "void yyrestart(FILE *input_file) ";
+%feature("docstring")  yyrestart "void yyrestart(FILE *input_file)
+
+Immediately switch to a different input stream.
+
+Parameters:
+-----------
+
+input_file:  A readable stream.
+
+This function does not reset the start condition to INITIAL . ";
 
 %feature("docstring")  yy_switch_to_buffer "void
-yy_switch_to_buffer(YY_BUFFER_STATE new_buffer) ";
+yy_switch_to_buffer(YY_BUFFER_STATE new_buffer)
+
+Switch to a different input buffer.
+
+Parameters:
+-----------
+
+new_buffer:  The new input buffer. ";
 
 %feature("docstring")  yy_create_buffer "YY_BUFFER_STATE
-yy_create_buffer(FILE *file, int size) ";
+yy_create_buffer(FILE *file, int size)
+
+Allocate and initialize an input buffer state.
+
+Parameters:
+-----------
+
+file:  A readable stream.
+
+size:  The character buffer size in bytes. When in doubt, use
+YY_BUF_SIZE.
+
+the allocated buffer state. ";
 
 %feature("docstring")  yy_delete_buffer "void
-yy_delete_buffer(YY_BUFFER_STATE b) ";
+yy_delete_buffer(YY_BUFFER_STATE b)
+
+Destroy the buffer.
+
+Parameters:
+-----------
+
+b:  a buffer created with yy_create_buffer() ";
 
 %feature("docstring")  yy_flush_buffer "void
 yy_flush_buffer(YY_BUFFER_STATE b)
@@ -7453,9 +6505,7 @@ yyensure_buffer_stack(void) ";
 yy_load_buffer_state(void) ";
 
 %feature("docstring")  yy_init_buffer "static void
-yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
-
-The main scanner function which does all the work. ";
+yy_init_buffer(YY_BUFFER_STATE b, FILE *file) ";
 
 %feature("docstring")  yy_scan_buffer "YY_BUFFER_STATE
 yy_scan_buffer(char *base, yy_size_t size)
@@ -7490,7 +6540,7 @@ If you want to scan bytes that may contain NUL values, then use
 yy_scan_bytes() instead. ";
 
 %feature("docstring")  yy_scan_bytes "YY_BUFFER_STATE
-yy_scan_bytes(yyconst char *yybytes, int _yybytes_len)
+yy_scan_bytes(yyconst char *yybytes, yy_size_t _yybytes_len)
 
 Setup the input buffer state to scan the given bytes.
 
@@ -7499,9 +6549,9 @@ The next call to yylex() will scan from a copy of bytes.
 Parameters:
 -----------
 
-yybytes:  the byte buffer to scan
+bytes:  the byte buffer to scan
 
-_yybytes_len:  the number of bytes in the buffer pointed to by bytes.
+len:  the number of bytes in the buffer pointed to by bytes.
 
 the newly allocated buffer state object. ";
 
@@ -7567,7 +6617,7 @@ Get the output stream. ";
 
 %feature("docstring")  yyset_out "void yyset_out(FILE *out_str) ";
 
-%feature("docstring")  yyget_leng "int yyget_leng(void)
+%feature("docstring")  yyget_leng "yy_size_t yyget_leng(void)
 
 Get the length of the current token. ";
 
@@ -7592,6 +6642,15 @@ line_number:  ";
 %feature("docstring")  input "static int input(void) ";
 
 %feature("docstring")  yylex "int yylex(void) ";
+
+%feature("docstring")  if "if(!(yy_init)) ";
+
+%feature("docstring")  while "while(1) ";
+
+%feature("docstring")  yyunput "static void yyunput(int c, register
+char *yy_bp) ";
+
+%feature("docstring")  isatty "int isatty(int) ";
 
 %feature("docstring")  yy_fatal_error "static void
 yy_fatal_error(yyconst char *msg) ";
@@ -7758,152 +6817,10 @@ SearchSpaceType &sspace, int idx, Real value, int start, int end) ";
 // File: timer_8h.xml
 
 
-// File: cyclops_8py.xml
-
-
-// File: test__client_8py.xml
-
-
-// File: unittest__cyclops_8py.xml
-
-
-// File: cyclops_8cpp.xml
-%feature("docstring")  cmpSearchResults "bool cmpSearchResults(const
-QPair< Result, QList< QVariant > > &r1, const QPair< Result, QList<
-QVariant > > &r2) ";
-
-%feature("docstring")  datasetError "void datasetError(const QString
-&name) ";
-
-%feature("docstring")  distanceError "void distanceError(const
-QString &name) ";
-
-%feature("docstring")  checkArgs "void checkArgs(const yaml::Sequence
-&args, int nargs, const QString &methodName) ";
-
-
-// File: cyclops_8h.xml
-
-
-// File: cyclopsmaster_8cpp.xml
-%feature("docstring")  replyForMissingPoints "yaml::Mapping
-replyForMissingPoints(const yaml::Sequence &askedFor, const DataSet
-*ds) ";
-
-%feature("docstring")  chainedSearchByExample "yaml::Sequence
-chainedSearchByExample(const yaml::Sequence &origQueries, const
-DataSet &points) ";
-
-%feature("docstring")  reducePointsToDataSet "DataSet*
-reducePointsToDataSet(const QList< yaml::Mapping > &replies) ";
-
-%feature("docstring")  cmpSearchResults "bool cmpSearchResults(const
-Result &r1, const Result &r2) ";
-
-%feature("docstring")  reduceGetPoints "yaml::Mapping
-reduceGetPoints(const QList< yaml::Mapping > &replies, const
-yaml::Sequence &askedFor) ";
-
-
-// File: cyclopsmaster_8h.xml
-
-
-// File: cyclopsmasterserver_8cpp.xml
-%feature("docstring")  logToFile "void logToFile(QtMsgType type,
-const char *msg) ";
-
-%feature("docstring")  main "int main(int argc, char *argv[]) ";
-
-
-// File: cyclopsproxy_8cpp.xml
-%feature("docstring")  toYaml "yaml::Node toYaml(const
-CyclopsResultsValues &values) ";
-
-%feature("docstring")  toYaml "yaml::Node toYaml(const
-CyclopsResultsHeader &header) ";
-
-%feature("docstring")  toYaml "yaml::Node toYaml(const CyclopsResults
-&results) ";
-
-%feature("docstring")  checkNParams "void checkNParams(const
-yaml::Sequence &seq, int n) ";
-
-
-// File: cyclopsproxy_8h.xml
-%feature("docstring")  toYaml "gaia2::yaml::Node toYaml(const
-CyclopsResults &results) ";
-
-
-// File: cyclopsserver_8cpp.xml
-%feature("docstring")  main "int main(int argc, char *argv[]) ";
-
-
-// File: logging_8h.xml
-%feature("docstring")  clog "QDebug clog() ";
-
-
-// File: yamlrpcserver_8cpp.xml
-%feature("docstring")  sid "QByteArray sid(const QTcpSocket *socket)
-";
-
-%feature("docstring")  readHTTPRequest "QByteArray
-readHTTPRequest(QTcpSocket *socket)
-
-Synchronously read the contents of an HTTP message from a socket. ";
-
-%feature("docstring")  readYamlRPCRequest "yaml::Mapping
-readYamlRPCRequest(QTcpSocket *socket)
-
-Synchronously read a Yaml-RPC request from a socket. ";
-
-%feature("docstring")  rpcError "yaml::Mapping rpcError(int code,
-const QString &msg)
-
-Return a Yaml object representing an error. ";
-
-%feature("docstring")  rpcError "yaml::Mapping rpcError(int code,
-const QStringList &msg) ";
-
-%feature("docstring")  timeElapsed "QString timeElapsed(const
-QDateTime &from, const QDateTime &to)
-
-Return a string describing the time elapsed between 2 QDateTimes. ";
-
-
-// File: yamlrpcserver_8h.xml
-%feature("docstring")  GAIA_DEFINE_EXCEPTION "GAIA_DEFINE_EXCEPTION(NotImplementedError) ";
-
-%feature("docstring")  GAIA_DEFINE_EXCEPTION "GAIA_DEFINE_EXCEPTION(InvalidParams) ";
-
-%feature("docstring")  timeElapsed "QString timeElapsed(const
-QDateTime &from, const QDateTime &to)
-
-Return a string describing the time elapsed between 2 QDateTimes. ";
-
-%feature("docstring")  rpcError "gaia2::yaml::Mapping rpcError(int
-code, const QString &msg)
-
-Return a Yaml object representing an error. ";
-
-%feature("docstring")  readHTTPRequest "QByteArray
-readHTTPRequest(QTcpSocket *socket)
-
-Synchronously read the contents of an HTTP message from a socket. ";
-
-%feature("docstring")  readYamlRPCRequest "gaia2::yaml::Mapping
-readYamlRPCRequest(QTcpSocket *socket)
-
-Synchronously read a Yaml-RPC request from a socket. ";
-
-
 // File: frozensearch_8cpp.xml
 
 
 // File: frozensearch_8h.xml
-
-
-// File: gaia22to23fl_8cpp.xml
-%feature("docstring")  main "int main(int argc, char *argv[]) ";
 
 
 // File: gaiabench_8cpp.xml
@@ -8005,32 +6922,26 @@ argc, char *argv[]) ";
 // File: tutorial.xml
 
 
-// File: dir_f8f29033dce7fc5abdb9eb661e12564e.xml
+// File: dir_e6df591b0639d4c4807ef64d058833e2.xml
 
 
-// File: dir_be52223c070ad0d81fb8604c4ab5cdc0.xml
+// File: dir_659facb5ea1bf65b3deecf95a0be0132.xml
 
 
-// File: dir_270179af9d9e6f7a1a93e4cdb5e86f52.xml
+// File: dir_ee0a2921d8a41481a2eb4b0c39976a70.xml
 
 
-// File: dir_aeb294789b011690e4082e3d39e143f2.xml
+// File: dir_6cd8491d143eb218b70983dbdb3c58bc.xml
 
 
-// File: dir_f57c587af93e34286c243ecd75dff2e1.xml
+// File: dir_68267d1309a1af8e8297ef4c3efbcdba.xml
 
 
-// File: dir_346b63e0afd1f2cc619a289374664efb.xml
+// File: dir_f3eaf2ccd92dcae96d1b9152e788f026.xml
 
 
-// File: dir_7a6e46f1a2cbf2e98c92b83017b61605.xml
+// File: dir_1563a38af0d3a5e4a6330d6d45e9792a.xml
 
 
-// File: dir_132f54bf328f391be9567520ab668114.xml
-
-
-// File: dir_3eda944cbe9d32550ab784df8129a81e.xml
-
-
-// File: main.xml
+// File: indexpage.xml
 

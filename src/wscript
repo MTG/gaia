@@ -31,7 +31,7 @@ def install_tree(bld, dst, src):
                               os.path.join(root, f))
 
 def build_library(bld):
-    sources =  bld.path.ant_glob('*.cpp')   
+    sources =  bld.path.ant_glob('*.cpp')
     sources += bld.path.ant_glob('algorithms/*.cpp')
     sources += bld.path.ant_glob('metrics/*.cpp')
     sources += bld.path.ant_glob('3rdparty/alglib/*.cpp')
@@ -48,14 +48,14 @@ def build_library(bld):
         install_path = '${PREFIX}/lib',
         includes = [ '.', 'metrics', '3rdparty' ]
     )
-    
+
     def write_pcfile(task):
         open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
 
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
     bld.add_group()
 
-    if bld.env['WITH_STLFACADE']: 
+    if bld.env['WITH_STLFACADE']:
         bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('stlfacade/*.h'))
         bld.install_files('${PREFIX}/include/gaia2', 'baseexception.h')
     else:
@@ -95,7 +95,7 @@ def build_tools(bld):
         target = 'tools/gaiainfo',
         includes = [ '.', 'metrics', '3rdparty' ],
         use = ['gaia2'] + bld.env['USELIB'])
-    
+
     # GaiaFusion
     bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
 
@@ -105,7 +105,7 @@ def build_tools(bld):
         target = 'tools/gaiafreeze',
         includes = [ '.', 'metrics', '3rdparty' ],
         use = ['gaia2'] + bld.env['USELIB'])
-        
+
     if is_dev_version(bld):
         # Note: we don't want to build this with a released version, because
         # otherwise rpm insists on including it also in the distributed binary
@@ -116,39 +116,7 @@ def build_tools(bld):
             includes = [ '.', 'metrics', '3rdparty' ],
             use = ['gaia2'] + bld.env['USELIB'])
 
-    # Cyclops server
-    if bld.env['WITH_CYCLOPS']:
-        # cyclops "normal" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclops',
-            includes = [ '.', 'metrics', '3rdparty' ],
-            use = ['gaia2'] + bld.env['USELIB'])
 
-        # cyclops "master" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsmasterserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclopsmaster.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclopsmaster',
-            includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            use = ['gaia2'] + bld.env['USELIB'])
-
-        # cyclops init scripts
-        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0755)
-    
 def build(bld):
     build_library(bld)
     build_tools(bld)
@@ -159,13 +127,3 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.recurse('bindings')
 
-# use the following to add the include paths for generated *.moc files automatically
-from waflib.TaskGen import feature, before, after
-@feature('cyclops')
-@after('process_source')
-@before('apply_incpaths')
-def add_includes_paths(self):
-    incs = set(self.to_list(getattr(self, 'includes', '')))
-    for x in self.compiled_tasks:
-        incs.add(x.inputs[0].parent.path_from(self.path))
-    self.includes = list(incs)

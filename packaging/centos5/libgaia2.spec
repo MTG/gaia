@@ -41,15 +41,12 @@ enumeration. In simple words, Gaia allows you to define the following:
 
 %build
 export PATH=$PATH:/usr/lib64/qt45/bin/
-./waf configure --with-python-bindings --nocache --qtdir=/usr/lib64/qt45/ --qtlibs=/usr/lib64/qt45/lib64/ --prefix=/usr/ --with-cyclops
+./waf configure --with-python-bindings --nocache --qtdir=/usr/lib64/qt45/ --qtlibs=/usr/lib64/qt45/lib64/ --prefix=/usr/
 ./waf
 
 %install
 rm -rf %{buildroot}
 ./waf install --destdir=%{buildroot}
-# copy redhat-specific init scripts
-cp packaging/centos5/init.d/cyclopsmaster %{buildroot}/etc/init.d/
-cp packaging/centos5/init.d/cyclopsslaves %{buildroot}/etc/init.d/
 
 %clean
 rm -rf %{buildroot}
@@ -90,49 +87,6 @@ Utilities for libgaia2
 /usr/bin/gaia22to23fl
 /usr/bin/gaiafusion
 /usr/bin/gaiafreeze
-
-# tools
-%package cyclops
-Summary: Gaia2 Cyclops
-Group: System Environment/Libraries
-Requires: libgaia2 = %{version}-%{release}
-Requires: cronolog
-Requires: python-yaml
-
-%description cyclops
-Cyclops for libgaia2
-
-
-%files cyclops
-%defattr(-, root, root, 0755)
-/usr/bin/cyclops
-/usr/bin/cyclopsmaster
-%config(noreplace) /etc/cyclops/master.yaml
-/etc/init.d/cyclopsmaster
-/etc/init.d/cyclopsslaves
-
-%pre cyclops
-/usr/sbin/useradd -c "Cyclops" -K UID_MAX=499 \
-	-s /bin/false -r -d /var/run/cyclops -m cyclops 2>/dev/null || :
-
-%post cyclops
-/sbin/chkconfig --add cyclopsmaster
-/sbin/chkconfig --add cyclopsslaves
-
-%preun cyclops
-if [ $1 = 0 ]; then
-   /usr/sbin/userdel cyclops 2>/dev/null || :
-   /usr/sbin/groupdel cyclops 2>/dev/null || :
-   /sbin/chkconfig --del cyclopsmaster
-   /sbin/chkconfig --del cyclopsslaves
-fi
-exit 0
-
-%postun cyclops
-if [ "$1" -ge 1 ]; then
-	/etc/rc.d/init.d/cyclopsmaster stop >/dev/null 2>&1 || :
-fi
-
 
 # devel
 %package devel
