@@ -271,7 +271,7 @@ bool GetOpt::parse( bool untilFirstSwitchOnly )
 	    }
 	    if ( t == LongOpt && opt.type == OUnknown ) {
 		if ( currOpt.type != OVarLen ) {
-                    qWarning( "Unknown option --%s", a.toAscii().data() );
+                    qWarning( "Unknown option --%s", a.toLatin1().data() );
 		    return false;
 		} else {
 		    // VarLength options support arguments starting with '-'
@@ -346,7 +346,7 @@ bool GetOpt::parse( bool untilFirstSwitchOnly )
 	    } else {
 		QString n = currType == LongOpt ?
 			    currOpt.lname : QString( QChar( currOpt.sname ) );
-		qWarning( "Expected an argument after '%s' option", n.toAscii().data() );
+		qWarning( "Expected an argument after '%s' option", n.toLatin1().data() );
 		return false;
 	    }
 	    break;

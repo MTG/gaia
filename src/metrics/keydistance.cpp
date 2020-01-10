@@ -1,18 +1,18 @@
-/* 
+/*
  * Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
  *
  * This file is part of Gaia
- * 
- * Gaia is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Affero General Public License as published by the Free 
- * Software Foundation (FSF), either version 3 of the License, or (at your 
+ *
+ * Gaia is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation (FSF), either version 3 of the License, or (at your
  * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the Affero GNU General Public License
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
@@ -27,7 +27,7 @@ class Key {
 
  public:
   Key(QString key) {
-    switch (key[0].toUpper().toAscii()) {
+    switch (key[0].toUpper().toLatin1()) {
     case 'A': _note = 0; break;
     case 'B': _note = 2; break;
     case 'C': _note = 3; break;
@@ -40,7 +40,7 @@ class Key {
 
     // is there an alteration or not?
     if (key.size() == 2) {
-      switch (key[1].toAscii()) {
+      switch (key[1].toLatin1()) {
       case '#': _note++; break;
       case 'b': _note--; break;
       default: throw GaiaException("impossible to parse key: ", key);

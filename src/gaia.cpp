@@ -41,12 +41,29 @@ const char* version_git_sha = GAIA_GIT_SHA;
 
 // message handler that aborts execution, so that when run inside gdb we can
 // still get a stack trace. Very useful!
-// got the idea from http://der-dakon.net/blog/KDE/tracing-qassert.html
-static void qtMessageHandler(QtMsgType type, const char *msg) {
-  fprintf(stderr, "%s\n", msg);
-  if (type == QtFatalMsg) {
-    abort();
-  }
+// from https://doc.qt.io/qt-5/qtglobal.html#qInstallMessageHandler
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    const char *file = context.file ? context.file : "";
+    const char *function = context.function ? context.function : "";
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    case QtInfoMsg:
+        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    }
 }
 
 
@@ -56,7 +73,7 @@ void init() {
 
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-  qInstallMsgHandler(qtMessageHandler);
+  qInstallMessageHandler(messageHandler);
 
   registerAnalyzers();
   registerAppliers();

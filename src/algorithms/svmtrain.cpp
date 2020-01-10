@@ -1,18 +1,18 @@
-/* 
+/*
  * Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
  *
  * This file is part of Gaia
- * 
- * Gaia is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Affero General Public License as published by the Free 
- * Software Foundation (FSF), either version 3 of the License, or (at your 
+ *
+ * Gaia is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation (FSF), either version 3 of the License, or (at your
  * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the Affero GNU General Public License
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
@@ -183,7 +183,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   QString modelFilename = modelFile.fileName();
   modelFile.close();
 
-  if (svm_save_model(modelFilename.toAscii().constData(), model) == -1) {
+  if (svm_save_model(modelFilename.toLatin1().constData(), model) == -1) {
     throw GaiaException("SVMTrain: error while saving SVM model to temp file");
   }
 
@@ -195,7 +195,7 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   // if we asked for the model to be output specifically, also do it
   if (_params.value("modelFilename", "").toString() != "") {
     QString filename = _params.value("modelFilename").toString();
-    svm_save_model(filename.toAscii().constData(), model);
+    svm_save_model(filename.toLatin1().constData(), model);
   }
 
   // destroy the model allocated by libsvm

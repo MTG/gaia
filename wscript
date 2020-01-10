@@ -12,20 +12,20 @@ def get_git_version():
     if os.path.exists(".git"):
         try:
             version = os.popen("git describe --dirty --always").read().strip()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
     return version
 
 APPNAME = 'gaia'
 VERSION = open('VERSION', 'r').read().strip('\n')
-GIT_SHA = get_git_version();
+GIT_SHA = get_git_version()
 
 top = '.'
 out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt4')
+    opt.load('compiler_cxx compiler_c qt5')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -53,21 +53,6 @@ def options(opt):
                    help='cross-compile for windows using mingw32 on linux')
 
 
-
-def debian_version():
-    try:
-        v = open('/etc/debian_version').read().strip()
-        return [ int(n) for n in v.split('.') ]
-    except IOError:
-        return []
-    except ValueError:
-        # string version instead of numeric
-        if 'wheezy' in v or 'sid' in v:
-            return [7, 0]
-        else:
-            return [6, 0]
-
-
 def check_tbb(conf):
     tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
                          mandatory = 1,
@@ -83,7 +68,7 @@ def check_tbb(conf):
 
 def configure(conf):
     if sys.platform != 'linux2' and sys.platform != 'darwin':
-        print 'Please use the QtCreator project for building Gaia in Windows...'
+        print('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
     print('→ configuring the project in ' + conf.path.abspath())
@@ -97,11 +82,11 @@ def configure(conf):
     #conf.env.CXXFLAGS += [ '-Werror' ]
 
     if conf.options.MODE == 'debug':
-        print ('→ Building in debug mode')
+        print('→ Building in debug mode')
         conf.env.CXXFLAGS += [ '-g' ]
 
     elif conf.options.MODE == 'release':
-        print ('→ Building in release mode')
+        print('→ Building in release mode')
         conf.env.CXXFLAGS += [ '-O2', '-msse2' ]
     else:
         raise ValueError('mode should be either "debug" or "release"')
@@ -112,22 +97,13 @@ def configure(conf):
     # super optimized flags
     #conf.env['CXXFLAGS'] += [ '-Wall -Werror -O3 -fPIC -DNDEBUG -DQT_NO_DEBUG -ffast-math -fomit-frame-pointer -funroll-loops' ]
 
-
-    # NOTE: Debian Squeeze doesn't provide pkg-config files for libyaml, but
-    #       Debian Wheezy does... Mac OS X (brew) does it also.
-    debver = debian_version()
-    is_squeeze = (debver and debver[0] < 7)
-
-    if is_squeeze:
-        conf.env.LINKFLAGS += [ '-lyaml' ]
-    else:
-        conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
-                      args=['--cflags', '--libs'])
+    conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
+                   args=['--cflags', '--libs'])
 
     conf.check_cfg(package='eigen3', uselib_store='EIGEN3',
                    args=['eigen3 >= 3.3.4', '--cflags'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML', 'EIGEN3' ]
+    conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML', 'EIGEN3' ]
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
@@ -137,7 +113,7 @@ def configure(conf):
     # optional dependency: QtNetwork for Cyclops Server
     conf.env['WITH_CYCLOPS'] = conf.options.cyclops
     if conf.env['WITH_CYCLOPS']:
-        conf.env['USELIB'] += [ 'QTNETWORK' ]
+        conf.env['USELIB'] += [ 'QT5NETWORK' ]
 
     conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
@@ -169,7 +145,7 @@ def configure(conf):
         conf.env.CXXFLAGS = ['-static-libgcc', '-static-libstdc++']
 
 
-    conf.load('compiler_cxx compiler_c qt4')
+    conf.load('compiler_cxx compiler_c qt5')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -196,8 +172,8 @@ def configure(conf):
     if sys.platform == 'linux2':
 
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
+             'qtlibdir': conf.env['LIB_QT5CORE'] or '/usr/lib',
+             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
              }
@@ -217,9 +193,9 @@ def configure(conf):
 
     elif sys.platform == 'darwin':
         opts = { 'prefix': prefix,
-             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QTCORE'][0] +
-                         ' -framework ' + conf.env['FRAMEWORK_QTCORE'][0],
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
+             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QT5CORE'][0] +
+                         ' -framework ' + conf.env['FRAMEWORK_QT5CORE'][0],
+             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
              }
