@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import sys, glob
-##import Options, Scripting
 from os.path import join, exists, normpath
 import os
 
@@ -12,8 +11,8 @@ def get_git_version():
     if os.path.exists(".git"):
         try:
             version = os.popen("git describe --dirty --always").read().strip()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
     return version
 
 APPNAME = 'gaia'
@@ -53,21 +52,6 @@ def options(opt):
                    help='cross-compile for windows using mingw32 on linux')
 
 
-
-def debian_version():
-    try:
-        v = open('/etc/debian_version').read().strip()
-        return [ int(n) for n in v.split('.') ]
-    except IOError:
-        return []
-    except ValueError:
-        # string version instead of numeric
-        if 'wheezy' in v or 'sid' in v:
-            return [7, 0]
-        else:
-            return [6, 0]
-
-
 def check_tbb(conf):
     tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
                          mandatory = 1,
@@ -82,11 +66,11 @@ def check_tbb(conf):
 
 
 def configure(conf):
-    if sys.platform != 'linux2' and sys.platform != 'darwin':
-        print 'Please use the QtCreator project for building Gaia in Windows...'
+    if not sys.platform.startswith('linux') and sys.platform != 'darwin':
+        print('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
 
-    print('→ configuring the project in ' + conf.path.abspath())
+    print('- configuring the project in ' + conf.path.abspath())
 
     conf.env.APP_VERSION = VERSION
 
@@ -97,11 +81,11 @@ def configure(conf):
     #conf.env.CXXFLAGS += [ '-Werror' ]
 
     if conf.options.MODE == 'debug':
-        print ('→ Building in debug mode')
+        print('- Building in debug mode')
         conf.env.CXXFLAGS += [ '-g' ]
 
     elif conf.options.MODE == 'release':
-        print ('→ Building in release mode')
+        print('- Building in release mode')
         conf.env.CXXFLAGS += [ '-O2', '-msse2' ]
     else:
         raise ValueError('mode should be either "debug" or "release"')
@@ -113,16 +97,8 @@ def configure(conf):
     #conf.env['CXXFLAGS'] += [ '-Wall -Werror -O3 -fPIC -DNDEBUG -DQT_NO_DEBUG -ffast-math -fomit-frame-pointer -funroll-loops' ]
 
 
-    # NOTE: Debian Squeeze doesn't provide pkg-config files for libyaml, but
-    #       Debian Wheezy does... Mac OS X (brew) does it also.
-    debver = debian_version()
-    is_squeeze = (debver and debver[0] < 7)
-
-    if is_squeeze:
-        conf.env.LINKFLAGS += [ '-lyaml' ]
-    else:
-        conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
-                      args=['--cflags', '--libs'])
+    conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
+                  args=['--cflags', '--libs'])
 
     conf.check_cfg(package='eigen3', uselib_store='EIGEN3',
                    args=['eigen3 >= 3.3.4', '--cflags'])
@@ -156,7 +132,7 @@ def configure(conf):
         conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
 
     if conf.options.CROSS_COMPILE_MINGW32:
-        #print("→ Cross-compiling for Windows with MinGW: search for pre-built dependencies in 'packaging/win32_3rdparty'")
+        #print("- Cross-compiling for Windows with MinGW: search for pre-built dependencies in 'packaging/win32_3rdparty'")
         #os.environ["PKG_CONFIG_PATH"] = 'packaging/win32_3rdparty/lib/pkgconfig'
         #os.environ["PKG_CONFIG_LIBDIR"] = os.environ["PKG_CONFIG_PATH"]
 
@@ -193,7 +169,7 @@ def configure(conf):
     # write pkg-config file
     prefix = normpath(conf.options.prefix)
 
-    if sys.platform == 'linux2':
+    if sys.platform.startswith('linux'):
 
         opts = { 'prefix': prefix,
              'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
@@ -244,5 +220,5 @@ def configure(conf):
 
 
 def build(bld):
-    print('→ building from ' + bld.path.abspath())
+    print('- building from ' + bld.path.abspath())
     bld.recurse('src')
