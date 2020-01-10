@@ -17,14 +17,14 @@ def get_git_version():
 
 APPNAME = 'gaia'
 VERSION = open('VERSION', 'r').read().strip('\n')
-GIT_SHA = get_git_version();
+GIT_SHA = get_git_version()
 
 top = '.'
 out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt4')
+    opt.load('compiler_cxx compiler_c qt5')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -91,14 +91,13 @@ def configure(conf):
     # super optimized flags
     #conf.env['CXXFLAGS'] += [ '-Wall -Werror -O3 -fPIC -DNDEBUG -DQT_NO_DEBUG -ffast-math -fomit-frame-pointer -funroll-loops' ]
 
-
     conf.check_cfg(package='yaml-0.1', uselib_store='YAML',
-                  args=['--cflags', '--libs'])
+                   args=['--cflags', '--libs'])
 
     conf.check_cfg(package='eigen3', uselib_store='EIGEN3',
                    args=['eigen3 >= 3.3.4', '--cflags'])
 
-    conf.env['USELIB'] = [ 'QTCORE', 'YAML', 'EIGEN3' ]
+    conf.env['USELIB'] = [ 'QT5CORE', 'QT5CONCURRENT', 'YAML', 'EIGEN3' ]
 
     # optional dependency: tbb, if asked for it
     conf.env['WITH_TBB'] = conf.options.tbb
@@ -135,7 +134,7 @@ def configure(conf):
         conf.env.CXXFLAGS = ['-static-libgcc', '-static-libstdc++']
 
 
-    conf.load('compiler_cxx compiler_c qt4')
+    conf.load('compiler_cxx compiler_c qt5')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
@@ -162,8 +161,8 @@ def configure(conf):
     if sys.platform.startswith('linux'):
 
         opts = { 'prefix': prefix,
-             'qtlibdir': conf.env['LIB_QTCORE'] or '/usr/lib',
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
+             'qtlibdir': conf.env['LIB_QT5CORE'] or '/usr/lib',
+             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
              }
@@ -183,9 +182,9 @@ def configure(conf):
 
     elif sys.platform == 'darwin':
         opts = { 'prefix': prefix,
-             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QTCORE'][0] +
-                         ' -framework ' + conf.env['FRAMEWORK_QTCORE'][0],
-             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QTCORE']),
+             'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QT5CORE'][0] +
+                         ' -framework ' + conf.env['FRAMEWORK_QT5CORE'][0],
+             'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
              }
