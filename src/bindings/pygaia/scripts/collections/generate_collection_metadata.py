@@ -15,7 +15,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -134,7 +134,8 @@ if __name__ == '__main__':
         gtname = args[1]
 
         if len(args) != 2:
-            raise 'fallthrough'
+            print(parser.print_help())
+            sys.exit(1)
     except:
         print(parser.print_help())
         sys.exit(1)

@@ -15,15 +15,17 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
 from __future__ import print_function
 import gaia2
 from gaia2 import DataSet, transform, applyTransfoChain, fastyaml
-import os, sys, tempfile, subprocess
-from os.path import join, dirname
+import os, subprocess
+
+from six import string_types
+
 
 def transformDataSet(inputFilename, outputFilename, transfoFile = None):
     """Apply the list of transformations given as a yaml sequence to the specified dataset."""
@@ -61,11 +63,11 @@ def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, se
     #     a big effect when merging millions of files
     cmd = [ 'gaiamerge', points, outputFilename + '.raw', str(start), str(end) ]
     if select:
-        if isinstance(select, basestring):
+        if isinstance(select, string_types):
             select = [ select ]
         cmd += [ '--select=' + ','.join(select) ]
     if exclude:
-        if isinstance(exclude, basestring):
+        if isinstance(exclude, string_types):
             exclude = [ exclude ]
         cmd += [ '--exclude=' + ','.join(exclude) ]
 
@@ -135,7 +137,7 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
     if exclude:
         try:
             p = gaia2.Point()
-            p.load(gaia2.fastyaml.loadfile(pointList).items()[0][1])
+            p.load(list(gaia2.fastyaml.loadfile(pointList).items())[0][1])
             excluded = p.layout().descriptorNames(exclude)
         except:
             raise
