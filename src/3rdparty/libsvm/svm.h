@@ -44,8 +44,8 @@ struct svm_parameter
 	double p;	/* for EPSILON_SVR */
 	int shrinking;	/* use the shrinking heuristics */
 	int probability; /* do probability estimates */
-    int max_iterations; /* maximum number of optimization iterations before updating the tolerance */
-    int max_tolerance_updates; /* maximum number of tolerance updates */
+	int max_iterations; /* maximum number of optimization iterations before updating the tolerance */
+	int max_tolerance_updates; /* maximum number of tolerance updates */
 };
 
 struct svm_model *svm_train(const struct svm_problem *prob, const struct svm_parameter *param);
