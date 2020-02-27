@@ -15,15 +15,15 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-
+from __future__ import absolute_import
 
 from gaia2 import DataSet
 from gaia2.utils import TextProgress
-from groundtruth import GroundTruth
-from confusionmatrix import ConfusionMatrix
+from .groundtruth import GroundTruth
+from .confusionmatrix import ConfusionMatrix
 import random
 import logging
 
@@ -57,7 +57,7 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, nfold=None, ver
             else:
                 confusion.addNfold(expected, found, pointId, nfold)
 
-        except Exception, e:
+        except Exception as e:
             log.warning('Could not classify point "%s" because %s' % (pointId, str(e)))
             raise
 

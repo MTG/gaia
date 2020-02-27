@@ -31,7 +31,7 @@ def install_tree(bld, dst, src):
                               os.path.join(root, f))
 
 def build_library(bld):
-    sources =  bld.path.ant_glob('*.cpp')   
+    sources =  bld.path.ant_glob('*.cpp')
     sources += bld.path.ant_glob('algorithms/*.cpp')
     sources += bld.path.ant_glob('metrics/*.cpp')
     sources += bld.path.ant_glob('3rdparty/alglib/*.cpp')
@@ -48,14 +48,14 @@ def build_library(bld):
         install_path = '${PREFIX}/lib',
         includes = [ '.', 'metrics', '3rdparty' ]
     )
-    
+
     def write_pcfile(task):
         open('../build/gaia2.pc', 'w').write(bld.env.pcfile)
 
     bld(rule=write_pcfile,  name='write_pcfile', target='../gaia2.pc')
     bld.add_group()
 
-    if bld.env['WITH_STLFACADE']: 
+    if bld.env['WITH_STLFACADE']:
         bld.install_files('${PREFIX}/include/gaia2', bld.path.ant_glob('stlfacade/*.h'))
         bld.install_files('${PREFIX}/include/gaia2', 'baseexception.h')
     else:
@@ -69,11 +69,9 @@ def build_library(bld):
         bld.install_files('${PREFIX}/include/gaia2/parser', [ 'parser/filter.h',
                                                               'parser/parsertypes.h',
                                                               'parser/grammar.h' ])
-    
-        # also install all Eigen headers
-        import os
-        os.chdir('src')
-        install_tree(bld, '${PREFIX}/include/gaia2/Eigen', '3rdparty/Eigen')
+
+    import os
+    os.chdir('src')
 
     bld.install_files('${PREFIX}/lib/pkgconfig', '../build/gaia2.pc')
     bld.install_files('${PREFIX}/lib', 'libgaia2.a')
@@ -97,9 +95,9 @@ def build_tools(bld):
         target = 'tools/gaiainfo',
         includes = [ '.', 'metrics', '3rdparty' ],
         use = ['gaia2'] + bld.env['USELIB'])
-    
+
     # GaiaFusion
-    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
+    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0o755)
 
     # gaiafreeze utility
     bld.program(
@@ -107,7 +105,7 @@ def build_tools(bld):
         target = 'tools/gaiafreeze',
         includes = [ '.', 'metrics', '3rdparty' ],
         use = ['gaia2'] + bld.env['USELIB'])
-        
+
     if is_dev_version(bld):
         # Note: we don't want to build this with a released version, because
         # otherwise rpm insists on including it also in the distributed binary
@@ -149,8 +147,8 @@ def build_tools(bld):
 
         # cyclops init scripts
         bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0755)
-    
+        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0o755)
+
 def build(bld):
     build_library(bld)
     build_tools(bld)

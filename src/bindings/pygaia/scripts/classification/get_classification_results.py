@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, glob
 from os.path import join, splitext
 from gaia2.classification import ConfusionMatrix
@@ -58,7 +58,7 @@ class ClassificationResults(object):
                    cm.normalizedAccuracy(), cm.stdNfold(normalizedAccuracies=True), filename, param)
                   for (filename, cm, param) in self.results ]
 
-        print "number of results ====", len(r)
+        print("number of results ====", len(r))
         r = sorted(r)[::-1][:n]
 
         return r
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     try:
         resultsdir = sys.argv[1]
     except:
-        print 'Usage: %s results_dir [classifierType]' % sys.argv[0]
+        print('Usage: %s results_dir [classifierType]' % sys.argv[0])
         exit(1)
 
     try:
@@ -84,17 +84,17 @@ if __name__ == '__main__':
         classifierType = None
 
     cr = ClassificationResults()
-    print 'Loading all results...'
+    print('Loading all results...')
     cr.readResults(resultsdir)
 
-    print 'Best parameters:'
+    print('Best parameters:')
     for r, filename, params in cr.best(10, classifierType):
-        print '*'*100
-        print 'Correct classification: %2f%%' % r
-        print 'Filename:', filename
+        print('*' * 100)
+        print('Correct classification: %2f%%' % r)
+        print('Filename:', filename)
 
         model = params['model']
-        print 'Classifier:', model['classifier']
-        print 'Parameters:'
+        print('Classifier:', model['classifier'])
+        print('Parameters:')
         del model['classifier']
-        print '    ' + yaml.dump(model).replace('\n', '\n    ')[:-4]
+        print('    ' + yaml.dump(model).replace('\n', '\n    ')[:-4])

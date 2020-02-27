@@ -1,12 +1,10 @@
-
-import train_model
-import json_to_sig
+from __future__ import print_function, absolute_import
+from . import train_model
+from . import json_to_sig
 
 import gaia2.fastyaml as yaml
 import sys
 import os
-import shutil
-import json
 import glob
 import shutil
 from argparse import ArgumentParser
@@ -20,7 +18,6 @@ template = {"type": "singleClass",
 
 def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
-
 
 def main(input_directory, output_directory, project_name, force=False,
          seed=None, cluster_mode=False):

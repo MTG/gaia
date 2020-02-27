@@ -15,17 +15,18 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
+from __future__ import print_function, absolute_import
 
-import sys, os, logging
+import logging
 import yaml
 from gaia2 import *
 from multiprocessing import cpu_count
 from concurrent.futures import ProcessPoolExecutor, as_completed
-import cStringIO
+from six.moves import cStringIO
 from os.path import join, split, exists
 from gaia2.utils import makedir, tuplify, dictcombinations
 from gaia2.classification import GroundTruth
@@ -52,8 +53,8 @@ class ClassificationTaskManager:
     def __init__(self, yamlfile, callback=None):
         try:
             conf = yaml.load(open(yamlfile).read())
-        except Exception, e:
-            print 'Unable to open project file:', e
+        except Exception as e:
+            print('Unable to open project file:', e)
             raise
 
         self.conf = conf
@@ -75,7 +76,7 @@ class ClassificationTaskManager:
 
 
         # make sure that each classifier has a list of valid preprocessed datasets specified, otherwise add them
-        preprocessingSteps = conf['preprocessing'].keys()
+        preprocessingSteps = list(conf['preprocessing'].keys())
         for trainer, configs in conf['classifiers'].items():
             for config in configs:
                 if 'preprocessing' not in config:
@@ -128,7 +129,7 @@ class ClassificationTaskManager:
         try:
             ds = DataSet()
             ds.load(self.conf['datasetFilename'])
-        except Exception, e:
+        except Exception as e:
             raise ValueError('Could not open the dataset file "%s" because: %s' % (dsfilename, str(e)))
 
         return ds
@@ -266,7 +267,7 @@ def runSingleTest(args, cluster_mode=False):
     start_time = time()
 
     if cluster_mode:
-        import cPickle
+        from six.moves import cPickle
         import subprocess
 
         singleTaskFile = join(split(__file__)[0], 'classificationtask.py')
@@ -286,13 +287,13 @@ def runSingleTest(args, cluster_mode=False):
         # we can't use stderr, because that's where we log the messages...
 
     else:
-        from classificationtask import ClassificationTask
+        from .classificationtask import ClassificationTask
 
         task = ClassificationTask()
         try:
             #task.run(className, outfilename, trainingparam, dsname, gtname, evalconfig)
             task.run(*args)
-        except Exception, e:
+        except Exception as e:
             log.error('Running task failed: %s' % e)
 
     end_time = time()

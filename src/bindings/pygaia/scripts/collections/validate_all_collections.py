@@ -19,7 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import os, sys, subprocess, yaml
 from os.path import *
 from gaia2.mtgdb.environment import MTGDB_AUDIO
@@ -34,4 +34,4 @@ if __name__ == '__main__':
 
         subprocess.call(cmd)
 
-        print '\n'
+        print('\n')

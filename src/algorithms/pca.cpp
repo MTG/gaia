@@ -21,7 +21,7 @@
 #include "linalg.h"
 #include "timer.h"
 #include "utils.h"
-#include "Eigen/Eigenvalues"
+#include <Eigen/Eigenvalues>
 using namespace std;
 using namespace Eigen;
 

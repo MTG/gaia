@@ -15,14 +15,17 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 from __future__ import with_statement
 
-import cPickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import os, sys
 import gaia2.fastyaml as yaml
 from gaia2 import DataSet, cvar
@@ -127,14 +130,13 @@ def getTrainer(classifier, param, ds):
         alpha = param['alpha']
         func1 = param['func1']
         func2 = param['func2']
-        print '\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2
+        print('\nUsing α =', alpha, ', func1 =', func1, ', func2 =', func2)
         trainer = train_1NN_segments
         trainingparam = { 'alpha': alpha, 'func1': func1, 'func2': func2, 'dropBestResult': False }
         newds = addRCA(ds, rcadim)
 
     else:
-        raise 'ERROR: classifier needs to be one of: simca, svm, mixed'
-        sys.exit(1)
+        raise ValueError('ERROR: classifier needs to be one of: simca, svm, mixed')
 
     return trainer, trainingparam, newds
 
@@ -197,7 +199,7 @@ class ClassificationTask(object):
 
 
 if __name__ == '__main__':
-    config = cPickle.load(sys.stdin)
+    config = pickle.load(sys.stdin)
 
     cvar.verbose = False
     task = ClassificationTask()

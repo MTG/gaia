@@ -15,11 +15,11 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 from gaia2 import *
 from gaia2.cyclops import Cyclops
 import gaia2.fastyaml as yaml
@@ -68,15 +68,15 @@ def setup():
     c.createDistance('euc', 'ds', 'euclidean')
     c.createDistance('euc2', 'ds', 'euclidean', { 'descriptorNames': '*.mean' })
 
-    print 'datasets loaded:', c.datasetNames()
-    print 'distances created:', c.distanceNames()
+    print('datasets loaded:', c.datasetNames())
+    print('distances created:', c.distanceNames())
 
 
 
 def testMemleak():
     c = Cyclops('localhost:8090')
     for i in range(100000):
-        print i,
+        print(i, end="")
         list(c.nnSearchById("(Sittin' On) The Dock Of The Bay.mp3",
                             'ds', { 'distance': 'euclidean',
                                     'params': { 'descriptorNames': '*.mean' }}).get(10))
@@ -94,9 +94,9 @@ def testNoCrashInvalidArguments():
     except: pass
 
     try:
-        print list(c.nnSearchById("gloup.mp3",
-                                  'ds', { 'distance': 'euclidean',
-                                          'params': { 'descriptorNames': '*.mean' }}).get(10, keys = [ 'tempotap_bpm' ]))
+        print(list(c.nnSearchById("gloup.mp3",
+                                  'ds', {'distance': 'euclidean',
+                                         'params': {'descriptorNames': '*.mean'}}).get(10, keys=['tempotap_bpm'])))
     except:
         pass
 
@@ -109,11 +109,11 @@ def assertEqual(name1, r1, name2, r2):
     r2 = list(r2)
 
     if r1 != r2:
-        print '*'*100
-        print 'ERROR: not equal'
-        print name1 + ':', r1
-        print name2 + ':', r2
-        print '*'*100
+        print('*' * 100)
+        print('ERROR: not equal')
+        print(name1 + ':', r1)
+        print(name2 + ':', r2)
+        print('*' * 100)
         #raise
 
 def testRegression():
@@ -177,7 +177,7 @@ def testInputSpace():
                              'ds', 'euc2', inputSpace = rset).get(10)
 
     for pid, dist, values in result:
-        print pid, '- bpm =', c.getPoint('ds', pid)['tempotap_bpm']
+        print(pid, '- bpm =', c.getPoint('ds', pid)['tempotap_bpm'])
 
 
 
@@ -188,7 +188,7 @@ def testInputSpace():
     result = v.nnSearch("(Sittin' On) The Dock Of The Bay.mp3", rset, dist).get(10)
 
     for pid, dist in result:
-        print pid, '- bpm =', c.getPoint('ds', pid)['tempotap_bpm']
+        print(pid, '- bpm =', c.getPoint('ds', pid)['tempotap_bpm'])
 
 
 
@@ -199,13 +199,13 @@ if __name__ == '__main__':
     try:
         setup()
 
-        print 'test ID or example'
+        print('test ID or example')
         testIdOrExample()
 
-        print 'test regression (including offset)'
+        print('test regression (including offset)')
         testRegression()
 
-        print 'test invalid args'
+        print('test invalid args')
         testNoCrashInvalidArguments()
 
     except:

@@ -22,6 +22,7 @@
 
 
 # try to guess on which computer we're running (with its IP address) to set some env variables
+from __future__ import print_function
 import subprocess
 for l in subprocess.Popen('/sbin/ifconfig', stdout = subprocess.PIPE).communicate()[0].split('\n'):
     if 'inet addr' in l:
@@ -60,6 +61,6 @@ else:
         try:
             MTGDB_AUDIO = G_MOUNT_POINTS[ipaddr]
         except:
-            print 'Warning: could not detect on which computer this program is running.'
+            print('Warning: could not detect on which computer this program is running.')
             print 'IP address:', ipaddr, '- username:', username
             print 'Please edit the mtgdb/environment.py file to add your data to it to be able to run it.'

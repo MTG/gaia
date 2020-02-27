@@ -15,23 +15,23 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, yaml, glob
 from os.path import join, exists, basename
 from gaia2.classification import GroundTruth
 
 def usage():
-    print '%s base_dir' % sys.argv[0]
+    print('%s base_dir' % sys.argv[0])
     sys.exit(1)
 
 
 def validate(basedir):
     # let's start with some basic check
-    print 'Checking basic directory layout...'
+    print('Checking basic directory layout...')
     if not exists(basedir):
         raise Exception('The specified base directory does not exist')
 
@@ -46,7 +46,7 @@ def validate(basedir):
 
 
     # check that the specified audioFormats correspond to the audio/ subfolders
-    print 'Checking available audio formats...'
+    print('Checking available audio formats...')
     audioFormats = config['audioFormats']
     if not audioFormats:
         raise Exception('audioFormats not specified in config.yaml')
@@ -56,11 +56,11 @@ def validate(basedir):
     if len(audioFolders) != len(audioFormats):
         raise Exception('Some audio folders are not described in the audioFormats section of the config.yaml')
 
-    print 'Found formats:', str(audioFolders)
+    print('Found formats:', str(audioFolders))
 
     # check the audio formats are valid, in particular that they have a valid filelist
     for format, desc in audioFormats.items():
-        print "\nChecking format '%s':" % format
+        print("\nChecking format '%s':" % format)
         # TODO: at some point in the future we should also check for valid values in desc
         if not exists(join(basedir, 'audio', format)):
             raise Exception('%s is listed as an audio format, but doesn\'t appear in the audio/ folder' % format)
@@ -69,7 +69,7 @@ def validate(basedir):
             raise Exception('Audio format "%s" does not define a filelist' % format)
 
         filelist = yaml.load(open(join(basedir, 'metadata', desc['filelist'])).read())
-        print '  filelist OK, lists %d files' % len(filelist)
+        print('  filelist OK, lists %d files' % len(filelist))
 
         for pid, filename in filelist.items():
             fullpath = join(basedir, 'audio', format, filename)
@@ -78,11 +78,11 @@ def validate(basedir):
 
 
     # check that the groundtruth files do actually exist if they are specified
-    print '\nChecking groundtruth files...'
+    print('\nChecking groundtruth files...')
     groundTruth = config.get('groundTruth', {})
-    print 'Found groundtruth files:', str(groundTruth.keys())
+    print('Found groundtruth files:', str(list(groundTruth.keys())))
     for name, gtfile in groundTruth.items():
-        print "\nChecking groundtruth '%s':" % name
+        print("\nChecking groundtruth '%s':" % name)
         gt = GroundTruth('')
         gt.load(join(basedir, 'metadata', gtfile))
         # check that the IDs used in the groundtruth files exist in all the filelists
@@ -91,7 +91,8 @@ def validate(basedir):
             for gid in gt:
                 if gid not in flist:
                     raise Exception("ID '%s' is in GroundTruth '%s', but could not be found in filelist for audio format '%s'" % (gid, gtfile, afname))
-        print '  gt filelist OK, found classes:', str(sorted(set(gt.values())))
+        print('  gt filelist OK, found classes:', str(sorted(set(gt.values()))))
+
 
 if __name__ == '__main__':
     try:
@@ -99,8 +100,8 @@ if __name__ == '__main__':
     except:
         usage()
 
-    print '**** Checking collection directory: %s ****\n' % basedir
+    print('**** Checking collection directory: %s ****\n' % basedir)
 
     validate(basedir)
 
-    print '\nCollection validated!'
+    print('\nCollection validated!')

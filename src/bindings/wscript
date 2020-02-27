@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 import sys
 
 def print_env(env):
     for n in env.m_table.keys():
         if 'py' in n or 'PY' in n:
-            print n, ':', env[n]
+            print(n, ':', env[n])
 
 
 def options(opt):
@@ -54,7 +55,7 @@ def build(bld):
         swig_flags = '-c++ -python -w451',
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
         includes = bld.env['CPPPATH_BINDINGS'],
-        install_path = '${PYTHONDIR}'
+        install_path = '${PYTHONDIR}/gaia2'
         )
 
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')

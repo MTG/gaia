@@ -1,4 +1,4 @@
-%module gaia2
+%module(moduleimport="import _gaia2") gaia2
 %{
 #include <cstddef>
 %}

@@ -38,7 +38,6 @@ yaml::Node toYaml(const SearchResults& results);
 class DistanceFunction;
 class FrozenDistance;
 
-#define Vector std::vector
 
 
 class SearchPoint {
@@ -88,7 +87,7 @@ public:
  * automatically when a DataSet changes, but SearchSpace ones don't)
  */
 template <typename SearchPointType, typename DataSetType>
-class BaseSearchSpace : public Vector<SearchPointType> {
+class BaseSearchSpace : public std::vector<SearchPointType> {
 
  public:
   BaseSearchSpace(const Filter* filter = 0, bool ownsFilter = false);

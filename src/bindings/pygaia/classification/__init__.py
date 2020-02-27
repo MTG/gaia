@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from confusionmatrix import ConfusionMatrix
-from groundtruth import GroundTruth, getGroundTruthFromDirectory, getGroundTruthFromLabel
-from evaluation import evaluate, evaluateNfold
-from classificationtaskmanager import ClassificationTaskManager
+from __future__ import absolute_import
+
+from .confusionmatrix import ConfusionMatrix
+from .groundtruth import GroundTruth, getGroundTruthFromDirectory, getGroundTruthFromLabel
+from .evaluation import evaluate, evaluateNfold
+from .classificationtaskmanager import ClassificationTaskManager
 import logging
 
 class SimpleFormatter(logging.Formatter):

@@ -15,11 +15,11 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
-
+from __future__ import print_function
 import sys, yaml, glob, os
 from optparse import OptionParser
 from os.path import join, exists, basename
@@ -93,7 +93,7 @@ def generate_std_metadata(basedir, gtname, options):
             # and create a groundtruth file for each of those
             mdirs = set(pid.split('/')[0] for pid in flist)
             mdirs = [ c for c in mdirs if ('not_' + c in mdirs or 'not-' + c in mdirs) ]
-            print 'Found following possible classes', mdirs
+            print('Found following possible classes', mdirs)
 
             for c in mdirs:
                 gt = GroundTruth(gtname + '_' + c)
@@ -110,8 +110,8 @@ def generate_std_metadata(basedir, gtname, options):
 
 
         else:
-            print 'WARNING: unknown groundtruth type:', str(options.gttype)
-            print '         not generating any groundtruth files...'
+            print('WARNING: unknown groundtruth type:', str(options.gttype))
+            print('         not generating any groundtruth files...')
 
 
 
@@ -134,14 +134,15 @@ if __name__ == '__main__':
         gtname = args[1]
 
         if len(args) != 2:
-            raise 'fallthrough'
+            print(parser.print_help())
+            sys.exit(1)
     except:
-        print parser.print_help()
+        print(parser.print_help())
         sys.exit(1)
 
     if options.gttype not in [ 'dir', 'txt', 'mdir' ]:
-        print 'ERROR: You have to specify a groundtruth type which is either "dir", "mdir" or "txt"\n'
-        print parser.print_help()
+        print('ERROR: You have to specify a groundtruth type which is either "dir", "mdir" or "txt"\n')
+        print(parser.print_help())
         sys.exit(1)
 
     generate_std_metadata(basedir, gtname, options)

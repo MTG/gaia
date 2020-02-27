@@ -19,6 +19,7 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
+from __future__ import print_function
 
 try:
     import yaml
@@ -36,7 +37,7 @@ try:
         dump = yaml.dump
 
 except ImportError:
-    print 'WARNING: could not import yaml module'
+    print('WARNING: could not import yaml module')
 
 
 def loadfile(filename):
