@@ -56,8 +56,7 @@ preprocessing:
                                                     'lowlevel.melbands128.*'
                                                     ] }
         - transfo: enumerate
-          params: { descriptorNames: &stringDescs [ # 'rhythm.perceptual_tempo', # removed from new extractor
-                                                    'tonal.chords_key', 'tonal.chords_scale',
+          params: { descriptorNames: &stringDescs ['tonal.chords_key', 'tonal.chords_scale',
                                                     'tonal.key_krumhansl.key', 'tonal.key_edma.key', 'tonal.key_temperley.key',
                                                     'tonal.key_krumhansl.scale', 'tonal.key_edma.scale', 'tonal.key_temperley.scale'] }
 
@@ -70,15 +69,6 @@ preprocessing:
           params: { descriptorNames: *stringDescs }
         - transfo: select
           params: { descriptorNames: 'lowlevel*' }
-
-    # sfx descriptors are removed from new extractor as it is focused on music, not sfx
-    # nosfx:
-    #     - transfo: remove
-    #       params: { descriptorNames: *unusedDescs }
-    #     - transfo: enumerate
-    #       params: { descriptorNames: *stringDescs }
-    #     - transfo: remove
-    #       params: { descriptorNames: [ 'sfx*' ] }
 
     nobands:
         - transfo: remove
@@ -117,7 +107,7 @@ preprocessing:
 classifiers:
     svm:
         # first svm test combinations
-        - preprocessing: [ 'basic', 'lowlevel', 'nobands', 'normalized', 'gaussianized', 'mfcc' ] # 'nosfx'
+        - preprocessing: [ 'basic', 'lowlevel', 'nobands', 'normalized', 'gaussianized', 'mfcc' ]
           type: [ 'C-SVC' ]
           kernel: [ 'poly', 'RBF' ]
           C:     [ -5, -3, -1, 1, 3, 5, 7, 9, 11 ] # will actually be 2**x
@@ -127,12 +117,6 @@ classifiers:
         #  descriptorNames: [ ['*.mean', '*.var'] ]
         # more svm params combinations
         # ...
-
-    # deactivated those because we can only import SVM models in Essentia at the moment
-    #mixed:
-    #    - preprocessing: [ normalized, gaussianized ]
-    #      rcadim: [ 2, 4, 6, 8, 9, 10, 15, 20 ]
-    #      alpha: [ 0.00, 0.02, 0.04, 0.06, 0.08, 0.9, 0.1, 0.11, 0.12, 0.14, 0.16, 0.18, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0 ]
 
 # List of evaluations to be performed
 evaluations:
