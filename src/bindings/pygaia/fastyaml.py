@@ -15,7 +15,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -24,17 +24,19 @@ from __future__ import print_function
 try:
     import yaml
 
-    if 'CLoader' in dir(yaml):
+    if hasattr(yaml, 'CLoader'):
         load = lambda x: yaml.load(x, yaml.CLoader)
         load_all = lambda x: yaml.load_all(x, yaml.CLoader)
     else:
         load = yaml.load
         load_all = yaml.load_all
 
-    if 'CDumper' in dir(yaml):
+    if hasattr(yaml, 'CDumper'):
         dump = lambda x, stream = None: yaml.dump(x, stream, Dumper=yaml.CDumper)
+        safe_dump = lambda x, stream = None: yaml.dump(x, stream, Dumper=yaml.CSafeDumper)
     else:
         dump = yaml.dump
+        safe_dump = yaml.safe_dump
 
 except ImportError:
     print('WARNING: could not import yaml module')
