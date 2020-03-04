@@ -262,7 +262,6 @@ class ClassificationTaskManager:
 
 
 def runSingleTest(args, cluster_mode=False):
-    #className, outfilename, trainingparam, dsname, gtname, evalconfig = args
 
     start_time = time()
 
@@ -277,8 +276,7 @@ def runSingleTest(args, cluster_mode=False):
                                 #stdout = subprocess.PIPE,
                                 #stderr = subprocess.PIPE)
 
-        inputs = cStringIO.StringIO()
-        #cPickle.dump((className, outfilename, trainingparam, dsname, gtname, evalconfig), inputs)
+        inputs = cStringIO()
         cPickle.dump(args, inputs)
 
         stdout, stderr = proc.communicate(inputs.getvalue())

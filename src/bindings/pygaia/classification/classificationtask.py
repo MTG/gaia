@@ -22,18 +22,16 @@
 from __future__ import print_function
 from __future__ import with_statement
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-import os, sys
 import gaia2.fastyaml as yaml
+import json
+import logging
+import os
+import sys
 from gaia2 import DataSet, cvar
 from gaia2.classification import GroundTruth, evaluate, evaluateNfold, utils
-from os.path import exists
-import logging
-import json
 from math import log10
+from os.path import exists
+from six.moves import cPickle
 
 log = logging.getLogger('gaia2.classification.ClassificationTask')
 
@@ -199,7 +197,7 @@ class ClassificationTask(object):
 
 
 if __name__ == '__main__':
-    config = pickle.load(sys.stdin)
+    config = cPickle.load(sys.stdin)
 
     cvar.verbose = False
     task = ClassificationTask()
