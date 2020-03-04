@@ -122,8 +122,6 @@ if __name__ == "__main__":
     if args.seed == 0:
         seed = None
 
-    print(seed)
-    sys.exit()
     main(args.input_directory, args.output_directory,
          args.project_name, args.force, seed=seed,
          cluster_mode=args.cluster_mode)
