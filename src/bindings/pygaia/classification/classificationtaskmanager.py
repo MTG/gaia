@@ -219,7 +219,7 @@ class ClassificationTaskManager:
         log.info('Setup finished, starting classification tasks.')
         log.info('Will use %d concurrent jobs.' % concurrentJobs)
 
-        with ProcessPoolExecutor() as executor:
+        with ProcessPoolExecutor(max_workers=concurrentJobs) as executor:
             futures = [executor.submit(runSingleTest, job,
                                        cluster_mode=self.conf['clusterMode']) for job in alljobs]
 
