@@ -172,7 +172,8 @@ class ClassificationTaskManager:
         from gaia2.fusion import mergeAll
         # exclude tags fields as they may not be consistent among tracks
         # and they don't contain relevant information for classification
-        mergeAll(self.conf['filelist'], self.conf['datasetFilename'], 5000, transfoFile = None, exclude = self.conf['excludedDescriptors'])
+        mergeAll(self.conf['filelist'], self.conf['datasetFilename'], 5000, transfoFile = None,
+                 exclude = self.conf['excludedDescriptors'], failOnUnmatched = self.conf['failOnUnmatched'])
 
         log.info('Original dataset successfully created!')
 

@@ -38,6 +38,9 @@ clusterMode: %(clusterMode)s
 # List of parameters that have to be excluded before applying the preprocessing steps
 excludedDescriptors: [ 'metadata.tags*' ]
 
+# Whether to fail if a pattern from excludedDescriptors doesn't have any match in the point layout.
+failOnUnmatched: False
+
 
 # List of preprocessed datasets to build
 preprocessing:

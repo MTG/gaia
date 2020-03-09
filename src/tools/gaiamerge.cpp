@@ -34,11 +34,12 @@ using namespace gaia2;
 QStringList descs_select("*"), descs_exclude;
 PointArray _validPoints;
 PointLayout* layout = 0;
+bool failOnUnmatched = true;
 
 
 void usage() {
   qFatal("ERROR: not enough arguments...\n\n\
-Usage: gaiamerge list_of_sigfiles output_dataset [ start end ] [--reflayout=...] [--select=...] [--exclude=...]");
+Usage: gaiamerge list_of_sigfiles output_dataset [ start end ] [--reflayout=...] [--select=...] [--exclude=...] [--passUnmatched]");
 }
 
 ParameterMap parseOptions(int argc, char* argv[]) {
@@ -79,6 +80,12 @@ ParameterMap parseOptions(int argc, char* argv[]) {
 
     if (args[i].startsWith("--nthreads=")) {
       QThreadPool::globalInstance()->setMaxThreadCount(args[i].mid(11).toInt());
+      args.removeAt(i);
+      i--;
+    }
+
+    if (args[i] == ("--passUnmatched")) {
+      failOnUnmatched = false;
       args.removeAt(i);
       i--;
     }
@@ -123,7 +130,7 @@ int main(int argc, char* argv[]) {
                                          descs_select, descs_exclude,
                                          options.value("start").toInt(),
                                          options.value("end").toInt(),
-                                         layout);
+                                         layout, failOnUnmatched);
 
   // save dataset & clean up stuff
   qDebug() << "Saving dataset...";
