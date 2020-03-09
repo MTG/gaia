@@ -125,7 +125,8 @@ class Point {
    */
   void load(const QString& filename,
             const QStringList& select = QStringList() << "*",
-            const QStringList& exclude = QStringList());
+            const QStringList& exclude = QStringList(),
+            bool failOnUnmatched = true);
 
   /**
    * Loads the given string as this Point's data. Can specify filters for
@@ -301,7 +302,8 @@ class Point {
 
   void load(yaml::Node& node,
             const QStringList& select,
-            const QStringList& exclude);
+            const QStringList& exclude,
+            bool failOnUnmatched = true);
 
   friend class DataSet; // mostly to be able to access setLayoutUnsafe
 
