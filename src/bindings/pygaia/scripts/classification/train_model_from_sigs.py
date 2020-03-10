@@ -19,6 +19,7 @@ template = {"type": "singleClass",
 def get_files_in_dir(dirname, extension):
     return glob.glob(os.path.join(dirname, "*.%s" % extension))
 
+
 def main(input_directory, output_directory, project_name, force=False,
          seed=None, cluster_mode=False):
     print("looking for data in dir", input_directory)
@@ -88,33 +89,29 @@ def main(input_directory, output_directory, project_name, force=False,
     if os.path.exists(json_name):
         os.remove(json_name)
 
-    train_model.trainModel(groundtruth_name, yaml_name,
+    train_model.train_model(groundtruth_name, yaml_name,
                            project_file, resultsdir, results_model_file,
                            seed=seed, cluster_mode=cluster_mode)
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser(description="Generates a model trained using "
-                                        "descriptor files (*.sig, *.json) "
-                                        "in a directory. Each subdirectory "
-                                        "is considered a class with the "
-                                        "descriptor files therein being its "
-                                        "training examples. JSON files are "
+    parser = ArgumentParser(description="Generates a model trained using descriptor files (*.sig, *.json) "
+                                        "in a directory. Each subdirectory is considered a class with the "
+                                        "descriptor files therein being its training examples. JSON files are "
                                         "converted to YAML if needed.")
     parser.add_argument('input_directory',
                         help='directory with the json/sig files.')
     parser.add_argument('output_directory',
-                        help='directory with the output files.')
+                        help='directory to store the results and model output.')
     parser.add_argument('project_name',
                         help='the project name.')
     parser.add_argument('--force', '-f', action='store_true',
-                        help='wheter to retrain an existing model.')
+                        help='If set, retrain an existing model.')
     parser.add_argument('--seed', '-s', type=float, default=1,
                         help='seed used to generate the random folds. '
-                             'Use 0 to use computer time (will vary on each trial).')
+                             'Use 0 to use current time (will vary on each trial).')
     parser.add_argument('--cluster_mode', '-cm', action='store_true',
-                        help='Flag to explicitly use the subprocess '
-                             'module to open a new python process for each subtask.')
+                        help='Open a new python process for each subtask.')
 
     args = parser.parse_args()
 
@@ -122,6 +119,5 @@ if __name__ == "__main__":
     if args.seed == 0:
         seed = None
 
-    main(args.input_directory, args.output_directory,
-         args.project_name, args.force, seed=seed,
+    main(args.input_directory, args.output_directory, args.project_name, args.force, seed=seed,
          cluster_mode=args.cluster_mode)

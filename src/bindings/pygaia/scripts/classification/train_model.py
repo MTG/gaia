@@ -29,7 +29,7 @@ from . import select_best_model
 from . import generate_params_report
 
 
-def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None, cluster_mode=False):
+def train_model(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None, cluster_mode=False):
     if not os.path.isfile(project_file):
         print("Creating classification project", project_file)
 
@@ -45,16 +45,6 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
                 shutil.rmtree(datasets_dir)
             if os.path.exists(results_dir):
                 shutil.rmtree(results_dir)
-
-        ## convert json to sig
-        # temporary filelist location
-        #filelist_file_sig = splitext(basename(filelist_file))[0] + '.sig.yaml'
-        #filelist_file_sig = os.path.join(project_dir, filelist_file_sig)
-
-        ## do not allow any missing sig files
-        #if not json_to_sig.convertJsonToSig(filelist_file, filelist_file_sig):
-        #    print "Error: some descriptor files are missing; training failed."
-        #    sys.exit(2)
 
         # generate classification project
         generate_classification_project.generateProject(
@@ -75,38 +65,30 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description="Project generation and related data preprocessing will be skipped if 'project_file'"
-                    "already exists. Specify a non-existent 'project_file' or remove it if you want to"
-                    "recreate the project. The filelist is expected to have '*.sig' files (yaml format)")
+        description="Generates a model trained using descriptor files specified in the groundtruth and filelist.")
 
     parser.add_argument('groundtruth_file',
                         help='yaml file containing a relation between keys and labels.')
     parser.add_argument('filelist_file',
-                        help='yaml file containing a relation between keys and features file paths.')
+                        help='yaml file containing a relation between keys and features file paths. '
+                             'Feature files should be in yaml (sig) format')
     parser.add_argument('project_file',
-                        help=' is path where the project configuration file will be stored.')
+                        help="path where the project configuration file will be stored. "
+                             "If this file doesn't exist, then a new project file will be made from a template")
     parser.add_argument('project_dir',
-                        help='is the path to the file where the best model ranking the best performance will be stored.')
+                        help='path to a directory where the best performing model will be stored.')
     parser.add_argument('results_model_file')
     parser.add_argument('--seed', '-s', type=float, default=1,
-                        help='seed used to generate the random folds.'
-                             'Use 0 to use computer time (will vary on each trial).')
+                        help='seed used to generate the random folds. '
+                             'Use 0 to use current time (will vary on each trial).')
     parser.add_argument('--cluster_mode', '-cm', action='store_true',
-                        help='Flag to explicitly use the subprocess '
-                             'module to open a new python process for each subtask.')
-
+                        help='Open a new python process for each subtask.')
 
     args = parser.parse_args()
-
-    groundtruth_file = args.groundtruth_file
-    filelist_file = args.filelist_file
-    project_file = args.project_file
-    project_dir = args.project_dir
-    results_model_file = args.results_model_file
-    cluster_mode = args.cluster_mode
 
     seed = args.seed
     if args.seed == 0:
         seed = None
 
-    trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=seed, cluster_mode=cluster_mode)
+    train_model(args.groundtruth_file, args.filelist_file, args.project_file, args.project_dir, args.results_model_file,
+                seed=seed, cluster_mode=args.cluster_mode)
