@@ -54,13 +54,13 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
     gt_trackids = list(groundTruth.keys())
     fl_trackids = list(fl.keys())
 
-    # check that there are no dublicate ids
+    # check that there are no duplicated ids
     if len(gt_trackids) != len(set(gt_trackids)):
-        print(groundtruth_file, "contains dublicate track ids")
+        print(groundtruth_file, "contains duplicated track ids")
         sys.exit(3)
 
     if len(fl_trackids) != len(set(fl_trackids)):
-        print(filelist_file, "contains dublicate track ids")
+        print(filelist_file, "contains duplicated track ids")
         sys.exit(3)
 
     # check if filelist is consistent with groundtruth (no files missing)
@@ -72,21 +72,24 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
 
     essentia_version = ''
     if not template:
-        try:
-            versions = set([yaml.load(open(v))['metadata']['version']['essentia'] for v in fl.values()])
+        versions = set()
+        for v in fl.values():
+            try:
+                version = yaml.load(open(v)).get('metadata', {}).get('version', {}).get('essentia', {})
+                if version:
+                    versions.add(version)
+            except IOError:
+                print('Error retrieving essentia version of {}'.format(v))
 
-            if (len(versions) == 1):
-                parsed_version = list(versions)[0].split('-')
+        if len(versions) == 1:
+            parsed_version = list(versions)[0].split('-')
 
-                essentia_version = parsed_version[0]
+            essentia_version = parsed_version[0]
 
-                if parsed_version[1].startswith('beta'):
-                    essentia_version += '-{}'.format(parsed_version[1])
-            else:
-                print('More than one essentia versions found in the datataset.\n'
-                      'Using the default project template.')
-        except IOError:
-            print('Error retrieving essentia version')
+            if parsed_version[1].startswith('beta'):
+                essentia_version += '-{}'.format(parsed_version[1])
+        else:
+            print("Couldn't find a unique essentia version in the dataset.")
 
         template_version = VERSION_MAP.get(essentia_version, '2.1-beta2')
 
@@ -95,7 +98,7 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
 
     project_template = open(join(filedir(), template)).read()
 
-    # If not seed specified, get the current clock value
+    # if not seed specified, get the current clock value
     if seed is None:
         import time
         seed = time.time()
