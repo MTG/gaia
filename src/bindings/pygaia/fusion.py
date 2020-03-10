@@ -74,7 +74,7 @@ def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, se
         # decide if we want the loader to fail if a pattern to exclude is not
         # found in the point layout
         if not failOnUnmatched:
-            cmd += [ '--passUnmatched' ]
+            cmd += [ '--dontFailOnUnmatched' ]
 
     subprocess.call(cmd)
 

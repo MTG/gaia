@@ -39,7 +39,7 @@ bool failOnUnmatched = true;
 
 void usage() {
   qFatal("ERROR: not enough arguments...\n\n\
-Usage: gaiamerge list_of_sigfiles output_dataset [ start end ] [--reflayout=...] [--select=...] [--exclude=...] [--passUnmatched]");
+Usage: gaiamerge list_of_sigfiles output_dataset [ start end ] [--reflayout=...] [--select=...] [--exclude=...] [-- dontFailOnUnmatched]");
 }
 
 ParameterMap parseOptions(int argc, char* argv[]) {
@@ -84,7 +84,7 @@ ParameterMap parseOptions(int argc, char* argv[]) {
       i--;
     }
 
-    if (args[i] == ("--passUnmatched")) {
+    if (args[i] == ("-- dontFailOnUnmatched")) {
       failOnUnmatched = false;
       args.removeAt(i);
       i--;
