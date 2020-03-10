@@ -28,8 +28,10 @@ from gaia2 import filedir
 import gaia2.fastyaml as yaml
 
 
-# Use a dict to map essentia versions to the appropriate template so that we
-# don't need to store one template for each version.
+# We have separate template files because different versions of the
+# music extractor require different layouts.
+# We use a dict to aggregate the music extractor versions relying on the
+# same layout so we don't need to store one template for each version.
 VERSION_MAP = {
     '2.1-beta5': '2.1-beta5',
     '2.1-beta6': '2.1-beta5',
@@ -66,7 +68,7 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
         print("track ids found in", groundtruth_file, "are inconsistent with", filelist_file)
         sys.exit(4)
 
-    print('Analizing the dataset to figure out which project template file to use...')
+    print('Analyzing the dataset to figure out which project template file to use...')
 
     essentia_version = ''
     if not template:
@@ -112,27 +114,25 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
+    parser = ArgumentParser(description='Generates a project configuration file given a filelist, a groundtruth file, '
+                                        'and the directories to store the datasets and the results files. '
+                                        'The script has a parameter to specify the project template to use. '
+                                        'If it is not specified, it will try to guess the appropriated one from the '
+                                        'essentia version found on the descriptor files.')
 
-    parser.add_argument('groundtruth_file')
-    parser.add_argument('filelist_file')
-    parser.add_argument('project_file')
-    parser.add_argument('datasets_dir')
-    parser.add_argument('results_dir')
-    parser.add_argument('-s', '--seed', default=None)
-    parser.add_argument('-c', '--cluster_mode', action='store_true')
-    parser.add_argument('-t', '--template', default=None)
+    parser.add_argument('groundtruth_file', help='yaml file containing a relation between keys and labels.')
+    parser.add_argument('filelist_file', help='yaml file containing a relation between keys and features file paths. '
+                                              'Feature files should be in yaml (sig) format.')
+    parser.add_argument('project_file', help='path where the project configuration file (.project) will be stored.')
+    parser.add_argument('datasets_dir', help='path where the dataset files will be stored.')
+    parser.add_argument('results_dir', help='path where the result files will be stored.')
+    parser.add_argument('-s', '--seed', default=None, help='seed used to generate the random folds. '
+                                                           'Use 0 to use current time (will vary on each trial).')
+    parser.add_argument('-c', '--cluster_mode', action='store_true', help='Open a new python process for each subtask.')
+    parser.add_argument('-t', '--template', default=None, help='classification project template file to use. '
+                                                               'If not specified, the script will try to detect it from the descriptors metadata.')
 
     args = parser.parse_args()
 
-    groundtruth_file = args.groundtruth_file
-    filelist_file = args.filelist_file
-    project_file = args.project_file
-    datasets_dir = args.datasets_dir
-    results_dir = args.results_dir
-    seed = args.seed
-    cluster_mode = args.cluster_mode
-    template = args.template
-
-    generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
-                    results_dir, seed=seed, cluster_mode=cluster_mode, template=template)
+    generateProject(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
+                    args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template)
