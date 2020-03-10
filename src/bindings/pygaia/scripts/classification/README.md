@@ -1,42 +1,91 @@
-# Classification script
+# Classification scripts
 
 This folder contains scripts for training SVM models. Given a dataset, several parameters are tried through a grid search process using n-fold cross-validation.
-A final model is trained with all the data (without validation set) featuring the best parameters combination in terms of accuracy. 
+A final model is trained with all the data (without a validation set) featuring the best parameter combination in terms of accuracy. 
+
+
 
 ## Main routines
-`train_model.py` is the main script. It can be both, imported as a module or run as an executable. This is the syntax for the latter case:
-`train_model.py  [--seed SEED] [--cluster_mode] groundtruth_file filelist_file project_file project_dir results_model_file `
+The main model training script is `gaia2.scripts.classification.train_model`. It can be imported as a module or run as an executable:
 
-Parameters:
-`groundtruth_file` is yaml file containing a relation between keys and labels. Refer to `groundtruth_example.yaml` in this folder for an example.
-`filelist_file` is a yaml file containing a relation between keys and feature file paths. Refer to `filelist_example.yaml` in this folder for an example.
-`project_file` is the path where the project configuration file will be stored.
-`project_dir` is the base path for the files generated during the training process.
-`results_model_file` is the path to the file where the best model ranking the best performance will be stored.
-`--seed` is an optional numeric parameter that controls the data splits for the n-fold cross-validation. If not specified, folds are stochastically chosen.
-`--cluster_mode` is a flag to explicitly use the subprocess module to open a new python process for each subtask.
+```
+$ python -m gaia2.scripts.classification.train_model --help
+usage: train_model.py [-h] [--seed SEED] [--cluster_mode]
+                      groundtruth_file filelist_file project_file project_dir
+                      results_model_file
 
-Alternatively, the script `train_model_from_sigs.py` only requires a path to a folder containing subfolders representing the classes with the features.
-For instance, given the path `base/path/` the script will expect a set of files organized in subfolders as `base/path/class-a/`, `base/path/class-b/`...
-The scripts generates the `groundtruth_file` and the `filelist_file` and calls `train_model.py`.
-`train_model_from_sigs.py [--force] [--seed SEED] [--cluster_mode] input_folder output_folder project_name `
+Generates a model trained using descriptor files specified in the groundtruth
+and filelist.
 
-Parameters:
-`input_folder` the base path to the subfolders with features.
-`output_folder` the project folder where to store all the generated files.
-`--seed` is an optional numeric parameter that controls the data splits for the n-fold cross-validation. If not set, folds are stochastically chosen.
-`--cluster_mode` is a flag to explicitly use the subprocess module to open a new python process for each subtask.
-`--force` Whether to retrain a model if output_folder already has one.
+positional arguments:
+  groundtruth_file      yaml file containing a relation between keys and
+                        labels.
+  filelist_file         yaml file containing a relation between keys and
+                        features file paths. Feature files should be in yaml
+                        (sig) format
+  project_file          path where the project configuration file will be
+                        stored. If this file doesn't exist, then a new project
+                        file will be made from a template
+  project_dir           path to a directory where the best performing model
+                        will be stored.
+  results_model_file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --seed SEED, -s SEED  seed used to generate the random folds. Use 0 to use
+                        current time (will vary on each trial).
+  --cluster_mode, -cm   Open a new python process for each subtask.
+```
 
 
-Parameters:
-input_directory: directory with the json/sig(yaml) feature files.
-output_directory: directory with the output files.
-project_name: the project name.
---force: whether to retrain an existing model
---seed: is an optional numeric parameter that controls the data splits for the n-fold cross-validation. If not specified, folds are stochastically chosen.
+Alternatively, the module `train_model_from_sigs` only requires a path to a folder containing subfolders 
+representing the classes with the features.
 
-Note that this folder does not contain scripts for the obtention of features from audio. This step is done relying on the [Essentia Music Extracor](https://essentia.upf.edu/documentation/FAQ.html#training-and-running-classifier-models-in-gaia)
+For example, a directory structure:
+
+    project
+    |- angry
+    |  |- 1.json
+    |  |- 2.json
+    |  |- 3.json
+    |  `- 4.json
+    |- happy
+    |  |- 1.json
+    |  |- 2.json
+    |  `- 3.json
+    `- sad
+       |- 1.json
+       `- 2.json
+       
+Will generate a dataset with 3 classes (angry, happy, sad), with 4, 3, and 2 files in each class, respectively.
+
+This tool generates the `groundtruth_file` and the `filelist_file` and calls `train_model`.
+
+```
+$ python -m gaia2.scripts.classification.train_model_from_sigs --help
+usage: train_model_from_sigs.py [-h] [--force] [--seed SEED] [--cluster_mode]
+                                input_directory output_directory project_name
+
+Generates a model trained using descriptor files (*.sig, *.json) in a
+directory. Each subdirectory is considered a class with the descriptor files
+therein being its training examples. JSON files are converted to YAML if
+needed.
+
+positional arguments:
+  input_directory       directory with the json/sig files.
+  output_directory      directory to store the results and model output.
+  project_name          the project name.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --force, -f           If set, retrain an existing model.
+  --seed SEED, -s SEED  seed used to generate the random folds. Use 0 to use
+                        current time (will vary on each trial).
+  --cluster_mode, -cm   Open a new python process for each subtask.
+```
+
+
+To create feature files, use the [Essentia Music Extractor](https://essentia.upf.edu/documentation/FAQ.html#training-and-running-classifier-models-in-gaia)
 
 ## How it works
 `train_model` performs the following actions:
