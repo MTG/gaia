@@ -1,0 +1,6 @@
+className: grountruth
+groundTruth:
+  00: a
+  01: b
+type: singleClass
+version: 1.0
