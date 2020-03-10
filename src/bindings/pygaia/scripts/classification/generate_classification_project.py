@@ -88,10 +88,10 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
         except IOError:
             print('Error retrieving essentia version')
 
-    template_version = VERSION_MAP.get(essentia_version, 'default')
+        template_version = VERSION_MAP.get(essentia_version, '2.1-beta2')
 
-    print('Using classification project template "{}"'.format(template_version))
-    template = 'classification_project_template_{}.yaml'.format(template_version)
+        print('Using classification project template "{}"'.format(template_version))
+        template = 'classification_project_template_{}.yaml'.format(template_version)
 
     project_template = open(join(filedir(), template)).read()
 

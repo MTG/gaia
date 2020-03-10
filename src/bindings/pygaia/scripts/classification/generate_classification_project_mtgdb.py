@@ -30,7 +30,7 @@ from gaia2.classification import GroundTruth
 from gaia2 import filedir
 
 
-PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml')).read()
+PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template_2.1-beta5.yaml')).read()
 
 def validEqloud(f):
     return f.endswith('.sig') and not f.endswith('.neq.sig')
