@@ -6,7 +6,11 @@
 #  - list of classifiers that need to be trained and evaluated
 #  - list of evaluations that need to be performed
 
-# name of the feature one wants to classify (genre, mood, artist...)
+# Template version. Each template is designed to match the layout of the MusicExtractor
+# from a given Essentia version. For this reason, we are using the same versioning code here.
+templateVersion: 2.1-beta2
+
+# Name of the feature one wants to classify (genre, mood, artist...)
 className: %(className)s
 
 
