@@ -47,7 +47,7 @@ def train_model(groundtruth_file, filelist_file, project_file, project_dir, resu
                 shutil.rmtree(results_dir)
 
         # generate classification project
-        generate_classification_project.generateProject(
+        generate_classification_project.generate_project(
                 groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=seed, cluster_mode=cluster_mode)
 
     else:

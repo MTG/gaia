@@ -38,7 +38,7 @@ VERSION_MAP = {
 }
 
 
-def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
+def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir,
                     results_dir, seed=None, cluster_mode=False, template=None):
 
     gt = yaml.load(open(groundtruth_file, 'r'))
@@ -134,5 +134,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    generateProject(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
+    generate_project(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
                     args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template)
