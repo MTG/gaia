@@ -60,7 +60,7 @@ def train_model(groundtruth_file, filelist_file, project_file, project_dir, resu
     select_best_model.selectBestModel(project_file, results_model_file)
 
     # generate a csv containing statistics for each parameter
-    generate_params_report.generateParamsReport(project_file)
+    generate_params_report.generate_params_report(project_file, 'report.tsv')
 
 
 if __name__ == '__main__':
