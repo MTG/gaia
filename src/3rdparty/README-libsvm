@@ -1,0 +1,4 @@
+We include LibSVM 2.89 in the source for gaia, in the `src/3rdparty/libsvm` directory.
+This source has an additional patch applied to it, `libsvm-tolerance-update.patch` which
+increases the stop tolerance if the maximum number of iterations is reached, in order
+to prevent the training process from going into an infinite loop.
