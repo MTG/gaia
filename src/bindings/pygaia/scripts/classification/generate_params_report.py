@@ -19,13 +19,12 @@
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 import argparse
-import collections
 import csv
 import os
 
 from gaia2.fastyaml import yaml
 
-from get_classification_results import ClassificationResults
+from gaia2.scripts.classification.classification_results import ClassificationResults
 
 
 def generate_params_report(project_file, result_file):
@@ -40,7 +39,7 @@ def generate_params_report(project_file, result_file):
 
         cr = ClassificationResults()
         print('Loading all results...')
-        cr.readResults(results_dir)
+        cr.read_results(results_dir)
 
         n_results = len(cr.results)
         results = cr.best(n_results, classifier_type)
