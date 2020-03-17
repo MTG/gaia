@@ -116,38 +116,6 @@ def build_tools(bld):
             includes = [ '.', 'metrics', '3rdparty' ],
             use = ['gaia2'] + bld.env['USELIB'])
 
-    # Cyclops server
-    if bld.env['WITH_CYCLOPS']:
-        # cyclops "normal" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclops',
-            includes = [ '.', 'metrics', '3rdparty' ],
-            use = ['gaia2'] + bld.env['USELIB'])
-
-        # cyclops "master" server
-        bld(
-            features = 'qt4 cxx cxxprogram cyclops',
-            source = '''
-            tools/cyclops_server/cyclopsmasterserver.cpp
-            tools/cyclops_server/cyclopsproxy.cpp
-            tools/cyclops_server/cyclopsmaster.cpp
-            tools/cyclops_server/cyclops.cpp
-            tools/cyclops_server/yamlrpcserver.cpp
-            ''',
-            target = 'tools/cyclopsmaster',
-            includes = [ '.', 'metrics', '3rdparty', 'tools/cyclops_server/' ],
-            use = ['gaia2'] + bld.env['USELIB'])
-
-        # cyclops init scripts
-        bld.install_files('/etc/cyclops/', 'tools/cyclops_server/master.yaml')
-        bld.install_files('/etc/init.d', bld.path.ant_glob('tools/cyclops_server/initscripts/*'), chmod=0o755)
 
 def build(bld):
     build_library(bld)
@@ -159,13 +127,3 @@ def build(bld):
     if bld.env['WITH_PYTHON_BINDINGS']:
         bld.recurse('bindings')
 
-# use the following to add the include paths for generated *.moc files automatically
-from waflib.TaskGen import feature, before, after
-@feature('cyclops')
-@after('process_source')
-@before('apply_incpaths')
-def add_includes_paths(self):
-    incs = set(self.to_list(getattr(self, 'includes', '')))
-    for x in self.compiled_tasks:
-        incs.add(x.inputs[0].parent.path_from(self.path))
-    self.includes = list(incs)

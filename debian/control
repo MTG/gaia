@@ -39,8 +39,3 @@ Package: gaia2-tools
 Architecture: any
 Depends: python-gaia2
 Description: gaia2-tools
-
-Package: gaia2-cyclops
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libqtcore4 (>= 4.5), libqt4-network (>= 4.5), cronolog
-Description: gaia2-cyclops

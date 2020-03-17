@@ -34,7 +34,7 @@ Dependencies:
 
 - Configure with the desired options:
 
-      ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts] [--with-cyclops]
+      ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts]
 
     NOTE: in order to link Essentia library with Gaia, do not use the --with-stlfacade option
 
@@ -55,13 +55,13 @@ Dependencies:
 
 #### Build from command-line using Homebrew (recommended):
 - Install Qt4:
-    
+
       brew install cartr/qt4/qt
-    
+
 - Install homebrew tap:
-    
+
       brew tap MTG/essentia
-    
+
 
 - Build Gaia (this will also install all the dependencies)
 

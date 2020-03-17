@@ -32,9 +32,6 @@ debian/libgaia2-dev/
 debian/python-gaia2.debhelper.log
 debian/python-gaia2.substvars
 debian/python-gaia2/
-debian/gaia2-cyclops.debhelper.log
-debian/gaia2-cyclops.substvars
-debian/gaia2-cyclops/
 debian/gaia2-tools.debhelper.log
 debian/gaia2-tools.substvars
 debian/gaia2-tools/

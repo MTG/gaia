@@ -37,11 +37,6 @@ def options(opt):
                    dest = 'tbb', default = False,
                    help = 'whether to use TBB for multithreading queries')
 
-    # whether to compile the Cyclops RPC server
-    opt.add_option('--with-cyclops', action = 'store_true',
-                   dest = 'cyclops', default = False,
-                   help = 'whether to compile the Cyclops RPC server')
-
     # whether to enable debug symbols and not optimize
     opt.add_option('--mode', action='store',
                    dest='MODE', default="release",
@@ -109,11 +104,6 @@ def configure(conf):
     conf.env['WITH_TBB'] = conf.options.tbb
     if conf.env['WITH_TBB']:
         check_tbb(conf)
-
-    # optional dependency: QtNetwork for Cyclops Server
-    conf.env['WITH_CYCLOPS'] = conf.options.cyclops
-    if conf.env['WITH_CYCLOPS']:
-        conf.env['USELIB'] += [ 'QTNETWORK' ]
 
     conf.env.DEFINES = ['GAIA_VERSION="%s"' % VERSION, 'GAIA_GIT_SHA="%s"' % GIT_SHA]
 
