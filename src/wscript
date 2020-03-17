@@ -97,7 +97,7 @@ def build_tools(bld):
         use = ['gaia2'] + bld.env['USELIB'])
 
     # GaiaFusion
-    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0755)
+    bld.install_as('${PREFIX}/bin/gaiafusion', 'tools/gaiafusion.py', chmod=0o755)
 
     # gaiafreeze utility
     bld.program(

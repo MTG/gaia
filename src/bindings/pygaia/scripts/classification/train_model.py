@@ -18,23 +18,21 @@
 # You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 import sys, os, shutil
 from optparse import OptionParser
-from os.path import basename, splitext, join
 
-import json_to_sig
-import generate_classification_project
-import run_tests
-import select_best_model
+from . import generate_classification_project
+from . import run_tests
+from . import select_best_model
 
 def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file):
     if not os.path.isfile(project_file):
         print("Creating classification project", project_file)
 
         # /datasets and /results location
-        datasets_dir = join(project_dir, 'datasets')
-        results_dir = join(project_dir, 'results')
+        datasets_dir = os.path.join(project_dir, 'datasets')
+        results_dir = os.path.join(project_dir, 'results')
 
         if not os.path.exists(project_dir):
             os.makedirs(project_dir)
@@ -48,7 +46,7 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
         ## convert json to sig
         # temporary filelist location
         #filelist_file_sig = splitext(basename(filelist_file))[0] + '.sig.yaml'
-        #filelist_file_sig = join(project_dir, filelist_file_sig)
+        #filelist_file_sig = os.path.join(project_dir, filelist_file_sig)
 
         ## do not allow any missing sig files
         #if not json_to_sig.convertJsonToSig(filelist_file, filelist_file_sig):
