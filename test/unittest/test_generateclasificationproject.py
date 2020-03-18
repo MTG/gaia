@@ -20,6 +20,7 @@
 
 import os
 import shutil
+import tempfile
 import unittest
 
 import gaia2.fastyaml as yaml
@@ -28,9 +29,7 @@ from gaia2.scripts.classification.generate_classification_project import generat
 
 class TestGenerateClassificationProject(unittest.TestCase):
     def check_project(self, groundtruth_file, filelist_file, expected):
-        tmp_dir = 'tmp/'
-        shutil.rmtree(tmp_dir, ignore_errors=True)
-        os.mkdir(tmp_dir)
+        tmp_dir = tempfile.mkdtemp()
 
         project_file = os.path.join(tmp_dir, expected)
 
