@@ -24,12 +24,12 @@
 #include <QStringList>
 #include <QPointF>
 #include <QDataStream>
+#include <QVarLengthArray>
 #include <Eigen/Dense>
 #include "osdetect.h"
 #include "gaia.h"
 #include "gaiaexception.h"
 #include "debugging.h"
-#include "gvarlengtharray.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // ----[ Fixed-length integer types ]---------------------------------------//
@@ -71,11 +71,11 @@ typedef float Real;
 typedef int Enum;
 
 template <typename T>
-class Array : public GVarLengthArray<T, 1> {
+class Array : public QVarLengthArray<T, 1> {
  public:
-  Array() : GVarLengthArray<T, 1>() {}
-  Array(int size) : GVarLengthArray<T, 1>(size) {}
-  Array(int size, const T& value) : GVarLengthArray<T, 1>(size) {
+  Array() : QVarLengthArray<T, 1>() {}
+  Array(int size) : QVarLengthArray<T, 1>(size) {}
+  Array(int size, const T& value) : QVarLengthArray<T, 1>(size) {
     for (int i=0; i<size; i++) (*this)[i] = value;
   }
   //friend QDataStream& operator<< <>(QDataStream& out, const Array<T>& array);
@@ -93,15 +93,15 @@ class Array : public GVarLengthArray<T, 1> {
     return *this;
   }
 
-  int size() const { return GVarLengthArray<T, 1>::size(); }
+  int size() const { return QVarLengthArray<T, 1>::size(); }
 
-  const T* constBegin() const { return GVarLengthArray<T, 1>::constData(); }
-  const T* begin() const { return GVarLengthArray<T, 1>::constData(); }
-  T* begin() { return GVarLengthArray<T, 1>::data(); }
+  const T* constBegin() const { return QVarLengthArray<T, 1>::constData(); }
+  const T* begin() const { return QVarLengthArray<T, 1>::constData(); }
+  T* begin() { return QVarLengthArray<T, 1>::data(); }
 
-  const T* constEnd() const { return GVarLengthArray<T, 1>::constData() + size(); }
-  const T* end() const { return GVarLengthArray<T, 1>::constData() + size(); }
-  T* end() { return GVarLengthArray<T, 1>::data() + size(); }
+  const T* constEnd() const { return QVarLengthArray<T, 1>::constData() + size(); }
+  const T* end() const { return QVarLengthArray<T, 1>::constData() + size(); }
+  T* end() { return QVarLengthArray<T, 1>::data() + size(); }
 
   bool operator==(const Array<T>& rhs) const {
     if (this->size() != rhs.size()) return false;
