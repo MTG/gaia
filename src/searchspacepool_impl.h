@@ -1,18 +1,18 @@
-/* 
+/*
  * Copyright (C) 2006-2013  Music Technology Group - Universitat Pompeu Fabra
  *
  * This file is part of Gaia
- * 
- * Gaia is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Affero General Public License as published by the Free 
- * Software Foundation (FSF), either version 3 of the License, or (at your 
+ *
+ * Gaia is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation (FSF), either version 3 of the License, or (at your
  * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the Affero GNU General Public License
  * version 3 along with this program.  If not, see http://www.gnu.org/licenses/
  */
@@ -121,8 +121,18 @@ BaseSearchSpace<SearchPointType, DataSetType>* BaseSearchSpacePool<SearchPointTy
     // - get the presorted chunk from L(start) to U(end)
     // - remove points in excess (with set_difference) from start to U(Start) and from L(end) to end
     int is, ie;
-    for (is=steps.size()-1; is>=0; is--) if (steps[is] <= start) break;  is = qMax(is, 0);
-    for (ie=0; ie<steps.size(); ie++)    if (steps[ie] >= end) break;    ie = qMin(ie, steps.size()-1);
+    for (is=steps.size()-1; is>=0; is--) {
+        if (steps[is] <= start) {
+            break;
+        }
+    }
+    is = qMax(is, 0);
+    for (ie=0; ie<steps.size(); ie++) {
+        if (steps[ie] >= end) {
+            break;
+        }
+    }
+    ie = qMin(ie, steps.size()-1);
 
     copySearchPoints(result, sorted[qMakePair(steps[is], steps[ie])]);
     SearchSpaceType tmp;
