@@ -37,9 +37,32 @@ VERSION_MAP = {
     '2.1-beta6': '2.1-beta5',
 }
 
+DEFAULT_VERSION = '2.1-beta2'
+
+
+def get_essentia_versions(filelist):
+    versions = set()
+
+    for v in filelist.values():
+        try:
+            version = yaml.load(open(v)).get('metadata', {}).get('version', {}).get('essentia', {})
+            if version:
+                parsed_version = version.split('-')
+                essentia_version = parsed_version[0]
+                if parsed_version[1].startswith('beta'):
+                    essentia_version += '-{}'.format(parsed_version[1])
+
+                versions.add(essentia_version)
+            else:
+                versions.add('no_essentia_version_field')
+
+        except IOError:
+            print('Error retrieving the Essentia version of {}'.format(v))
+    return versions
 
 def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir,
-                    results_dir, seed=None, cluster_mode=False, template=None):
+                    results_dir, seed=None, cluster_mode=False, template=None,
+                    force_consistency=False):
 
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
@@ -68,30 +91,29 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
         print("track ids found in", groundtruth_file, "are inconsistent with", filelist_file)
         sys.exit(4)
 
-    print('Analyzing the dataset to figure out which project template file to use...')
+    if force_consistency:
+        print('Checking Essentia version in the descriptor files to ensure consistency...')
+        versions = get_essentia_versions(fl)
 
-    essentia_version = ''
+        if len(versions) > 1:
+            raise Exception("Couldn't find a unique Essentia version in the dataset. "
+                            "This exception is thrown because you are using the flag `force-consistency`")
+        print('ok!')
+
     if not template:
-        versions = set()
-        for v in fl.values():
-            try:
-                version = yaml.load(open(v)).get('metadata', {}).get('version', {}).get('essentia', {})
-                if version:
-                    versions.add(version)
-            except IOError:
-                print('Error retrieving essentia version of {}'.format(v))
+        print('No classification project template specified.')
+        essentia_version = DEFAULT_VERSION
+
+        if not force_consistency:
+            print('Analyzing the dataset to figure out which project template file to use...')
+            versions = get_essentia_versions(fl)
 
         if len(versions) == 1:
-            parsed_version = list(versions)[0].split('-')
-
-            essentia_version = parsed_version[0]
-
-            if parsed_version[1].startswith('beta'):
-                essentia_version += '-{}'.format(parsed_version[1])
+            essentia_version = list(versions)[0]
         else:
             print("Couldn't find a unique essentia version in the dataset.")
 
-        template_version = VERSION_MAP.get(essentia_version, '2.1-beta2')
+        template_version = VERSION_MAP.get(essentia_version, DEFAULT_VERSION)
 
         print('Using classification project template "{}"'.format(template_version))
         template = 'classification_project_template_{}.yaml'.format(template_version)
@@ -134,8 +156,11 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cluster_mode', action='store_true', help='Open a new python process for each subtask.')
     parser.add_argument('-t', '--template', default=None, help='classification project template file to use. '
                                                                'If not specified, the script will try to detect it from the descriptors metadata.')
+    parser.add_argument('-f', '--force-consistency', action='store_true', help='Checks if all the descriptor files were computed with the same Essentia version. '
+                                                                                'Throws an exception if not.')
 
     args = parser.parse_args()
 
     generate_project(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
-                    args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template)
+                    args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template,
+                    force_consistency=args.force_consistency)
