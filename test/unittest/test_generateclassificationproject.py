@@ -28,7 +28,7 @@ from gaia2.scripts.classification.generate_classification_project import generat
 
 
 class TestGenerateClassificationProject(unittest.TestCase):
-    def check_project(self, groundtruth_file, filelist_file, expected):
+    def check_project(self, groundtruth_file, filelist_file, expected, force_consistency=False):
         tmp_dir = tempfile.mkdtemp()
 
         project_file = os.path.join(tmp_dir, expected)
@@ -37,7 +37,8 @@ class TestGenerateClassificationProject(unittest.TestCase):
                          filelist_file,
                          project_file,
                          tmp_dir,
-                         tmp_dir)
+                         tmp_dir,
+                         force_consistency=force_consistency)
 
         found = yaml.load(open(project_file, 'r'))['templateVersion']
 
@@ -77,6 +78,23 @@ class TestGenerateClassificationProject(unittest.TestCase):
         # Should work even if some files are missing.
         self.check_project(groundtruth_file, filelist_file, expected)
 
+    def testForceConsistency(self):
+        groundtruth_file = 'data/classification_projects/grountruth.yaml'
+        filelist_file = 'data/classification_projects/mixed_filelist.yaml'
+        expected = '2.1-beta2'
+
+        # The test should pass with force_consistency=False and raise an
+        # exception with force_consistency=True.
+        self.check_project(groundtruth_file,
+                        filelist_file,
+                        expected,
+                        force_consistency=False)
+
+        with self.assertRaises(Exception) as context:
+            self.check_project(groundtruth_file,
+                            filelist_file,
+                            expected,
+                            force_consistency=True)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestGenerateClassificationProject)
 
