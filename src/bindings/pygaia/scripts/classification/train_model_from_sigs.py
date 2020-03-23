@@ -21,7 +21,7 @@ def get_files_in_dir(dirname, extension):
 
 
 def main(input_directory, output_directory, project_name, force=False,
-         seed=None, cluster_mode=False):
+         seed=None, cluster_mode=False, force_consistency=False):
     print("looking for data in dir", input_directory)
     print("storing results in dir", output_directory)
 
@@ -91,7 +91,8 @@ def main(input_directory, output_directory, project_name, force=False,
 
     train_model.train_model(groundtruth_name, yaml_name,
                            project_file, resultsdir, results_model_file,
-                           seed=seed, cluster_mode=cluster_mode)
+                           seed=seed, cluster_mode=cluster_mode,
+                           force_consistency=force_consistency)
 
 
 if __name__ == "__main__":
@@ -105,13 +106,16 @@ if __name__ == "__main__":
                         help='directory to store the results and model output.')
     parser.add_argument('project_name',
                         help='the project name.')
-    parser.add_argument('--force', '-f', action='store_true',
+    parser.add_argument('-f', '--force', action='store_true',
                         help='If set, retrain an existing model.')
-    parser.add_argument('--seed', '-s', type=float, default=1,
+    parser.add_argument('-s', '--seed', type=float, default=1,
                         help='seed used to generate the random folds. '
                              'Use 0 to use current time (will vary on each trial).')
-    parser.add_argument('--cluster_mode', '-cm', action='store_true',
+    parser.add_argument('-cm', '--cluster_mode', action='store_true',
                         help='Open a new python process for each subtask.')
+    parser.add_argument('-fc', '--force-consistency', action='store_true',
+                        help='Checks if all the descriptor files were computed with the same Essentia version. '
+                             'Throws an exception if not.')
 
     args = parser.parse_args()
 
@@ -120,4 +124,4 @@ if __name__ == "__main__":
         seed = None
 
     main(args.input_directory, args.output_directory, args.project_name, args.force, seed=seed,
-         cluster_mode=args.cluster_mode)
+         cluster_mode=args.cluster_mode, force_consistency=args.force_consistency)

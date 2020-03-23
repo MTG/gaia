@@ -29,7 +29,8 @@ from . import select_best_model
 from . import generate_params_report
 
 
-def train_model(groundtruth_file, filelist_file, project_file, project_dir, results_model_file, seed=None, cluster_mode=False):
+def train_model(groundtruth_file, filelist_file, project_file, project_dir, results_model_file,
+                seed=None, cluster_mode=False, force_consistency=False):
     if not os.path.isfile(project_file):
         print("Creating classification project", project_file)
 
@@ -48,7 +49,8 @@ def train_model(groundtruth_file, filelist_file, project_file, project_dir, resu
 
         # generate classification project
         generate_classification_project.generate_project(
-                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir, seed=seed, cluster_mode=cluster_mode)
+            groundtruth_file, filelist_file, project_file, datasets_dir, results_dir,
+            seed=seed, cluster_mode=cluster_mode, force_consistency=force_consistency)
 
     else:
         print("Project file", project_file, "has been found. Skipping project generation step.")
@@ -78,11 +80,14 @@ if __name__ == '__main__':
     parser.add_argument('project_dir',
                         help='path to a directory where the best performing model will be stored.')
     parser.add_argument('results_model_file')
-    parser.add_argument('--seed', '-s', type=float, default=1,
+    parser.add_argument('-s', '--seed', type=float, default=1,
                         help='seed used to generate the random folds. '
                              'Use 0 to use current time (will vary on each trial).')
-    parser.add_argument('--cluster_mode', '-cm', action='store_true',
+    parser.add_argument('-cm', '--cluster_mode', action='store_true',
                         help='Open a new python process for each subtask.')
+    parser.add_argument('-f', '--force-consistency', action='store_true',
+                        help='Checks if all the descriptor files were computed with the same Essentia version. '
+                             'Throws an exception if not.')
 
     args = parser.parse_args()
 
@@ -91,4 +96,4 @@ if __name__ == '__main__':
         seed = None
 
     train_model(args.groundtruth_file, args.filelist_file, args.project_file, args.project_dir, args.results_model_file,
-                seed=seed, cluster_mode=args.cluster_mode)
+                seed=seed, cluster_mode=args.cluster_mode, force_consistency=args.force_consistency)
