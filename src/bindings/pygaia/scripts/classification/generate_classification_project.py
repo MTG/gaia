@@ -23,13 +23,47 @@ from __future__ import print_function
 from __future__ import with_statement
 import sys
 from os.path import join, abspath
-from optparse import OptionParser
+from argparse import ArgumentParser
 from gaia2 import filedir
 import gaia2.fastyaml as yaml
 
-PROJECT_TEMPLATE = open(join(filedir(), 'classification_project_template.yaml')).read()
 
-def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir):
+# We have separate template files because different versions of the
+# music extractor require different layouts.
+# We use a dict to aggregate the music extractor versions relying on the
+# same layout so we don't need to store one template for each version.
+VERSION_MAP = {
+    '2.1-beta5': '2.1-beta5',
+    '2.1-beta6': '2.1-beta5',
+}
+
+DEFAULT_VERSION = '2.1-beta2'
+
+
+def get_essentia_versions(filelist):
+    versions = set()
+
+    for v in filelist.values():
+        try:
+            version = yaml.load(open(v)).get('metadata', {}).get('version', {}).get('essentia', {})
+            if version:
+                parsed_version = version.split('-')
+                essentia_version = parsed_version[0]
+                if parsed_version[1].startswith('beta'):
+                    essentia_version += '-{}'.format(parsed_version[1])
+
+                versions.add(essentia_version)
+            else:
+                versions.add('no_essentia_version_field')
+
+        except IOError:
+            print('Error retrieving the Essentia version of {}'.format(v))
+    return versions
+
+def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir,
+                    results_dir, seed=None, cluster_mode=False, template=None,
+                    force_consistency=False):
+
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
         className = gt['className']
@@ -43,13 +77,13 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
     gt_trackids = list(groundTruth.keys())
     fl_trackids = list(fl.keys())
 
-    # check that there are no dublicate ids
+    # check that there are no duplicated ids
     if len(gt_trackids) != len(set(gt_trackids)):
-        print(groundtruth_file, "contains dublicate track ids")
+        print(groundtruth_file, "contains duplicated track ids")
         sys.exit(3)
 
     if len(fl_trackids) != len(set(fl_trackids)):
-        print(filelist_file, "contains dublicate track ids")
+        print(filelist_file, "contains duplicated track ids")
         sys.exit(3)
 
     # check if filelist is consistent with groundtruth (no files missing)
@@ -57,31 +91,76 @@ def generateProject(groundtruth_file, filelist_file, project_file, datasets_dir,
         print("track ids found in", groundtruth_file, "are inconsistent with", filelist_file)
         sys.exit(4)
 
+    if force_consistency:
+        print('Checking Essentia version in the descriptor files to ensure consistency...')
+        versions = get_essentia_versions(fl)
+
+        if len(versions) > 1:
+            raise Exception("Couldn't find a unique Essentia version in the dataset. "
+                            "This exception is thrown because you are using the flag `force-consistency`")
+        print('ok!')
+
+    if not template:
+        print('No classification project template specified.')
+        essentia_version = DEFAULT_VERSION
+
+        if not force_consistency:
+            print('Analyzing the dataset to figure out which project template file to use...')
+            versions = get_essentia_versions(fl)
+
+        if len(versions) == 1:
+            essentia_version = list(versions)[0]
+        else:
+            print("Couldn't find a unique essentia version in the dataset.")
+
+        template_version = VERSION_MAP.get(essentia_version, DEFAULT_VERSION)
+
+        print('Using classification project template "{}"'.format(template_version))
+        template = 'classification_project_template_{}.yaml'.format(template_version)
+
+    project_template = open(join(filedir(), template)).read()
+
+    # if not seed specified, get the current clock value
+    if seed is None:
+        import time
+        seed = time.time()
+
     # write the project file
     with open(project_file, 'w') as pfile:
-        pfile.write(PROJECT_TEMPLATE % { 'className': className,
+        pfile.write(project_template % { 'className': className,
                                          'datasetsDirectory': abspath(datasets_dir),
                                          'resultsDirectory': abspath(results_dir),
                                          'filelist': abspath(filelist_file),
-                                         'groundtruth': abspath(groundtruth_file) })
+                                         'groundtruth': abspath(groundtruth_file),
+                                         'seed': seed,
+                                         'clusterMode': cluster_mode})
 
     print('Successfully written', project_file)
 
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file datasets_dir results_dir')
+    parser = ArgumentParser(description='Generates a project configuration file given a filelist, a groundtruth file, '
+                                        'and the directories to store the datasets and the results files. '
+                                        'The script has a parameter to specify the project template to use. '
+                                        'If it is not specified, it will try to guess the appropriated one from the '
+                                        'essentia version found on the descriptor files.')
 
-    options, args = parser.parse_args()
+    parser.add_argument('groundtruth_file', help='yaml file containing a relation between keys and labels.')
+    parser.add_argument('filelist_file', help='yaml file containing a relation between keys and features file paths. '
+                                              'Feature files should be in yaml (sig) format.')
+    parser.add_argument('project_file', help='path where the project configuration file (.project) will be stored.')
+    parser.add_argument('datasets_dir', help='path where the dataset files will be stored.')
+    parser.add_argument('results_dir', help='path where the result files will be stored.')
+    parser.add_argument('-s', '--seed', default=None, help='seed used to generate the random folds. '
+                                                           'Use 0 to use current time (will vary on each trial).')
+    parser.add_argument('-c', '--cluster_mode', action='store_true', help='Open a new python process for each subtask.')
+    parser.add_argument('-t', '--template', default=None, help='classification project template file to use. '
+                                                               'If not specified, the script will try to detect it from the descriptors metadata.')
+    parser.add_argument('-f', '--force-consistency', action='store_true', help='Checks if all the descriptor files were computed with the same Essentia version. '
+                                                                                'Throws an exception if not.')
 
-    try:
-        groundtruth_file = args[0]
-        filelist_file = args[1]
-        project_file = args[2]
-        datasets_dir = args[3]
-        results_dir = args[4]
-    except:
-        parser.print_help()
-        sys.exit(1)
+    args = parser.parse_args()
 
-    generateProject(groundtruth_file, filelist_file, project_file, datasets_dir, results_dir)
-
+    generate_project(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
+                    args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template,
+                    force_consistency=args.force_consistency)

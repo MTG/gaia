@@ -462,9 +462,10 @@ Point* PointLayout::morphPoint(const Point* p) const {
 }
 
 
-void PointLayout::filter(const QStringList& select, const QStringList& exclude) {
+void PointLayout::filter(const QStringList& select, const QStringList& exclude, bool failOnUnmatched) {
   if (_d->ref > 1) throw GaiaException("PointLayout: layout is shared hence immutable");
-  QStringList toKeep = selectDescriptors(*this, UndefinedType, select, exclude);
+
+  QStringList toKeep = selectDescriptors(*this, UndefinedType, select, exclude, failOnUnmatched);
   QStringList all = descriptorNames();
 
   foreach (QString name, toKeep) {

@@ -20,13 +20,17 @@
 
 from __future__ import print_function, absolute_import
 import sys, os, shutil
-from optparse import OptionParser
+from argparse import ArgumentParser
+from os.path import basename, splitext, join
 
 from . import generate_classification_project
 from . import run_tests
 from . import select_best_model
+from . import generate_params_report
 
-def trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file):
+
+def train_model(groundtruth_file, filelist_file, project_file, project_dir, results_model_file,
+                seed=None, cluster_mode=False, force_consistency=False):
     if not os.path.isfile(project_file):
         print("Creating classification project", project_file)
 
@@ -43,19 +47,10 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
             if os.path.exists(results_dir):
                 shutil.rmtree(results_dir)
 
-        ## convert json to sig
-        # temporary filelist location
-        #filelist_file_sig = splitext(basename(filelist_file))[0] + '.sig.yaml'
-        #filelist_file_sig = os.path.join(project_dir, filelist_file_sig)
-
-        ## do not allow any missing sig files
-        #if not json_to_sig.convertJsonToSig(filelist_file, filelist_file_sig):
-        #    print "Error: some descriptor files are missing; training failed."
-        #    sys.exit(2)
-
         # generate classification project
-        generate_classification_project.generateProject(
-                groundtruth_file, filelist_file, project_file, datasets_dir, results_dir)
+        generate_classification_project.generate_project(
+            groundtruth_file, filelist_file, project_file, datasets_dir, results_dir,
+            seed=seed, cluster_mode=cluster_mode, force_consistency=force_consistency)
 
     else:
         print("Project file", project_file, "has been found. Skipping project generation step.")
@@ -66,26 +61,39 @@ def trainModel(groundtruth_file, filelist_file, project_file, project_dir, resul
     # analyze results and select best model
     select_best_model.selectBestModel(project_file, results_model_file)
 
+    # generate a csv containing statistics for each parameter
+    generate_params_report.generate_params_report(project_file, 'report.tsv')
+
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] groundtruth_file filelist_file project_file project_dir results_model_file\n' +
-"""
-Project generation and related data preprocessing will be skipped if 'project_file'
-already exists. Specify a non-existent 'project_file' or remove it if you want to
-recreate the project. The filelist is expected to have "*.sig" files (yaml format)
-"""
-                         )
+    parser = ArgumentParser(
+        description="Generates a model trained using descriptor files specified in the groundtruth and filelist.")
 
-    options, args = parser.parse_args()
+    parser.add_argument('groundtruth_file',
+                        help='yaml file containing a relation between keys and labels.')
+    parser.add_argument('filelist_file',
+                        help='yaml file containing a relation between keys and features file paths. '
+                             'Feature files should be in yaml (sig) format')
+    parser.add_argument('project_file',
+                        help="path where the project configuration file will be stored. "
+                             "If this file doesn't exist, then a new project file will be made from a template")
+    parser.add_argument('project_dir',
+                        help='path to a directory where the best performing model will be stored.')
+    parser.add_argument('results_model_file')
+    parser.add_argument('-s', '--seed', type=float, default=1,
+                        help='seed used to generate the random folds. '
+                             'Use 0 to use current time (will vary on each trial).')
+    parser.add_argument('-cm', '--cluster_mode', action='store_true',
+                        help='Open a new python process for each subtask.')
+    parser.add_argument('-f', '--force-consistency', action='store_true',
+                        help='Checks if all the descriptor files were computed with the same Essentia version. '
+                             'Throws an exception if not.')
 
-    try:
-        groundtruth_file = args[0]
-        filelist_file = args[1]
-        project_file = args[2]
-        project_dir = args[3]
-        results_model_file = args[4]
-    except:
-        parser.print_help()
-        sys.exit(1)
+    args = parser.parse_args()
 
-    trainModel(groundtruth_file, filelist_file, project_file, project_dir, results_model_file)
+    seed = args.seed
+    if args.seed == 0:
+        seed = None
+
+    train_model(args.groundtruth_file, args.filelist_file, args.project_file, args.project_dir, args.results_model_file,
+                seed=seed, cluster_mode=args.cluster_mode, force_consistency=args.force_consistency)

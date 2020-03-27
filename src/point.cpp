@@ -584,14 +584,16 @@ void Point::loadFromString(const std::string& str,
 }
 
 void Point::load(const QString& filename,
-                 const QStringList& select, const QStringList& exclude) {
+                 const QStringList& select, const QStringList& exclude,
+                 bool failOnUnmatched) {
   G_DEBUG(GPoint, "--------------- loading" << filename);
   yaml::Node yamldesc = yaml::loadFromFile(filename, true);
-  load(yamldesc, select, exclude);
+  load(yamldesc, select, exclude, failOnUnmatched);
 }
 
 void Point::load(yaml::Node& yamldesc,
-                 const QStringList& select, const QStringList& exclude) {
+                 const QStringList& select, const QStringList& exclude,
+                 bool failOnUnmatched) {
   yaml::Mapping segments;
   try {
     segments = yamldesc["segments"].mapping();
@@ -609,7 +611,7 @@ void Point::load(yaml::Node& yamldesc,
 
   _layout = PointLayout();
   yamlNodeToLayout(yamldesc, _layout);
-  _layout.filter(select, exclude); // layout.update() contained in filter
+  _layout.filter(select, exclude, failOnUnmatched); // layout.update() contained in filter
 
   // TODO: sort the segments map by segment name
 

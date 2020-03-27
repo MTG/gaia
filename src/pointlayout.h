@@ -253,9 +253,10 @@ class PointLayout {
    * Filters the elements contained in this layout so that the resulting layout
    * only contains those which name match one of the pattern in the select
    * argument and doesn't match any of the patterns in the exclude argument.
-   * You can use shell style globbing in the patterns.
+   * You can use shell style globbing in the patterns. `failOnUnmatched` controls
+   * if the filter fails when a pattern on `exclude` is not found in the layout.
    */
-  void filter(const QStringList& select, const QStringList& exclude);
+  void filter(const QStringList& select, const QStringList& exclude, bool failOnUnmatched = false);
 
   void debug() const;
 

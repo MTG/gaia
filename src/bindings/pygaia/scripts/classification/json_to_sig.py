@@ -43,7 +43,7 @@ def convertJsonToSig(filelist_file, result_filelist_file):
 
             sig_file = os.path.splitext(json_file)[0] + '.sig'
 
-            yaml.dump(data, open(sig_file, 'w'))
+            yaml.safe_dump(data, open(sig_file, 'w'))
             result_fl[trackid] = sig_file
 
         except:

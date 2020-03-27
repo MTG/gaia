@@ -59,7 +59,8 @@ void SVMTrain::initParams() {
 SVMTrain::SVMTrain(const ParameterMap& params) : Analyzer(params) {
   G_DEBUG(GAlgorithms, "Initializing SVMTrain analyzer");
   validParams << "type" << "kernel" << "probability" << "degree" << "c"
-              << "nu" << "gamma" << "className";
+              << "nu" << "gamma" << "className" << "balanceClasses"
+              << "maxIterations" << "maxToleranceUpdates";
   initParams();
 
   _className = _params.value("className").toString();
@@ -97,6 +98,43 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   // of dimensions + 1 for the sentinel, and we're not in a sparse representation)
   int dimension = prob.x[1] - prob.x[0] - 1;
 
+  int nr_weight = 0;
+  int *labels  = NULL;
+  double *weights = NULL;
+
+  // if we want to balance the classes, compute the weights as done in Scikit-learn:
+  // https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_class_weight.html
+  // Otherwise leave labels and weights as NULL pointers
+  if (_params.value("balanceClasses", false).toBool()) {
+    QMap<int, int> counts;
+
+    for (int i = 0; i < prob.l; i++ ) {
+      if (!counts.contains(prob.y[i])) {
+        counts[prob.y[i]] = 1;
+      } else {
+        counts[prob.y[i]] += 1;
+      }
+    }
+
+    nr_weight = counts.size();
+
+    labels = new int[nr_weight];
+    weights = new double[nr_weight];
+
+    QMapIterator<int, int> iCounts(counts);
+    int count = 0;
+
+    // the heuristics to compute the weights are inspired by
+    // Logistic Regression in Rare Events Data, King, Zen, 2001.
+    while (iCounts.hasNext()) {
+      iCounts.next();
+    
+      labels[count] = iCounts.key();
+      weights[count] = (double)prob.l / (iCounts.value() * nr_weight);
+
+      count++;
+    }
+  }
 
   // default values
   struct svm_parameter param;
@@ -112,9 +150,9 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   param.p = 0.1;
   param.shrinking = 1;
   //param.probability = 0;
-  param.nr_weight = 0;
-  param.weight_label = NULL;
-  param.weight = NULL;
+  param.nr_weight = nr_weight;
+  param.weight_label = labels;
+  param.weight = weights;
 
   // get parameters
   QString svmType = _params.value("type", "C-SVC").toString().toLower();
@@ -125,7 +163,8 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   param.C = _params.value("c", 1).toDouble();
   param.gamma = _params.value("gamma", 1.0/dimension).toDouble();
   param.probability = _params.value("probability", false).toBool() ? 1 : 0;
-
+  param.max_iterations = _params.value("maxIterations", 1e7).toInt();
+  param.max_tolerance_updates = _params.value("maxToleranceUpdates", 4).toInt();
 
   const char* error_msg = svm_check_parameter(&prob, &param);
 
@@ -211,6 +250,10 @@ Transformation SVMTrain::analyze(const DataSet* dataset) const {
   result.params.insert("classMapping", classMapping);
   result.params.insert("probability", (param.probability == 1 && (param.svm_type == C_SVC ||
                                                                   param.svm_type == NU_SVC)));
+
+  delete[] labels;
+  delete[] weights;
+
   return result;
 }
 

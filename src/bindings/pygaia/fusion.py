@@ -53,7 +53,7 @@ def horizontalLine():
     print('\n' + '-' * 80 + '\n')
 
 
-def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, select = None, exclude = None):
+def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, select = None, exclude = None, failOnUnmatched = True):
     """This function merges the given points (file containing the points, + optional start/end index).
     The history to be applied is given as a list of tuples (transfoName,  transfoParams).
     It also checks the the history for this DataSet corresponds to the original one (if given)."""
@@ -70,6 +70,11 @@ def mergeChunk(points, outputFilename, transfoFile, start = 0, end = 1000000, se
         if isinstance(exclude, string_types):
             exclude = [ exclude ]
         cmd += [ '--exclude=' + ','.join(exclude) ]
+
+        # decide if we want the loader to fail if a pattern to exclude is not
+        # found in the point layout
+        if not failOnUnmatched:
+            cmd += [ '--dontFailOnUnmatched' ]
 
     subprocess.call(cmd)
 
@@ -123,7 +128,7 @@ def harmonizeChunks(partfiles):
     return vldescs, nandescs, rdescs
 
 
-def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, exclude = None):
+def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, exclude = None, failOnUnmatched = True):
     # TODO: validation of the yaml file format? (ie: pre-2.3 yaml files should be rejected)
     totalPoints = len(fastyaml.load(open(pointList).read()))
 
@@ -139,8 +144,8 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
             p = gaia2.Point()
             p.load(list(gaia2.fastyaml.loadfile(pointList).items())[0][1])
             excluded = p.layout().descriptorNames(exclude)
-        except:
-            raise
+        except Exception as e:
+            print(e)
 
     # merge each chunk separately
     # this includes removevl and fixlength, which should yield smaller files than just after
@@ -150,7 +155,7 @@ def mergeAll(pointList, outputFilename, chunkSize, transfoFile, select = None, e
         partfile = partfileTemplate % (begin, end)
         partfiles += [ partfile ]
 
-        mergeChunk(pointList, partfile, transfoFile, begin, end, select, exclude)
+        mergeChunk(pointList, partfile, transfoFile, begin, end, select, exclude, failOnUnmatched)
         begin, end = end, end + chunkSize
 
         horizontalLine()
@@ -231,5 +236,3 @@ def mergeDirectory(dirname, outputFilename, chunkSize, transfoFile, select = Non
 
     # call 'classic' merge function
     mergeAll(yamllist.name, outputFilename, chunkSize, transfoFile, select, exclude)
-
-

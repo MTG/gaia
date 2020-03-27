@@ -31,7 +31,7 @@ log = logging.getLogger('gaia2.classification.Evaluation')
 
 
 
-def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True):
+def evaluate(classifier, dataset, groundTruth, confusion = None, nfold=None, verbose=True):
     """Evaluate the classifier on the given dataset and returns the confusion matrix.
 
     Uses only the points that are in the groundTruth parameter for the evaluation.
@@ -52,7 +52,10 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True)
     for pointId, expected in groundTruth.items():
         try:
             found = classifier(dataset.point(pointId))
-            confusion.add(expected, found, pointId)
+            if nfold is None:
+                confusion.add(expected, found, pointId)
+            else:
+                confusion.addNfold(expected, found, pointId, nfold)
 
         except Exception as e:
             log.warning('Could not classify point "%s" because %s' % (pointId, str(e)))
@@ -64,7 +67,7 @@ def evaluate(classifier, dataset, groundTruth, confusion = None, verbose = True)
     return confusion
 
 
-def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
+def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, seed=None, *args, **kwargs):
     """Evaluate the classifier on the given dataset and returns the confusion matrix.
 
     The evaluation is performed using n-fold cross validation.
@@ -87,6 +90,7 @@ def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
     iclasses = {}
     for c in classes:
         iclasses[c] = [ p for p in groundTruth.keys() if groundTruth[p] == c ]
+        random.seed(a=seed)
         random.shuffle(iclasses[c])
 
     # get folds
@@ -114,6 +118,6 @@ def evaluateNfold(nfold, dataset, groundTruth, trainingFunc, *args, **kwargs):
         testgt = GroundTruth(groundTruth.className, dict([ (p, c) for p, c in groundTruth.items() if p in folds[i] ]))
 
         classifier = trainingFunc(trainds, traingt, *args, **kwargs)
-        confusion = evaluate(classifier, testds, testgt, confusion, verbose = False)
+        confusion = evaluate(classifier, testds, testgt, confusion, nfold=i, verbose=False)
 
     return confusion

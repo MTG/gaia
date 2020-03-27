@@ -270,7 +270,8 @@ class DataSet : public PointArray, public QObject {
                              const QStringList& descsSelect = QStringList() << "*",
                              const QStringList& descsExclude = QStringList(),
                              int start = 0, int end = 10000000,
-                             PointLayout* reflayout = 0);
+                             PointLayout* reflayout = 0,
+                             bool failOnUnmatched = true);
 
   /**
    * Performs a deep copy of this dataset (ie: the contained points are copied as well).

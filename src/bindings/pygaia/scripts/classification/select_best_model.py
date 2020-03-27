@@ -22,10 +22,11 @@ from __future__ import print_function, absolute_import
 
 import sys, os.path, shutil
 from gaia2.fastyaml import yaml
-from .get_classification_results import ClassificationResults
-from .generate_svm_history_from_config import trainSVMHistory
+from gaia2.scripts.classification.classification_results import ClassificationResults
+from gaia2.scripts.classification.generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
 from optparse import OptionParser
+
 
 def selectBestModel(project_file, results_model_file):
     f = open(results_model_file + '.results.html', 'w')
@@ -39,12 +40,15 @@ def selectBestModel(project_file, results_model_file):
 
         cr = ClassificationResults()
         print('Loading all results...')
-        cr.readResults(results_dir)
+        cr.read_results(results_dir)
 
-        accuracy, filename, params = cr.best(1, classifierType)[0]
-        print("RESULT " + project_file + '\t' + str(accuracy) + '\t' + filename)
+        accuracy, stdev, normAccuracy, normStdev, filename, params = cr.best(1, classifierType)[0]
 
-        f.write('<h1>%s (%s)</h1>\nAccuracy: %s\n' % (className, project_file, accuracy))
+        print('RESULT {}\tAcc:{:.3f}\tStd:{:.3f}\tnormalized Acc:{:.3f}\tnormalized Std:{:.3f}\t{}'.format(
+            project_file, accuracy, stdev, normAccuracy, normStdev, filename))
+
+        f.write('<h1>%s (%s)</h1>\nAccuracy: %s. Std: %s.\nNormalized accuracy: %s. Normalized std: %s.\n' %
+                (className, project_file, accuracy, stdev, normAccuracy, normStdev))
 
         cm = ConfusionMatrix()
         cm.load(filename)

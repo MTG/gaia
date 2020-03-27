@@ -1,0 +1,128 @@
+# This file should contain all the information relevant to conducting a set of evaluations
+#
+# This information includes:
+#  - location of the files on hard disk (audio files, datasets, results, ...)
+#  - list of preprocessing steps that need to be applied to the original data
+#  - list of classifiers that need to be trained and evaluated
+#  - list of evaluations that need to be performed
+
+# Template version. Each template is designed to match the layout of the MusicExtractor
+# from a given Essentia version. For this reason, we are using the same versioning code here.
+templateVersion: 2.1-beta2
+
+# Name of the feature one wants to classify (genre, mood, artist...)
+className: %(className)s
+
+
+# Path to the directory where the preprocessed datasets are going to be stored
+# This can be absolute or relative to where you launch the main classification script
+datasetsDirectory: %(datasetsDirectory)s
+
+# Path to the directory where the results are going to be stored
+# This can be absolute or relative to where you launch the main classification script
+resultsDirectory: %(resultsDirectory)s
+
+
+# Path to the yaml file containing the list of files to be merged in the original dataset
+filelist: %(filelist)s
+
+# Path to the groundtruth file, containing a serialized gaia2.classification.GroundTruth object
+groundtruth: %(groundtruth)s
+
+
+# Seed used to randomly assign tracks to folds. Use 'None' to use clock value. This will
+# produce slightly different results on different trials)
+seed: %(seed)s
+
+# Cluster mode controls how subprocesses are called. Set it to True to explicitly use the subprocess
+# module to open a new python process and call each classificationTask as a script. Otherwise, this
+# call will be performed as a function.
+clusterMode: %(clusterMode)s
+
+# List of parameters that have to be excluded before applying the preprocessing steps
+excludedDescriptors: [ 'metadata.tags*' ]
+
+# Whether to fail if a pattern from excludedDescriptors doesn't have any match in the point layout.
+failOnUnmatched: False
+
+
+# List of preprocessed datasets to build
+preprocessing:
+    # it is possible to not apply any processing, although this is of
+    # of little value in real-life tests and evaluations
+    raw: []
+
+    basic:
+        - transfo: remove
+          params: { descriptorNames: &unusedDescs [ 'metadata.*', '*dmean*', '*dvar*',
+                                                    '*.min', '*.max', '*cov',
+                                                    'tonal.thpcp', # because of division by zero
+                                                    'lowlevel.spectral_energyband_high.*', # 0 for low samplerate
+                                                    'lowlevel.silence_rate*' # funky behavior in general
+                                                    ] }
+        - transfo: enumerate
+          params: { descriptorNames: &stringDescs [ # 'rhythm.perceptual_tempo', # removed from new extractor
+                                                    'tonal.chords_key', 'tonal.chords_scale',
+                                                    'tonal.key_key', 'tonal.key_scale' ] }
+
+    lowlevel:
+        # note that the order of the transformations is important!
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: select
+          params: { descriptorNames: 'lowlevel*' }
+
+    nobands:
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: remove
+          params: { descriptorNames: [ 'barkbands*', '*energyband*', 'melbands*', 'erbbands*' ] }
+
+    normalized:
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: normalize
+
+    gaussianized:
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: normalize
+        - transfo: gaussianize
+          params: { descriptorNames: 'lowlevel.*' }
+
+    mfcc:
+        # an MFCC only baseline
+        - transfo: remove
+          params: { descriptorNames: *unusedDescs }
+        - transfo: enumerate
+          params: { descriptorNames: *stringDescs }
+        - transfo: select
+          params: { descriptorNames: 'lowlevel.mfcc*' }
+
+# List of classifiers to be trained
+classifiers:
+    svm:
+        # first svm test combinations
+        - preprocessing: [ 'basic', 'lowlevel', 'nobands', 'normalized', 'gaussianized', 'mfcc' ]
+          type: [ 'C-SVC' ]
+          kernel: [ 'poly', 'RBF' ]
+          C:     [ -5, -3, -1, 1, 3, 5, 7, 9, 11 ] # will actually be 2**x
+          gamma: [ 3, 1, -1, -3, -5, -7, -9, -11 ] # will actually be 2**x
+          # if True, weight classes based on the number of elements
+          balanceClasses: [False, True]
+        #  descriptorNames: [ ['*.mean', '*.var'] ]
+        # more svm params combinations
+        # ...
+
+# List of evaluations to be performed
+evaluations:
+    nfoldcrossvalidation:
+        - nfold: [ 5 ]

@@ -23,11 +23,13 @@
 from __future__ import with_statement
 from collections import defaultdict
 import gaia2.fastyaml as yaml
+from math import sqrt
 
 class ConfusionMatrix:
 
     def __init__(self):
         self.matrix = defaultdict(lambda: defaultdict(list))
+        self.folds = dict()
 
     def load(self, filename):
         with open(filename) as f:
@@ -35,17 +37,51 @@ class ConfusionMatrix:
 
         # convert to a defaultdict the data we just loaded
         self.matrix = defaultdict(lambda: defaultdict(list))
-        for k, v in data.items():
+        for k, v in data['matrix'].items():
             self.matrix[k] = defaultdict(list, v)
+
+        self.folds = data['fold']
 
     def save(self, filename):
         # convert to "normal" dicts before saving
-        data = dict((k, dict(v)) for k, v in self.matrix.items())
+        data = {
+                'matrix': dict((k, dict(v)) for k, v in self.matrix.items()),
+                'fold': self.folds
+                }
         with open(filename, 'w') as f:
             yaml.dump(data, f)
 
     def add(self, expected, predicted, name = ''):
         self.matrix[expected][predicted] += [ name ]
+
+    def addNfold(self, expected, predicted, name, nfold):
+        self.matrix[expected][predicted] += [ name ]
+        self.folds[name] = nfold
+
+    def matrixNfold(self, nfold):
+        nfoldDict = defaultdict(lambda: defaultdict(list))
+        for c in self.matrix:
+            for d in self.matrix[c]:
+                for e in self.matrix[c][d]:
+                    if self.folds[e] == nfold:
+                        nfoldDict[c][d].append(e)
+        return nfoldDict
+
+    def stdNfold(self, normalizedAccuracies=False):
+        """Return standard deviation of the accuracies across folds."""
+
+        if normalizedAccuracies:
+            accuracies = self.normalizedAccuraciesNFold()
+        else:
+            accuracies = self.accuraciesNFold()
+
+        # TODO the following lines compute standard deviation. In
+        # the future we can use stdev method from the statistics
+        # package, shipped by default since Python 3.4
+        acc_mean = sum(accuracies) / len(accuracies)
+
+        return sqrt(sum([(x - acc_mean) * (x - acc_mean)
+                    for x in accuracies]) / len(accuracies))
 
     def classes(self):
         allClasses = set()
@@ -65,6 +101,15 @@ class ConfusionMatrix:
                 result += len(self.matrix[c][d])
         return result
 
+    def totalNfold(self, fold):
+        """Return the total number of classification instances for a given fold."""
+        matrix = self.matrixNfold(fold)
+        result = 0
+        for c in matrix:
+            for d in matrix[c]:
+                result += len(matrix[c][d])
+        return result
+
     def correct(self):
         """Return the number of correctly classified instances."""
         result = 0
@@ -72,6 +117,13 @@ class ConfusionMatrix:
             result += len(self.matrix[c][c])
         return result
 
+    def correctNfold(self, fold):
+        """Return the number of correctly classified instances for a given fold."""
+        matrix = self.matrixNfold(fold)
+        result = 0
+        for c in matrix:
+            result += len(matrix[c][c])
+        return result
 
     def toDict(self):
         """Format nicely the confusion matrix as normal dict, replace list of
@@ -92,7 +144,47 @@ class ConfusionMatrix:
         total = self.total()
         return 'Correctly classified: %d out of %d (%d%%)' % (good, total, 100*good//total)
 
+    def accuraciesNFold(self):
+        '''Return accuracies per fold.'''
+        folds = set(self.folds.values())
 
+        if not bool(folds):
+            raise('This matrix does not contain information about folds')
+
+        return [self.correctNfold(f) * 100. / self.totalNfold(f)
+                for f in folds]
+
+    def normalizedAccuraciesNFold(self):
+        '''Returns the normalized accuracy.'''
+        folds = set(self.folds.values())
+
+        if not bool(folds):
+            raise('This matrix does not contain information about folds')
+
+        foldAccuracies = []
+
+        for f in folds:
+            classAccuracies = []
+            matrix = self.matrixNfold(f)
+
+            for c in matrix:
+                classElements = 0
+                for e in matrix[c]:
+                    classElements += len(matrix[c][e])
+
+                classAccuracies.append(len(matrix[c][c]) * 100. / classElements)
+
+            foldAccuracies.append(sum(classAccuracies) / len(classAccuracies))
+
+        return foldAccuracies
+
+    def accuracy(self):
+        accuracies = self.accuraciesNFold()
+        return sum(accuracies) / len(accuracies)
+
+    def normalizedAccuracy(self):
+        accuracies = self.normalizedAccuraciesNFold()
+        return sum(accuracies) / len(accuracies)
 
     def toHtml(self, standAlone = True, embedStyleSheet = True):
         html = '<table>'

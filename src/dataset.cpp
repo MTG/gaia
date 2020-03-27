@@ -808,10 +808,11 @@ class LoadPointJob {
  public:
   LoadPointJob(const QString& pname, const QString& filename,
                const QStringList* descsSelect, const QStringList* descsExclude,
-               PointLayout** layout, int* ncompleted, TextProgress* info, QMutex* lock) :
+               PointLayout** layout, int* ncompleted, TextProgress* info, QMutex* lock,
+               bool failOnUnmatched = true) :
     _pname(pname), _filename(filename), _descsSelect(descsSelect),
     _descsExclude(descsExclude), _layout(layout), _numberOfJobsCompleted(ncompleted),
-    _info(info), _globalLock(lock) {}
+    _info(info), _globalLock(lock), _failOnUnmatched(failOnUnmatched) {}
 
   ~LoadPointJob() {}
 
@@ -820,7 +821,7 @@ class LoadPointJob {
     p->setName(_pname);
 
     try {
-      p->load(_filename, *_descsSelect, *_descsExclude);
+      p->load(_filename, *_descsSelect, *_descsExclude, _failOnUnmatched);
     }
     catch (GaiaException& e) {
       qWarning() << "Could not read from file:" << _filename;
@@ -879,13 +880,15 @@ class LoadPointJob {
   int* _numberOfJobsCompleted;
   TextProgress* _info;
   QMutex* _globalLock;
+  bool _failOnUnmatched;
 };
 
 
 DataSet* DataSet::mergeFiles(const QMap<QString, QString>& sigfiles,
                              const QStringList& descsSelect,
                              const QStringList& descsExclude,
-                             int start, int end, PointLayout* reflayout) {
+                             int start, int end, PointLayout* reflayout,
+                             bool failOnUnmatched) {
 
   PointLayout* layout = reflayout;
   TextProgress info(0, "Merging file [%1/%2] (%3% done)", UpdateOnUnit);
@@ -903,7 +906,8 @@ DataSet* DataSet::mergeFiles(const QMap<QString, QString>& sigfiles,
 
     listJobs << new LoadPointJob(it.key(), it.value(),
                                  &descsSelect, &descsExclude,
-                                 &layout, &currentJob, &info, &lock);
+                                 &layout, &currentJob, &info, &lock,
+                                 failOnUnmatched);
   }
 
   G_INFO("Processing jobs number from " << start << " to " << currentJob-1 <<

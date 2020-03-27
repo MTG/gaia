@@ -22,17 +22,16 @@
 from __future__ import print_function
 from __future__ import with_statement
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-import os, sys
 import gaia2.fastyaml as yaml
+import json
+import logging
+import os
+import sys
 from gaia2 import DataSet, cvar
 from gaia2.classification import GroundTruth, evaluate, evaluateNfold, utils
+from math import log10
 from os.path import exists
-import logging
-import json
+from six.moves import cPickle
 
 log = logging.getLogger('gaia2.classification.ClassificationTask')
 
@@ -56,6 +55,7 @@ def getTrainer(classifier, param, ds):
         svmtype = param['type']
         kernel = param['kernel']
         cexp = param['C']
+        balanceClasses = param['balanceClasses']
         gammaexp = param['gamma']
 
         descriptorNames = param.get('descriptorNames', '*')
@@ -66,7 +66,8 @@ def getTrainer(classifier, param, ds):
 
         trainingparam = { 'descriptorNames':  descriptorNames,
                           'exclude': exclude, 'svmtype': svmtype, 'kernel': kernel,
-                          'c': 2**cexp, 'gamma': 2**gammaexp}
+                          'c': 2**cexp, 'gamma': 2**gammaexp,
+                          'balanceClasses': balanceClasses}
         newds = ds
 
     elif classifier == 'NN':
@@ -139,7 +140,7 @@ def getTrainer(classifier, param, ds):
 
 
 class ClassificationTask(object):
-    def run(self, className, outfilename, param, dsname, gtname, evalconfig):
+    def run(self, className, outfilename, param, dsname, gtname, evalconfig, seed, jobidx=None, jobcount=None):
 
         try:
             classifier = param['classifier']
@@ -160,6 +161,10 @@ class ClassificationTask(object):
                     log.warning('Removing %s from GroundTruth as it could not be found in the merged dataset' % pid)
                     del gt[pid]
 
+            # get the number of digits of jobcount to format the log
+            if jobidx and jobcount:
+                jobdigits = len(str(jobcount))
+
             trainerFun, trainingparam, newds = getTrainer(classifier, param, ds)
 
             # run all the evaluations specified in the evaluation config
@@ -175,9 +180,11 @@ class ClassificationTask(object):
                                                                                               param['preprocessing']))
                 log.info('    PID: %d, parameters: %s' % (os.getpid(), json.dumps(param)))
 
-                # run evaluation
-                confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, **trainingparam)
+                if jobidx and jobcount:
+                    log.info('    Job: %.*d/%d' % (jobdigits, jobidx, jobcount))
 
+                # run evaluation
+                confusion = evaluateNfold(evalparam['nfold'], ds, gt, trainerFun, seed=seed, **trainingparam)
                 # write evaluation params & result
                 with open(outfilename + '_%d.param' % i, 'w') as f:
                     yaml.dump({ 'model': param, 'evaluation': evalparam }, f)
@@ -190,8 +197,8 @@ class ClassificationTask(object):
 
 
 if __name__ == '__main__':
-    className, outfilename, param, dsname, gtname, evalconfig = pickle.load(sys.stdin)
+    config = cPickle.load(sys.stdin)
 
     cvar.verbose = False
     task = ClassificationTask()
-    task.run(className, outfilename, param, dsname, gtname, evalconfig)
+    task.run(*config)

@@ -409,7 +409,8 @@ public:
 
 	void Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		   double *alpha_, double Cp, double Cn, double eps,
-		   SolutionInfo* si, int shrinking);
+		   SolutionInfo* si, int shrinking, int max_iters=1e7,
+		   int max_tolerance_updates=4);
 protected:
 	int active_size;
 	schar *y;
@@ -507,7 +508,8 @@ void Solver::reconstruct_gradient()
 
 void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		   double *alpha_, double Cp, double Cn, double eps,
-		   SolutionInfo* si, int shrinking)
+		   SolutionInfo* si, int shrinking, int max_iters,
+		   int max_tolerance_updates)
 {
 	this->l = l;
 	this->Q = &Q;
@@ -562,6 +564,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 	// optimization step
 
 	int iter = 0;
+	int update_tolerance = 0;
 	int counter = min(l,1000)+1;
 
 	while(1)
@@ -727,6 +730,27 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 				else
 					for(k=0;k<l;k++)
 						G_bar[k] += C_j * Q_j[k];
+			}
+		}
+
+		// try a looser stop tolerance if the maximum
+		// number of iterations is reached
+		if(iter >= max_iters)
+		{
+			// do this a limited number of times so we
+			// do not get stuck even if the problem is
+			// ill defined
+			if(update_tolerance >= max_tolerance_updates)
+			{
+				print_string_stdout("Solver: Maximum number of tolerance updates reached\n");
+				break;
+			}
+			else
+			{
+				print_string_stdout("Solver: Increasing stop tolerance\n");
+				this->eps *= 10;
+				iter = 0;
+				update_tolerance++;
 			}
 		}
 	}
@@ -1447,7 +1471,8 @@ static void solve_c_svc(
 
 	Solver s;
 	s.Solve(l, SVC_Q(*prob,*param,y), minus_ones, y,
-		alpha, Cp, Cn, param->eps, si, param->shrinking);
+		alpha, Cp, Cn, param->eps, si, param->shrinking,
+		param->max_iterations, param->max_tolerance_updates);
 
 	double sum_alpha=0;
 	for(i=0;i<l;i++)
