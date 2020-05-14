@@ -176,14 +176,15 @@ def configure(conf):
         Name: libgaia2
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
-        Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
+        Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQt5Core -lQt5Concurrent -lyaml %(tbblib)s
         Cflags: -I${includedir} ${qtincludes}
         ''' % opts
 
     elif sys.platform == 'darwin':
         opts = { 'prefix': prefix,
              'qtlibdir': '-F' + conf.env['FRAMEWORKPATH_QT5CORE'][0] +
-                         ' -framework ' + conf.env['FRAMEWORK_QT5CORE'][0],
+                         ' -framework ' + conf.env['FRAMEWORK_QT5CORE'][0] +
+                         ' -framework ' + conf.env['FRAMEWORK_QT5CONCURRENT'][0],
              'qtincludedir': '-I' + ' -I'.join(conf.env['INCLUDES_QT5CORE']),
              'version': VERSION,
              'tbblib': tbblib,
