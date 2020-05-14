@@ -116,9 +116,6 @@ def configure(conf):
         conf.env.LINKFLAGS = [ '-stdlib=libc++' ]
         # for defining static const variables in header
         conf.env.CXXFLAGS += [ '-Wno-static-float-init' ]
-        # add /usr/local/include as the brew formula for yaml doesn't have
-        # the cflags properly set
-        conf.env.CXXFLAGS += [ '-I/usr/local/include' ]
 
     if conf.options.CROSS_COMPILE_MINGW32:
         #print("- Cross-compiling for Windows with MinGW: search for pre-built dependencies in 'packaging/win32_3rdparty'")
