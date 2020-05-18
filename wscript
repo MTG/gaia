@@ -49,8 +49,8 @@ def options(opt):
 
 def check_tbb(conf):
     tbb = conf.check_cxx(header_name = 'tbb/task_scheduler_init.h',
-                         mandatory = 1,
-                         errmsg = 'Intel TBB is recommended in order to compile Gaia')
+                         mandatory = True,
+                         errmsg = 'Intel TBB cannot be found')
 
     if not tbb:
         return
@@ -61,6 +61,7 @@ def check_tbb(conf):
 
 
 def configure(conf):
+    conf.load('compiler_cxx compiler_c qt4')
     if not sys.platform.startswith('linux') and sys.platform != 'darwin':
         print('Please use the QtCreator project for building Gaia in Windows...')
         sys.exit(1)
@@ -134,8 +135,6 @@ def configure(conf):
         # compile libgcc and libstd statically when using MinGW
         conf.env.CXXFLAGS = ['-static-libgcc', '-static-libstdc++']
 
-
-    conf.load('compiler_cxx compiler_c qt4')
 
     #conf.env['LINKFLAGS'] += [ '--as-needed' ] # TODO do we need this flag?
 
