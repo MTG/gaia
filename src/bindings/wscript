@@ -24,11 +24,6 @@ def configure(conf):
         conf.check_python_version((3, 7))
         conf.check_python_headers()
 
-        # do not use the default extension of .bundle on MacOS
-        # TODO: still necessary with waf 1.5.x?
-        if sys.platform == 'darwin':
-            conf.env['pyext_SUFFIX'] = '.so'
-
         conf.env['CPPPATH_BINDINGS'] = [ '../../src',
                                          '../../src/bindings',
                                          '../../src/metrics',
@@ -38,7 +33,7 @@ def configure(conf):
 
 
 def build(bld):
-    bld(features = 'cxx cshlib pyext',
+    bld.shlib(features = 'cxx cshlib pyext',
         source = 'gaia.swig',
         target = '_gaia2',
         # -w 451: ignore the warning "Setting a const char * variable may leak memory"
@@ -46,7 +41,7 @@ def build(bld):
         use = ['gaia2'] + bld.env['USELIB'], # + ['BINDINGS'],
         includes = bld.env['CPPPATH_BINDINGS'],
         install_path = '${PYTHONDIR}/gaia2'
-        )
+    )
 
     bld.install_as('${PYTHONDIR}/gaia2/__init__.py', 'gaia2.py')
     bld.install_files('${PYTHONDIR}/gaia2', bld.path.ant_glob('pygaia/*.py'))
