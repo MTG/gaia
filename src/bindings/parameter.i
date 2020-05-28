@@ -16,7 +16,7 @@ PyObject* parameterToPython(const QVariant* p) {
 
   case QVariant::ByteArray: {
     QByteArray array = p->toByteArray();
-    result = PyString_FromStringAndSize(array.data(), array.size());
+    result = PyBytes_FromStringAndSize(array.data(), array.size());
     break;
   }
 
