@@ -58,7 +58,7 @@ def combinations(vrange):
 def dictcombinations(d):
     """From a dictionary of key to possible values, generate dictionaries with all possible combinations for the values."""
     keys = tuple(d.keys())
-    for values in combinations(d.values()):
+    for values in combinations(list(d.values())):
         yield dict(zip(keys, values))
 
 
