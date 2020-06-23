@@ -31,6 +31,7 @@ from os.path import join, split, exists
 from gaia2.utils import makedir, tuplify, dictcombinations
 from gaia2.classification import GroundTruth
 from time import time
+import sys
 
 
 log = logging.getLogger('gaia2.classification.ClassificationTaskManager')
@@ -271,7 +272,7 @@ def runSingleTest(args, cluster_mode=False):
         import subprocess
 
         singleTaskFile = join(split(__file__)[0], 'classificationtask.py')
-        proc = subprocess.Popen([ 'python', singleTaskFile ],
+        proc = subprocess.Popen([sys.executable, singleTaskFile],
                                 stdin  = subprocess.PIPE)
                                 # do not capture stdout nor stderr, so that we have logging messages in "real-time"
                                 #stdout = subprocess.PIPE,
