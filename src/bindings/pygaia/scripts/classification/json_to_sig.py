@@ -29,7 +29,7 @@ def convertJsonToSig(filelist_file, result_filelist_file):
     result_fl = fl
     errors = []
 
-    for trackid, json_file in fl.iteritems():
+    for trackid, json_file in fl.items():
         try:
             data = json.load(open(json_file))
 
