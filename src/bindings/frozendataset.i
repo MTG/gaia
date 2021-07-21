@@ -52,7 +52,7 @@ class FrozenLayout(object):
         if pattern in (StringType, EnumType):
             return []
 
-        if isinstance(pattern, basestring):
+        if isinstance(pattern, str):
             pattern = pattern.lower()
             # try to be a bit lenient here by allowing to not specify the namespace of a descriptor
             if pattern[0] not in ('*', '.'):
@@ -149,7 +149,7 @@ class FrozenPoint(tuple):
         raise NotImplementedError()
 
     def __getitem__(self, desc):
-        if isinstance(desc, basestring):
+        if isinstance(desc, str):
             region = self.layout().descriptorLocation(desc)
             return self[region[0]:region[1]]
 

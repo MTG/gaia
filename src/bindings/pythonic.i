@@ -21,14 +21,8 @@ def pmap(param_map):
 
     pm = ParameterMap()
     for key, value in param_map.items():
-        if not isinstance(key, basestring):
+        if not isinstance(key, str):
             raise TypeError('A key in the map is not a string; can not convert it')
-
-        # until python 3, everything should always be utf-8 encoded bytestrings
-        if isinstance(key, unicode):
-            key = key.encode('utf-8')
-        if isinstance(value, unicode):
-            value = value.encode('utf-8')
 
         if isinstance(value, (dict, ParameterMap)): # if value is a python map, convert it to ParameterMap
             pm.setParameterMap(key, pmap(value))
