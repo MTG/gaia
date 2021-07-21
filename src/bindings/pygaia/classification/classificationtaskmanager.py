@@ -22,6 +22,8 @@
 from __future__ import print_function, absolute_import
 
 import logging
+import os
+
 import yaml
 from gaia2 import *
 from multiprocessing import cpu_count
@@ -99,6 +101,35 @@ class ClassificationTaskManager:
         log.debug('Generating all possible configs...')
         self.updateAllConfigs()
 
+    def gaia_cpu_count(self):
+        """Find the number of processes that should be used concurrently when training a model.
+        First, look in the environment variable `GAIA_NUM_TRAINING_PROCESSES`. If the value is
+        "all", then use the full number of cores available on the CPU, otherwise interpret it
+        as a number. If the value isn't a number, use all cores.
+        If this value isn't set, look at the numberProcesses option in the project file, with
+        the same behaviour.
+        If the environment variable isn't set and no config option is in the project file, use
+        the full number of cores available on the CPU."""
+        config_env = "GAIA_NUM_TRAINING_PROCESSES"
+        environ_cpu_count = os.environ.get(config_env)
+        if environ_cpu_count:
+            if environ_cpu_count == "all":
+                return cpu_count(), "environ"
+            try:
+                return int(environ_cpu_count), "environ"
+            except ValueError:
+                return cpu_count(), "default - error reading environ"
+
+        config_cpu_count = self.conf.get('numberProcesses', False)
+        if config_cpu_count:
+            if config_cpu_count == "all":
+                return cpu_count(), "config"
+            try:
+                return int(config_cpu_count), "config"
+            except ValueError:
+                return cpu_count(), "default - error reading config"
+
+        return cpu_count(), "default"
 
     def updateAllConfigs(self):
         """Compute all the possible config combinations for training & evaluations."""
@@ -215,11 +246,11 @@ class ClassificationTaskManager:
 
             jobidx += 1
 
-        concurrentJobs = cpu_count()
+        concurrentJobs, numJobsSource = self.gaia_cpu_count()
 
         log.info('-'*80)
         log.info('Setup finished, starting classification tasks.')
-        log.info('Will use %d concurrent jobs.' % concurrentJobs)
+        log.info('Will use %d concurrent jobs (value from %s).' % (concurrentJobs, numJobsSource))
 
         with ProcessPoolExecutor(max_workers=concurrentJobs) as executor:
             futures = [executor.submit(runSingleTest, job,
