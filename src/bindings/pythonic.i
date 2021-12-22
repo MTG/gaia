@@ -8,6 +8,7 @@ import sys
 import os.path
 
 __version__ = _gaia2.cvar.version
+GaiaException = _gaia2.GaiaException
 
 #### ParameterMap and Factories adjustments ###################################
 
@@ -169,10 +170,10 @@ def autoSetValue(p, name, value):
 def autoGetValue(p, name):
     try:
         return p.value(name)
-    except:
+    except GaiaException:
         try:
             return p.label(name)
-        except:
+        except GaiaException:
             raise NameError('Descriptor %s doesn\'t exist' % name)
 
 Point.__getitem__ = autoGetValue
