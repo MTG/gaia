@@ -153,14 +153,6 @@ addChildRef(View, '__init__')
 
 #### API pythonization ########################################################
 
-try:
-    all
-except NameError:
-    def all(l):
-        if l == []:
-            return True
-        return l[0] and all(l[1:])
-
 def autoSetValue(p, name, value):
     if isinstance(value, str) or (isinstance(value, list) and all([ isinstance(item, str) for item in value ])):
         p.setLabel(name, value)
