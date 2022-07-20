@@ -177,6 +177,7 @@ def configure(conf):
         Name: libgaia2
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
+        Requires.private: eigen3
         Libs: -L${libdir} -L${qtlibdir} -lgaia2 -lQtCore -lyaml %(tbblib)s
         Cflags: -I${includedir} ${qtincludes}
         ''' % opts
@@ -199,6 +200,7 @@ def configure(conf):
         Name: libgaia2
         Description: A library for doing similarity in semimetric spaces
         Version: %(version)s
+        Requires.private: eigen3
         Libs: -L${libdir} ${qtlibdir} -lgaia2 -lyaml %(tbblib)s
         Cflags: -I${includedir} ${qtincludes}
         ''' % opts
