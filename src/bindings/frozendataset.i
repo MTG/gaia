@@ -113,12 +113,12 @@ class FrozenLayout(object):
             layout = self._layout
         else:
             layout = None
-        return base64.b64encode(yaml.dump(layout))
+        return base64.b64encode(yaml.dump(layout).encode())
 
     @staticmethod
     def fromBase64(str64):
         result = FrozenLayout(None)
-        result._layout = yaml.load(base64.b64decode(str64))
+        result._layout = yaml.load(base64.b64decode(str64).decode())
         return result
 
 
@@ -184,10 +184,10 @@ class FrozenPoint(tuple):
 
 
     def toBase64(self):
-        name64 = base64.b64encode(self._name)
-        nsize64 = '%04d' % len(name64)
+        name64 = base64.b64encode(self._name.encode())
+        nsize64 = ('%04d' % len(name64)).encode()
         data64 = base64.b64encode(struct.pack('f'*len(self), *self))
-        size64 = '%04d' % len(data64)
+        size64 = ('%04d' % len(data64)).encode()
         layout64 = self.layout().toBase64()
         return nsize64 + name64 + size64 + data64 + layout64
 
@@ -195,17 +195,17 @@ class FrozenPoint(tuple):
     @staticmethod
     def fromBase64(str64):
         offset = 0
-        nsize64 = int(str64[offset : offset+4])
+        nsize64 = int(str64[offset : offset+4].decode())
         name64 = str64[offset+4 : offset+4+nsize64]
 
         offset = offset+4+nsize64
-        size64 = int(str64[offset : offset+4])
+        size64 = int(str64[offset : offset+4].decode())
         data64 = str64[offset+4 : offset+4+size64]
         layout64 = str64[offset+4+size64:]
 
-        name = base64.b64decode(name64)
+        name = base64.b64decode(name64).decode()
         packed_data = base64.b64decode(data64)
-        data = struct.unpack('f'*(len(packed_data)/4), packed_data)
+        data = struct.unpack('f'*int(len(packed_data)/4), packed_data)
         result = FrozenPoint(data, name, None)
         result._layout = FrozenLayout.fromBase64(layout64)
 
