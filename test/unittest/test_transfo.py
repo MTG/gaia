@@ -14,7 +14,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -174,9 +174,9 @@ class TestTransfo(unittest.TestCase):
 
         self.assertEqual(ds5.history().toPython(),
                          [{ 'Analyzer name': 'remove',
-                            'Analyzer parameters': { 'descriptorNames': [ '.a.1', '.a.2', '.d' ] },
+                            'Analyzer parameters': { 'descriptorNames': [ '.a.1', '.a.2', '.d', '.e' ] },
                             'Applier name': 'removedesc',
-                            'Applier parameters': {'descriptorNames': [ '.a.1', '.a.2', '.d' ] },
+                            'Applier parameters': {'descriptorNames': [ '.a.1', '.a.2', '.d', '.e' ] },
                             'Additional info': {}
                             },
                           { 'Analyzer name': 'fixlength',
@@ -185,7 +185,6 @@ class TestTransfo(unittest.TestCase):
                             'Applier parameters': {'descriptorNames': [ '.b', '.c' ] },
                             'Additional info': {}
                             }])
-
 
         p2 = Point()
         p2.setLayout(ds0.layout())
@@ -198,9 +197,6 @@ class TestTransfo(unittest.TestCase):
         self.assertEqual(p2m.layout().descriptorNames(), ('.b', '.c'))
         self.assertEqual(p2m['b'], 23.)
         self.assertEqual(p2m['c'], 78.)
-
-
-
 
     def testFixLength(self):
         testdata.useFixedLength = True
