@@ -14,7 +14,7 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the Affero GNU General Public License     
+# You should have received a copy of the Affero GNU General Public License
 # version 3 along with this program. If not, see http://www.gnu.org/licenses/
 
 
@@ -57,7 +57,7 @@ class TestMerge(unittest.TestCase):
         ds.save(testdata.TEST_DATABASE)
 
     def testGaiaFusion(self):
-        cmd = [ 'python', '../../src/tools/gaiafusion.py', '-c', '2', '-d', 'data/fusion', 'data/gaiatest.db' ]
+        cmd = [ 'python3', '../../src/tools/gaiafusion.py', '-c', '2', '-d', 'data/fusion', 'data/gaiatest.db' ]
 
         fusion = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         stdout, stderr = fusion.communicate()
@@ -67,10 +67,10 @@ class TestMerge(unittest.TestCase):
             os.remove(f)
 
         if fusion.returncode != 0:
-            print 'STDOUT' + '*'*100
-            print stdout
-            print 'STDERR' + '*'*100
-            print stderr
+            print('STDOUT' + '*'*100)
+            print(stdout)
+            print('STDERR' + '*'*100)
+            print(stderr)
 
         self.assertEqual(fusion.returncode, 0)
 
