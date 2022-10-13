@@ -1,9 +1,0 @@
-evaluation: {nfold: 5, type: nfoldcrossvalidation}
-model:
-  C: 7
-  classifier: svm
-  descriptorNames: ['*.mean', '*.var']
-  gamma: -3
-  kernel: poly
-  preprocessing: lowlevel
-  type: C-SVC

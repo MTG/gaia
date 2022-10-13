@@ -1,9 +1,0 @@
-evaluation: {nfold: 5, type: nfoldcrossvalidation}
-model:
-  C: 5
-  classifier: svm
-  descriptorNames: ['*.mean', '*.var']
-  gamma: -3
-  kernel: RBF
-  preprocessing: gaussianized
-  type: nu-SVC
