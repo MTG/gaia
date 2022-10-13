@@ -34,6 +34,12 @@ groundtruth: %(groundtruth)s
 # produce slightly different results on different trials)
 seed: %(seed)s
 
+# Number of processes to use when training models. If set to a false value (False, None, or 0)
+# then the environment variable GAIA_NUM_TRAINING_PROCESSES will also be checked.
+# If this value or the environment variable is `all`, then the value of multiprocessing.cpu_count()
+# will be used
+numberProcesses: %(numberProcesses)s
+
 # Cluster mode controls how subprocesses are called. Set it to True to explicitly use the subprocess
 # module to open a new python process and call each classificationTask as a script. Otherwise, this
 # call will be performed as a function.

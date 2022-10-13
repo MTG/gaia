@@ -62,7 +62,7 @@ def get_essentia_versions(filelist):
 
 def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir,
                     results_dir, seed=None, cluster_mode=False, template=None,
-                    force_consistency=False):
+                    force_consistency=False, number_processes=False):
 
     gt = yaml.load(open(groundtruth_file, 'r'))
     try:
@@ -133,7 +133,8 @@ def generate_project(groundtruth_file, filelist_file, project_file, datasets_dir
                                          'filelist': abspath(filelist_file),
                                          'groundtruth': abspath(groundtruth_file),
                                          'seed': seed,
-                                         'clusterMode': cluster_mode})
+                                         'clusterMode': cluster_mode,
+                                         'numberProcesses': number_processes})
 
     print('Successfully written', project_file)
 
@@ -158,9 +159,11 @@ if __name__ == '__main__':
                                                                'If not specified, the script will try to detect it from the descriptors metadata.')
     parser.add_argument('-f', '--force-consistency', action='store_true', help='Checks if all the descriptor files were computed with the same Essentia version. '
                                                                                 'Throws an exception if not.')
-
+    parser.add_argument('-j', '--number-processes', type=int, required=False,
+                        help='Indicate the number of CPU threads to use during the training process. If not set, the '
+                             'process will default to the number of cores available on the machine it is run it.')
     args = parser.parse_args()
 
     generate_project(args.groundtruth_file, args.filelist_file, args.project_file, args.datasets_dir,
                     args.results_dir, seed=args.seed, cluster_mode=args.cluster_mode, template=args.template,
-                    force_consistency=args.force_consistency)
+                    force_consistency=args.force_consistency, number_processes=args.number_processes)
