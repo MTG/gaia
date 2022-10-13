@@ -46,6 +46,10 @@ namespace std {
   try {
     $action
   }
+  catch (GaiaException& e) {
+    PyErr_SetString(gaiaException, e.what());
+    SWIG_fail;
+  }
   catch (std::exception& e) {
     PyErr_SetString(PyExc_Exception, e.what());
     SWIG_fail;
@@ -103,7 +107,7 @@ inline std::vector<std::vector<double> > covarianceMatrix(const gaia2::DataSet* 
 // declare this here, definition is in parameter.i
 PyObject* parameterToPython(const QVariant* p);
 PyObject* pmapToPython(const ParameterMap* pm);
-
+static PyObject* gaiaException;
 %}
 
 %include "../gaia.h"
@@ -123,6 +127,9 @@ PyObject* pmapToPython(const ParameterMap* pm);
 
 %init %{
   init();
+  gaiaException = PyErr_NewException("_gaia.GaiaException", NULL, NULL);
+  Py_INCREF(gaiaException);
+  PyModule_AddObject(m, "GaiaException", gaiaException);
 %}
 
 

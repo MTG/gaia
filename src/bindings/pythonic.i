@@ -8,6 +8,7 @@ import sys
 import os.path
 
 __version__ = _gaia2.cvar.version
+GaiaException = _gaia2.GaiaException
 
 #### ParameterMap and Factories adjustments ###################################
 
@@ -152,14 +153,6 @@ addChildRef(View, '__init__')
 
 #### API pythonization ########################################################
 
-try:
-    all
-except NameError:
-    def all(l):
-        if l == []:
-            return True
-        return l[0] and all(l[1:])
-
 def autoSetValue(p, name, value):
     if isinstance(value, str) or (isinstance(value, list) and all([ isinstance(item, str) for item in value ])):
         p.setLabel(name, value)
@@ -169,10 +162,10 @@ def autoSetValue(p, name, value):
 def autoGetValue(p, name):
     try:
         return p.value(name)
-    except:
+    except GaiaException:
         try:
             return p.label(name)
-        except:
+        except GaiaException:
             raise NameError('Descriptor %s doesn\'t exist' % name)
 
 Point.__getitem__ = autoGetValue
