@@ -257,7 +257,8 @@ class TestAlgorithms(unittest.TestCase):
             ds = testdata.loadTestDB()
 
             ds = history.mapDataSet(ds)
-            gt = yaml.load(open('data/svm/test_svm_%s.gt.yaml' % t).read())
+            gt = yaml.load(open('data/svm/test_svm_%s.gt.yaml' % t).read(),
+                           Loader=yaml.FullLoader)
 
             for p in ds.points():
                 self.assertEquals(p['genre'], gt[p.name()])
