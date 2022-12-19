@@ -55,13 +55,13 @@ Cleaner::Cleaner(const ParameterMap& params) : Analyzer(params) {}
           if (isnan(x)) {
             QString name = layout.descriptorName(RealType, FixedLength, i);
             isNan[name] += 1;
-            G_DEBUG(GAlgorithms, "ERROR:" << p->name() << " in dim " << name << " has NaN value");
+            G_DEBUG(GAlgorithms, "ERROR: " << p->name() << " in dim " << name << " has NaN value");
             continue;
           }
           if (isinf(x)) {
             QString name = layout.descriptorName(RealType, FixedLength, i);
             isInf[name] += 1;
-            G_DEBUG(GAlgorithms, "ERROR:" << p->name() << " in dim " << name << " has Inf value");
+            G_DEBUG(GAlgorithms, "ERROR: " << p->name() << " in dim " << name << " has Inf value");
             continue;
           }
         }
@@ -93,13 +93,13 @@ Cleaner::Cleaner(const ParameterMap& params) : Analyzer(params) {}
         if (x.isnan()) {
           QString name = layout.descriptorName(RealType, VariableLength, idx);
           isNan[name] += 1;
-          G_ERROR("ERROR:" << p->name() << " in dim " << name << " has NaN value");
+          G_ERROR("ERROR: " << p->name() << " in dim " << name << " has NaN value");
           continue;
         }
         if (x.isinf()) {
           QString name = layout.descriptorName(RealType, VariableLength, idx);
           isInf[name] += 1;
-          G_ERROR("ERROR:" << p->name() << " in dim " << name << " has Inf value");
+          G_ERROR("ERROR: " << p->name() << " in dim " << name << " has Inf value");
           continue;
         }
       }
@@ -109,11 +109,11 @@ Cleaner::Cleaner(const ParameterMap& params) : Analyzer(params) {}
   // list of descriptors to remove
   QSet<QString> toRemove;
   foreach (const QString& name, isInf.keys()) {
-    G_INFO("Removing" << name << "because it has Inf values");
+    G_INFO("Removing " << name << " because it has Inf values");
     toRemove.insert(name);
   }
   foreach (const QString& name, isNan.keys()) {
-    G_INFO("Removing" << name << "because it has NaN values");
+    G_INFO("Removing " << name << " because it has NaN values");
     toRemove.insert(name);
   }
 
@@ -146,7 +146,7 @@ Cleaner::Cleaner(const ParameterMap& params) : Analyzer(params) {}
       }
     }
     if (remove) {
-      G_INFO("Removing" << name << "because it is a constant descriptor");
+      G_INFO("Removing " << name << " because it is a constant descriptor");
       toRemove.insert(name);
     }
   }
