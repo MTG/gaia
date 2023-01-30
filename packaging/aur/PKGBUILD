@@ -1,7 +1,7 @@
 # Maintainer: Ronald Record <github@ronrecord.com>
 
 pkgname=gaia
-pkgver=v2.4.6r1
+pkgver=v2.4.6r2
 pkgrel=1
 pkgdesc="C++ library with python bindings which implements similarity measures and classifcations on the results of audio analysis, and generates classifcation models that Essentia can use to compute high-level description of music."
 arch=('x86_64' 'armv7h')
@@ -44,10 +44,10 @@ package() {
     mkdir -p ${pkgdir}/${destdir}/share/doc/${pkgname}
   }
   cp AUTHORS ${pkgdir}/${destdir}/share/doc/${pkgname}
-  cp Changelog ${pkgdir}/${destdir}/share/doc/${pkgname}
+  cp ChangeLog ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp COPYING.txt ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp README.md ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp VERSION ${pkgdir}/${destdir}/share/doc/${pkgname}
-  gzip -9 ${pkgdir}/${destdir}/share/doc/${pkgname}/Changelog
+  gzip -9 ${pkgdir}/${destdir}/share/doc/${pkgname}/ChangeLog
   chmod 755 ${pkgdir}/${destdir}/bin/* ${pkgdir}/${destdir}/bin
 }
