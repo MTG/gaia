@@ -12,11 +12,11 @@ makepkg
 After successfully building, to install:
 
 ```shell
-sudo pacman -U gaia-<version>-<release>-<architecture>.pkg.tar.zst
+sudo pacman -U libgaia2-<version>-<release>-<architecture>.pkg.tar.zst
 ```
 
 To uninstall:
 
 ```shell
-sudo pacman -R gaia
+sudo pacman -R libgaia2
 ```

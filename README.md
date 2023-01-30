@@ -57,13 +57,13 @@ On Arch Linux the Arch User Repository PKGBUILD can be used to build, package, a
 ```shell
 cd packaging/aur
 makepkg
-sudo pacman -U gaia-<version>-<release>-<architecture>.pkg.tar.zst
+sudo pacman -U libgaia2-<version>-<release>-<architecture>.pkg.tar.zst
 ```
 
 To uninstall on Arch Linux:
 
 ```shell
-sudo pacman -R gaia
+sudo pacman -R libgaia2
 ```
 
 ### MacOS

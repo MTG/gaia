@@ -1,6 +1,6 @@
 # Maintainer: Ronald Record <github@ronrecord.com>
 
-pkgname=gaia
+pkgname=libgaia2
 pkgver=v2.4.6r2
 pkgrel=1
 pkgdesc="C++ library with python bindings which implements similarity measures and classifcations on the results of audio analysis, and generates classifcation models that Essentia can use to compute high-level description of music."
