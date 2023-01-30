@@ -50,6 +50,21 @@ Dependencies:
 
       python src/doc/regenerate_docstring.py
 
+#### Arch Linux
+
+On Arch Linux the Arch User Repository PKGBUILD can be used to build, package, and install:
+
+```shell
+cd packaging/aur
+makepkg
+sudo pacman -U gaia-<version>-<release>-<architecture>.pkg.tar.zst
+```
+
+To uninstall on Arch Linux:
+
+```shell
+sudo pacman -R gaia
+```
 
 ### MacOS
 
