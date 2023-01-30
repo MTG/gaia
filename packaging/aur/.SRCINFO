@@ -2,7 +2,7 @@ pkgbase = gaia
 	pkgdesc =  C++ library with python bindings which implements similarity measures and classifcations on the results of audio analysis, and generates classifcation models that Essentia can use to compute high-level description of music.
 	pkgver = v2.4.6r2
 	pkgrel = 1
-	url = https://github.com/MTG/gaia
+	url = https://github.com/doctorfree/gaia
 	arch = x86_64
 	arch = armv7h
 	license = AGPL3
@@ -13,7 +13,7 @@ pkgbase = gaia
 	makedepends = python
 	makedepends = qt5-base
 	makedepends = swig
-	source = gaia::git+https://github.com/MTG/gaia.git
+	source = gaia::git+https://github.com/doctorfree/gaia.git
 	sha256sums = SKIP
 
 pkgname = gaia
