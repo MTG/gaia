@@ -24,7 +24,7 @@ out = 'build'
 
 
 def options(opt):
-    opt.load('compiler_cxx compiler_c qt5')
+    opt.load('compiler_cxx compiler_c qt5 xcode6')
     opt.recurse('src')
 
     # whether or not to have all the asserts working
@@ -207,6 +207,7 @@ def configure(conf):
     pcfile = '\n'.join([ l.strip() for l in pcfile.split('\n') ])
     conf.env.pcfile = pcfile
     #open('build/gaia2.pc', 'w').write(pcfile) # we'll do it later on the build stage
+    conf.load('xcode6')
 
 
 def build(bld):
