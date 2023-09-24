@@ -54,14 +54,9 @@ Dependencies:
 ### MacOS
 
 #### Build from command-line using Homebrew (recommended):
-- Install Qt4:
-
-      brew install cartr/qt4/qt
-
 - Install homebrew tap:
 
       brew tap MTG/essentia
-
 
 - Build Gaia (this will also install all the dependencies)
 
@@ -69,11 +64,11 @@ Dependencies:
 
 #### Build from command-line:
 
-- Install python, qt libraries 4.8, libYAML and swig dependencies using [Homebrew](http://brew.sh):
+- Install python, qt libraries 5, libYAML and swig dependencies using [Homebrew](http://brew.sh):
 
       brew install python
 
-      brew install swig libyaml cartr/qt4/qt@4
+      brew install swig libyaml qt@5
 
 - Install pyyaml pip package in case you want to build with python bindings:
 
