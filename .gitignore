@@ -3,6 +3,7 @@ build/
 
 .lock-wscript
 .waf-1*
+.waf3-*
 *~
 
 # data files for the unittests
