@@ -11,10 +11,10 @@ Documentation: http://essentia.upf.edu/documentation/gaia
 
 Dependencies:
 
-  * Qt >= 4.5
+  * Qt >= 5.12
   * libYAML >= 0.1.1
-  * Python >= 2.4
-  * SWIG >= 1.3.31
+  * Python >= 3.7
+  * SWIG >= 3.0.12
   * Eigen >= 3.3.4
 
 
@@ -24,31 +24,29 @@ Dependencies:
 
 - Install dependencies (Ubuntu/Debian)
 
-      apt-get install build-essential libqt4-dev libyaml-dev swig python-dev pkg-config libeigen3-dev
-
-   Note that Gaia build will fail if you are using swig 3.0.8. Install either a previous or later version. You will encounter this problem if you are using swig package distributed with Ubuntu 16.04. In this case install the newest swig version from source (https://github.com/swig/swig).
+      apt-get install build-essential qtbase5-dev libyaml-dev swig python3-dev pkg-config libeigen3-dev
 
 - Online help for WAF (build system)
 
-      ./waf --help
+      python3 waf --help
 
 - Configure with the desired options:
 
-      ./waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts]
+      python3 waf configure --download [--with-python-bindings] [--with-stlfacade] [--with-asserts]
 
     NOTE: in order to link Essentia library with Gaia, do not use the --with-stlfacade option
 
 - Compile libgaia.a:
 
-      ./waf
+      python3 waf
 
 - Install (to install system-wide you might need `sudo`)
 
-      ./waf install [--destdir=/where/ever/]
+      python3 waf install [--destdir=/where/ever/]
 
 - Build documentation (optional), it will be located at build/doc/ folder
 
-      python src/doc/regenerate_docstring.py
+      python3 src/doc/regenerate_docstring.py
 
 
 ### MacOS
@@ -76,11 +74,11 @@ Dependencies:
 
 - Configure and build similarly to Linux (see above).
 
-### Build with QtCreator (alternative):
+### (OUTDATED) Build with QtCreator (alternative):
 
 #### Gaia2lib
 
-- Install qt libraries 4.8 (including debug libraries) and [QtCreator](https://download.qt.io/archive/qtcreator/4.4/4.4.1/) from the [Qt download archives](https://download.qt.io/archive/qt/4.8/4.8.7/).
+- Install qt libraries (including debug libraries) and [QtCreator](https://download.qt.io/archive/qtcreator/4.4/4.4.1/) from the [Qt download archives](https://download.qt.io/archive/qt/4.8/4.8.7/).
 
 - Install libYAML and swig dependencies using [Homebrew](http://brew.sh) (we assume you already have a python installation, otherwise you can also install it using Homebrew):
 
@@ -108,7 +106,7 @@ Dependencies:
 
 - Copy the folder packaging/darwin/tmp/gaia2/python/gaia2 (created when running make_release_tarball.sh) to the site-packages directory of your python distribution. You can now import gaia2 from python.
 
-### Windows
+### (OUTDATED) Windows
 
 - Use the QtCreator projects inside the packaging/win32 directory.
 
