@@ -1,6 +1,7 @@
 %newobject gaia2::Factory< QString, gaia2::Analyzer, gaia2::ParameterMap >::create;
 
 
+namespace gaia2 {
 template < typename IdentifierType,
            typename AbstractProduct,
            typename ArgumentType >
@@ -20,6 +21,7 @@ class Factory {
 
 
 };
+}
 
 %template(AnalyzerFactory) gaia2::Factory< QString, gaia2::Analyzer, gaia2::ParameterMap >;
 

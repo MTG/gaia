@@ -2,6 +2,7 @@
 %newobject gaia2::LayoutAwareFactory< QString, gaia2::FrozenDistance, gaia2::FrozenDataSet, gaia2::ParameterMap >::create;
 
 
+namespace gaia2 {
 template < typename IdentifierType,
            typename AbstractProduct,
            typename LayoutType,
@@ -25,6 +26,7 @@ class LayoutAwareFactory {
 
 
 };
+}
 
 %template(DistanceFunctionFactory) gaia2::LayoutAwareFactory< QString, gaia2::DistanceFunction, gaia2::PointLayout, gaia2::ParameterMap >;
 

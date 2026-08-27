@@ -182,8 +182,6 @@ namespace std {
 
 // only functions from utils.h that should be usable from python
 void checkIsomorphDataSets(const gaia2::DataSet* dataset1, const gaia2::DataSet* dataset2);
-gaia2::PointLayout mergeLayouts(const gaia2::PointLayout& layout1, const gaia2::PointLayout& layout2);
-gaia2::DataSet* mergeDataSets(const gaia2::DataSet* ds1, const gaia2::DataSet* ds2);
 
 // from linalg.h
 inline std::vector<std::vector<double> > covarianceMatrix(const gaia2::DataSet* dataset);
