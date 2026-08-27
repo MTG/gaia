@@ -134,7 +134,7 @@ SVM_RESULT = 'data/test.1.predict'
 
 def readLibSVMDataSet(filename):
     with open(filename) as f:
-        data = [l.split() for l in f.readlines()]
+        data = [l.split() for l in f]
     minidx = maxidx = 1
     for l in data:
         for i in range(1, len(l)):
