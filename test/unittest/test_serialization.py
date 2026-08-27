@@ -36,35 +36,35 @@ class TestSerialization(unittest.TestCase):
     def testLayout(self):
         layout = testdata.createSimpleLayout()
 
-        (tmpFile, tmpName) = tempfile.mkstemp()
-        os.close(tmpFile)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            tmpName = tmp.name
 
-        # write dataset with layout
-        p = Point()
-        p.setName('p1')
-        p.setLayout(layout)
-        p2 = Point()
-        p2.setName('p2')
-        p2.setLayout(layout)
+        try:
+            # write dataset with layout
+            p = Point()
+            p.setName('p1')
+            p.setLayout(layout)
+            p2 = Point()
+            p2.setName('p2')
+            p2.setLayout(layout)
 
-        p['a.1'] = 23
-        self.assertEqual(p['a.1'], 23)
-        self.assertRaises(Exception, p.setValue, 'a.4', 34)
+            p['a.1'] = 23
+            self.assertEqual(p['a.1'], 23)
+            self.assertRaises(Exception, p.setValue, 'a.4', 34)
 
-        ds1 = DataSet()
-        ds1.setName('ds1')
-        ds1.addPoint(p)
-        ds1.addPoint(p2)
-        ds1.save(tmpName)
+            ds1 = DataSet()
+            ds1.setName('ds1')
+            ds1.addPoint(p)
+            ds1.addPoint(p2)
+            ds1.save(tmpName)
 
-        # reload dataset
-        ds2 = DataSet()
-        ds2.load(tmpName)
-        self.assertEqual(layout, ds2.layout())
-        self.assertEqual(ds2.point('p1')['a.1'], 23)
-
-        # remove temp file
-        os.remove(tmpName)
+            # reload dataset
+            ds2 = DataSet()
+            ds2.load(tmpName)
+            self.assertEqual(layout, ds2.layout())
+            self.assertEqual(ds2.point('p1')['a.1'], 23)
+        finally:
+            os.remove(tmpName)
 
     def testHistory(self):
         ds = testdata.loadTestDB()
@@ -98,29 +98,30 @@ class TestSerialization(unittest.TestCase):
                                  p2[name])
 
 
-        (tmpFile, tmpName) = tempfile.mkstemp()
-        os.close(tmpFile)
-        normalized_db.save(tmpName)
-        reloaded_db = DataSet()
-        reloaded_db.load(tmpName)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            tmpName = tmp.name
 
-        for pointName in testPoints:
-            p1 = normalized_db.point(pointName)
-            p2 = normalized_db.history().mapPoint(ds_orig.point(pointName))
-            p3 = reloaded_db.point(pointName)
-            p4 = reloaded_db.history().mapPoint(ds_orig.point(pointName))
+        try:
+            normalized_db.save(tmpName)
+            reloaded_db = DataSet()
+            reloaded_db.load(tmpName)
 
-            self.assert_(p1.layout() == p2.layout())
-            self.assert_(p2.layout() == p3.layout())
-            self.assert_(p3.layout() == p4.layout())
+            for pointName in testPoints:
+                p1 = normalized_db.point(pointName)
+                p2 = normalized_db.history().mapPoint(ds_orig.point(pointName))
+                p3 = reloaded_db.point(pointName)
+                p4 = reloaded_db.history().mapPoint(ds_orig.point(pointName))
 
-            for name in p1.layout().descriptorNames():
-                self.assertEqual(p1[name], p2[name])
-                self.assertEqual(p2[name], p3[name])
-                self.assertEqual(p3[name], p4[name])
+                self.assert_(p1.layout() == p2.layout())
+                self.assert_(p2.layout() == p3.layout())
+                self.assert_(p3.layout() == p4.layout())
 
-        # remove temp file
-        os.remove(tmpName)
+                for name in p1.layout().descriptorNames():
+                    self.assertEqual(p1[name], p2[name])
+                    self.assertEqual(p2[name], p3[name])
+                    self.assertEqual(p3[name], p4[name])
+        finally:
+            os.remove(tmpName)
 
 
     def testValueQuoting(self):

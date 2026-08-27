@@ -43,4 +43,5 @@ except ImportError:
 
 
 def loadfile(filename):
-    return load(open(filename).read())
+    with open(filename) as f:
+        return load(f.read())
