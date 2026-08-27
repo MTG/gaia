@@ -245,7 +245,7 @@ class TestAlgorithms(unittest.TestCase):
         predicted = trained.history().mapDataSet(testDS)
 
         with open(testdata.SVM_RESULT) as f:
-            expected = [l.strip() for l in f.readlines()]
+            expected = [line.strip() for line in f]
         for p, expectedClass in zip(predicted.points(), expected):
             self.assertEqual(p.label('class'), expectedClass)
 
