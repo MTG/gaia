@@ -244,7 +244,8 @@ class TestAlgorithms(unittest.TestCase):
         testDS = testdata.readLibSVMDataSet(testdata.SVM_TESTING_SET)
         predicted = trained.history().mapDataSet(testDS)
 
-        expected = [ l.strip() for l in open(testdata.SVM_RESULT).readlines() ]
+        with open(testdata.SVM_RESULT) as f:
+            expected = [l.strip() for l in f.readlines()]
         for p, expectedClass in zip(predicted.points(), expected):
             self.assertEqual(p.label('class'), expectedClass)
 
@@ -257,8 +258,9 @@ class TestAlgorithms(unittest.TestCase):
             ds = testdata.loadTestDB()
 
             ds = history.mapDataSet(ds)
-            gt = yaml.load(open('data/svm/test_svm_%s.gt.yaml' % t).read(),
-                           Loader=yaml.FullLoader)
+            with open('data/svm/test_svm_%s.gt.yaml' % t) as f:
+                gt = yaml.load(f.read(),
+                               Loader=yaml.FullLoader)
 
             for p in ds.points():
                 self.assertEquals(p['genre'], gt[p.name()])
@@ -284,9 +286,11 @@ class TestAlgorithms(unittest.TestCase):
 
         # try by passing directly the groundtruth map
         import gaia2.fastyaml as yaml
+        with open(testdata.RCA_GENRE_GT) as f:
+            class_map = yaml.load(f.read())
         ds_rca = transform(ds, 'rca', { 'resultName': 'rca10',
                                         'dimension': 10,
-                                        'classMap': yaml.load(open(testdata.RCA_GENRE_GT).read()) })
+                                        'classMap': class_map })
 
         v = View(ds_rca)
         dist = MetricFactory.create('euclidean', ds_rca.layout())

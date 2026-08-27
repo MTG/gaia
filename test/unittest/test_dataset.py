@@ -271,15 +271,17 @@ class TestDataSet(unittest.TestCase):
         for (pname, desc), value in enumValues.items():
             self.assertEqual(value, ds.point(pname)[desc])
 
-        (tmpFile, tmpName) = tempfile.mkstemp()
-        os.close(tmpFile)
-        ds.save(tmpName)
-        ds.load(tmpName)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            tmpName = tmp.name
 
-        for (pname, desc), value in enumValues.items():
-            self.assertEqual(value, ds.point(pname)[desc])
+        try:
+            ds.save(tmpName)
+            ds.load(tmpName)
 
-        os.remove(tmpName)
+            for (pname, desc), value in enumValues.items():
+                self.assertEqual(value, ds.point(pname)[desc])
+        finally:
+            os.remove(tmpName)
 
 
     def testFixLength(self):

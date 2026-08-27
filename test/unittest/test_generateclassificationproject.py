@@ -19,7 +19,6 @@
 
 
 import os
-import shutil
 import tempfile
 import unittest
 
@@ -29,22 +28,20 @@ from gaia2.scripts.classification.generate_classification_project import generat
 
 class TestGenerateClassificationProject(unittest.TestCase):
     def check_project(self, groundtruth_file, filelist_file, expected, force_consistency=False):
-        tmp_dir = tempfile.mkdtemp()
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            project_file = os.path.join(tmp_dir, expected)
 
-        project_file = os.path.join(tmp_dir, expected)
+            generate_project(groundtruth_file,
+                             filelist_file,
+                             project_file,
+                             tmp_dir,
+                             tmp_dir,
+                             force_consistency=force_consistency)
 
-        generate_project(groundtruth_file,
-                         filelist_file,
-                         project_file,
-                         tmp_dir,
-                         tmp_dir,
-                         force_consistency=force_consistency)
+            with open(project_file, 'r') as f:
+                found = yaml.load(f)['templateVersion']
 
-        found = yaml.load(open(project_file, 'r'))['templateVersion']
-
-        shutil.rmtree(tmp_dir)
-
-        # Check that te script picked the correct templateVersion.
+        # Check that the script picked the correct templateVersion.
         self.assertEqual(expected, found)
 
     def test21beta2(self):

@@ -29,7 +29,8 @@ import os, glob, subprocess
 class TestMerge(unittest.TestCase):
 
     def testValues(self):
-        collection = yaml.load(open(testdata.TEST_DATABASE_FILES, 'r').read())
+        with open(testdata.TEST_DATABASE_FILES, 'r') as f:
+            collection = yaml.load(f.read())
 
         # prepend 'data/' to the filenames
         for pid, filename in collection.items():

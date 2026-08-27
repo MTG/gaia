@@ -58,10 +58,11 @@ ds = transform(ds, 'svmtrain', { 'className': 'genre',
 
 ds.history().save('test_svm_singledesc.history')
 
-gtorig = yaml.load(open('../svm_old/test_svm_singledesc.gt.yaml'))
+with open('../svm_old/test_svm_singledesc.gt.yaml') as f:
+    gtorig = yaml.load(f)
 for p in ds.points():
     if str(p['genre']) != gtorig[p.name()]:
-        print 'for point', p.name(), 'expected:', gtorig[p.name()], 'got:', p['genre']
+        print('for point', p.name(), 'expected:', gtorig[p.name()], 'got:', p['genre'])
 
 
 # multidimdesc
