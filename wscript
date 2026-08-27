@@ -61,6 +61,7 @@ def check_tbb(conf):
 
 
 def configure(conf):
+    conf.qt5_vars = ['Qt5Core', 'Qt5Concurrent']
     conf.load('compiler_cxx compiler_c qt5')
     #conf.load('compiler_cxx compiler_c qt4')
     
