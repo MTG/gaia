@@ -20,19 +20,21 @@
 
 
 from __future__ import print_function
-import sys
+import argparse
 from gaia2.classification import ConfusionMatrix
 
 
-try:
-    results = sys.argv[1]
-    output_html = sys.argv[2]
-except:
-    print('Usage: %s <results_file> <confusion_matrix_html_file>' % sys.argv[0])
-    exit(1)
+def main():
+    parser = argparse.ArgumentParser(
+        description='Visualize a confusion matrix as HTML.')
+    parser.add_argument('results_file', help='the results file')
+    parser.add_argument('confusion_matrix_html_file', help='the output HTML file')
+    args = parser.parse_args()
 
-cm = ConfusionMatrix()
-cm.load(results)
-open(output_html, 'w').write(cm.toHtml())
+    cm = ConfusionMatrix()
+    cm.load(args.results_file)
+    with open(args.confusion_matrix_html_file, 'w') as f:
+        f.write(cm.toHtml())
 
-
+if __name__ == '__main__':
+    main()

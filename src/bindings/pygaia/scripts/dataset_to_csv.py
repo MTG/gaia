@@ -19,7 +19,7 @@
 
 
 from __future__ import print_function
-import sys
+import argparse
 import gaia2
 
 def dataset_to_csv(filename, csv_filename):
@@ -54,11 +54,9 @@ def dataset_to_csv(filename, csv_filename):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('USAGE: %s gaia_dataset.db output.csv' % sys.argv[0])
-        sys.exit(1)
-        
-    ds_filename = sys.argv[1]
-    csv_filename = sys.argv[2]
+    parser = argparse.ArgumentParser(description='Convert a Gaia dataset to CSV format.')
+    parser.add_argument('gaia_dataset', help='the Gaia dataset file (.db)')
+    parser.add_argument('output_csv', help='the output CSV file')
+    args = parser.parse_args()
 
-    dataset_to_csv(ds_filename, csv_filename)
+    dataset_to_csv(args.gaia_dataset, args.output_csv)

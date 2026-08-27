@@ -21,7 +21,7 @@
 from __future__ import print_function
 import sys, os.path, json
 import gaia2.fastyaml as yaml
-from optparse import OptionParser
+import argparse
 
 def convertJsonToSig(filelist_file, result_filelist_file):
     fl = yaml.load(open(filelist_file, 'r'))
@@ -58,22 +58,17 @@ def convertJsonToSig(filelist_file, result_filelist_file):
     return len(errors) == 0
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] filelist_file result_filelist_file\n' +
+    parser = argparse.ArgumentParser(usage='%(prog)s [options] filelist_file result_filelist_file\n' +
 """
 Converts json files found in filelist_file into *.sig yaml files compatible with
 Gaia. The result files are written to the same directory where original files were
 located.
 """
         )
+    parser.add_argument('filelist_file', help='the input filelist yaml file')
+    parser.add_argument('result_filelist_file', help='the output filelist yaml file')
 
-    options, args = parser.parse_args()
+    args = parser.parse_args()
 
-    try:
-        filelist_file = args[0]
-        result_filelist_file = args[1]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
-    convertJsonToSig(filelist_file, result_filelist_file)
+    convertJsonToSig(args.filelist_file, args.result_filelist_file)
 

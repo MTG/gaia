@@ -20,7 +20,7 @@
 
 
 from __future__ import print_function
-import sys, yaml
+import sys, yaml, argparse
 from os.path import *
 from gaia2 import DataSet, transform
 from gaia2.classification import GroundTruth
@@ -86,17 +86,14 @@ def trainSVMHistory(configFilename, paramsFilename, outputHistoryFilename, class
 
 
 if __name__ == '__main__':
-    try:
-        configFilename = sys.argv[1]
-        paramsFilename = sys.argv[2]
-        outputHistoryFilename = sys.argv[3]
+    parser = argparse.ArgumentParser(
+        description='Train an SVM history from a classification config file.')
+    parser.add_argument('config_filename', help='classification project config file')
+    parser.add_argument('params_filename', help='params filename')
+    parser.add_argument('output_history_filename', help='output history filename')
+    parser.add_argument('class_name', nargs='?', default=None, help='optional class name')
 
-    except:
-        print('usage: %s classification_project params_filename output_history [class_name]' % sys.argv[0])
-        sys.exit(1)
+    args = parser.parse_args()
 
-    className = None
-    if len(sys.argv) > 4:
-        className = sys.argv[4]
-
-    trainSVMHistory(configFilename, paramsFilename, outputHistoryFilename, className)
+    trainSVMHistory(args.config_filename, args.params_filename,
+                    args.output_history_filename, args.class_name)

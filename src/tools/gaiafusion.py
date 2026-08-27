@@ -21,49 +21,48 @@
 
 from __future__ import print_function
 from gaia2.fusion import transformDataSet, mergeChunk, mergeAll, mergeDirectory
-from optparse import OptionParser, OptionGroup
+import argparse
 from os.path import isdir, isfile
 import sys, gaia2
 
 
-def createOptionParser():
-    parser = OptionParser(usage = 'usage: %prog [options] input_sigfiles output_db\n\n' +
-    'where input_sigfiles can be either a yaml file containing the mapping ids -> sigfiles,\n' +
-    'or a directory containing them (in which case the ids will be guessed from the filenames)\n\n' +
-    'input_sigfiles and output_db can be specified either as keyword options or as positional arguments.')
+def createArgumentParser():
+    parser = argparse.ArgumentParser(
+        usage='%(prog)s [options] input_sigfiles output_db\n\n' +
+        'where input_sigfiles can be either a yaml file containing the mapping ids -> sigfiles,\n' +
+        'or a directory containing them (in which case the ids will be guessed from the filenames)\n\n' +
+        'input_sigfiles and output_db can be specified either as keyword options or as positional arguments.')
 
-    parser.add_option("-y", "--yamllist", dest="yamllist",
-                      help="the Yaml file containing the list of files to be merged")
+    parser.add_argument("-y", "--yamllist", dest="yamllist",
+                        help="the Yaml file containing the list of files to be merged")
 
-    parser.add_option("-d", "--directory", dest="directory",
-                      help="the directory containing all the sigfiles to be merged")
+    parser.add_argument("-d", "--directory", dest="directory",
+                        help="the directory containing all the sigfiles to be merged")
 
-    parser.add_option("-o", "--output", dest="outputFile",
-                      help="the filename of the output dataset")
+    parser.add_argument("-o", "--output", dest="outputFile",
+                        help="the filename of the output dataset")
 
-    parser.add_option("-c", "--chunksize", dest="chunkSize", default = 30000,
-                      help="the size of the chunks to be used for merging")
+    parser.add_argument("-c", "--chunksize", dest="chunkSize", default=30000,
+                        help="the size of the chunks to be used for merging")
 
-    parser.add_option("-t", "--transfofile", dest="transfoFile",
-                      help="the file containing the original transformations to be applied, in yaml format")
+    parser.add_argument("-t", "--transfofile", dest="transfoFile",
+                        help="the file containing the original transformations to be applied, in yaml format")
 
-    parser.add_option("-s", "--select", dest="select",
-                      help="the descriptors to be included when initally loading the points")
+    parser.add_argument("-s", "--select", dest="select",
+                        help="the descriptors to be included when initally loading the points")
 
-    parser.add_option("-e", "--exclude", dest="exclude",
-                      help="the descriptors to be excluded when initally loading the points")
+    parser.add_argument("-e", "--exclude", dest="exclude",
+                        help="the descriptors to be excluded when initally loading the points")
 
-    advancedGroup = OptionGroup(parser, 'Advanced Options',
-                                'Note: use these options only if you know what you\'re doing. You\'ve been warned...')
+    advanced = parser.add_argument_group('Advanced Options',
+                                         'Note: use these options only if you know what you\'re doing. You\'ve been warned...')
 
-    advancedGroup.add_option("-r", "--transform",
-                             action="store_true", dest="transform", default=False,
-                             help="apply basic transformations to dataset instead of merging it")
+    advanced.add_argument("-r", "--transform",
+                          action="store_true", dest="transform", default=False,
+                          help="apply basic transformations to dataset instead of merging it")
 
-    advancedGroup.add_option("-i", "--input", dest="inputFile",
-                             help="the filename of the input dataset. Only valid when transforming datasets")
-
-    parser.add_option_group(advancedGroup)
+    advanced.add_argument("-i", "--input", dest="inputFile",
+                          help="the filename of the input dataset. Only valid when transforming datasets")
 
     return parser
 
@@ -73,12 +72,12 @@ def usage():
     gaiafusion -d essentia_1.0.6/sigfiles -o amazon.db
     gaiafusion --chunksize=10000 ...
     '''
-    createOptionParser().print_help()
+    createArgumentParser().print_help()
     sys.exit(1)
 
 
 def fusion():
-    options, args = createOptionParser().parse_args()
+    options, args = createArgumentParser().parse_known_args()
 
     # dispatch the positional args into their named equivalents
     try:
