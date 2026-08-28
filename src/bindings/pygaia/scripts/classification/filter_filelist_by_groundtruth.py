@@ -1,15 +1,18 @@
 # This script filters descriptors filelist removing mapping for
 # all tracks that are not present in the ground truth file
 
-import sys, yaml
+import sys, yaml, argparse
 
-try:
-    gt_file = sys.argv[1]
-    filelist_file = sys.argv[2]
-    results_filelist_file = sys.argv[3]
-except:
-    print('usage:', sys.argv[0], '<ground-truth-file> <filelist-file> <result-filelist-file>')
-    sys.exit()
+parser = argparse.ArgumentParser(
+    description='Filter filelist removing mappings for tracks not in ground truth.')
+parser.add_argument('gt_file', help='ground truth file')
+parser.add_argument('filelist_file', help='filelist file')
+parser.add_argument('results_filelist_file', help='result filelist file')
+args = parser.parse_args()
+
+gt_file = args.gt_file
+filelist_file = args.filelist_file
+results_filelist_file = args.results_filelist_file
 
 gt = yaml.load(open(gt_file, 'r'))
 filelist = yaml.load(open(filelist_file, 'r'))

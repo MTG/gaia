@@ -3,16 +3,17 @@
 # among original classes.
 
 from __future__ import print_function
-import sys
+import argparse
 import yaml
 from random import shuffle
 
-try:
-    input_gt = sys.argv[1]
-    balanced_gt = sys.argv[2]
-except:
-    print('usage:', sys.argv[0], '<input-grounttruth> <output-balanced-groundtruth>')
-    sys.exit()
+parser = argparse.ArgumentParser(description='Create a balanced ground truth by random sampling.')
+parser.add_argument('input_groundtruth', help='input ground truth file')
+parser.add_argument('output_balanced_groundtruth', help='output balanced ground truth file')
+args = parser.parse_args()
+
+input_gt = args.input_groundtruth
+balanced_gt = args.output_balanced_groundtruth
 
 input_gt = yaml.load(open(input_gt, 'r'))
 

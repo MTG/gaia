@@ -25,7 +25,7 @@ from gaia2.classification import ClassificationTaskManager
 import os, os.path
 import sys
 import logging
-from optparse import OptionParser
+import argparse
 
 debugLevel = logging.INFO
 
@@ -60,15 +60,10 @@ def runTests(project_file):
         pass
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] project_file')
+    parser = argparse.ArgumentParser(usage='%(prog)s [options] project_file')
+    parser.add_argument('project_file', help='the yaml project file')
 
-    options, args = parser.parse_args()
+    args = parser.parse_args()
 
-    try:
-        project_file = args[0]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
-    runTests(project_file)
+    runTests(args.project_file)
 

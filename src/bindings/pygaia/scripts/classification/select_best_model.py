@@ -25,7 +25,7 @@ from gaia2.fastyaml import yaml
 from gaia2.scripts.classification.classification_results import ClassificationResults
 from gaia2.scripts.classification.generate_svm_history_from_config import trainSVMHistory
 from gaia2.classification import ConfusionMatrix
-from optparse import OptionParser
+import argparse
 
 
 def selectBestModel(project_file, results_model_file):
@@ -65,15 +65,10 @@ def selectBestModel(project_file, results_model_file):
 
 
 if __name__ == '__main__':
-    parser = OptionParser(usage = '%prog [options] project_file results_model_file')
+    parser = argparse.ArgumentParser(usage='%(prog)s project_file results_model_file')
+    parser.add_argument('project_file', help='the project yaml file')
+    parser.add_argument('results_model_file', help='the results model file')
 
-    options, args = parser.parse_args()
+    args = parser.parse_args()
 
-    try:
-        project_file = args[0]
-        results_model_file = args[1]
-    except:
-        parser.print_help()
-        sys.exit(1)
-
-    selectBestModel(project_file, results_model_file)
+    selectBestModel(args.project_file, args.results_model_file)
