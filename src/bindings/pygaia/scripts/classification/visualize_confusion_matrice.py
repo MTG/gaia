@@ -24,17 +24,12 @@ import argparse
 from gaia2.classification import ConfusionMatrix
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='Visualize a confusion matrix as HTML.')
-    parser.add_argument('results_file', help='the results file')
-    parser.add_argument('confusion_matrix_html_file', help='the output HTML file')
-    args = parser.parse_args()
+parser = argparse.ArgumentParser(
+    description='Visualize a confusion matrix as HTML.')
+parser.add_argument('results_file', help='the results file')
+parser.add_argument('confusion_matrix_html_file', help='the output HTML file')
+args = parser.parse_args()
 
-    cm = ConfusionMatrix()
-    cm.load(args.results_file)
-    with open(args.confusion_matrix_html_file, 'w') as f:
-        f.write(cm.toHtml())
-
-if __name__ == '__main__':
-    main()
+cm = ConfusionMatrix()
+cm.load(args.results_file)
+open(args.confusion_matrix_html_file, 'w').write(cm.toHtml())
